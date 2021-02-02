@@ -4,14 +4,21 @@
 企业级后台管理系统开发模板
 
 #### 软件架构
-软件架构说明
+1.  Vue版本:2.6.11
+2.  Ant-Design-Vue版本:1.7.2
+3.  后端模拟数据:mockjs2
+4.  http://localhost:8080/
 
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  cd crm-template
+2.  yarn
+3.  yarn serve
+4.  新建 Pull Request
+    
+
+
 
 #### 使用说明
 
