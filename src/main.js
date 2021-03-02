@@ -1,13 +1,9 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './core/lazy_ant_ui'
+import Antd  from './utils/antd_lazy'
+import './permission'
+const app  = createApp(App)
 
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  store,
-  render: function (h) { return h(App) }
-}).$mount('#app')
+app.use(Antd).use(router).use(store).mount('#app')

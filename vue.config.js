@@ -15,10 +15,10 @@ const assetsCDN = {
     css: [],
     // https://unpkg.com/browse/vue@2.6.10/
     js: [
-        '//cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.min.js',
-        '//cdn.jsdelivr.net/npm/vue-router@3.1.3/dist/vue-router.min.js',
-        '//cdn.jsdelivr.net/npm/vuex@3.1.1/dist/vuex.min.js',
-        '//cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js'
+        '//cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.min.js',
+        '//cdn.jsdelivr.net/npm/vue-router@43.1.3/dist/vue-router.min.js',
+        '//cdn.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.min.js',
+        '//cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js'
     ]
 }
 
@@ -30,9 +30,9 @@ const vueConfig = {
             less: {
                 modifyVars: {
                     // less vars，customize ant design theme
-                    'primary-color': '#F5222D',
-                    'link-color': '#F5222D',
-                    'border-radius-base': '2px'
+                    'primary-color': '#1890ff',
+                    'link-color': '#1890ff',
+                    'border-radius-base': '4px'
                 },
                 // DO NOT REMOVE THIS LINE
                 javascriptEnabled: true

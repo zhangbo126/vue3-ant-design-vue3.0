@@ -1,16 +1,12 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-import { asyncRouterMap } from '@/config/router.config'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { routerMap } from '@/config/router.config'
 
 
-
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes:asyncRouterMap,
+const router = createRouter({
+  history: createWebHashHistory(process.env.BASE_URL),
+  routes: routerMap
 })
+
+
 
 export default router

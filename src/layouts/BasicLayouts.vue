@@ -1,5 +1,5 @@
 <template>
-   <route-view></route-view>
+   <div>全局页面</div>
 </template>
 
 <script>
