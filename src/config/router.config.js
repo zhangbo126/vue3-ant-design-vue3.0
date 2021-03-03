@@ -18,7 +18,7 @@ export const routerMap = [
                 name: 'login',
                 component: () => import('@/views/Login/Login'),
                 meta: { title: '登录' }
-            }
+            },
         ]
     },
     {
@@ -32,5 +32,22 @@ export const routerMap = [
     // }
 ]
 
+
+//需要登录访问的页面
+export const LoginRouterMap = [
+    {
+        path: '/',
+        component: BasicLayouts,
+        redirect: '/form/formlist',
+        children: [
+            {
+                path: '/form/formlist',
+                name: 'FormList',
+                component: () => import('@/views/FormList/FormList'),
+                meta: { title: 'form' }
+            },
+        ]
+    }
+]
 
 

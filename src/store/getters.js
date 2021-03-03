@@ -1,5 +1,5 @@
 const getters = {
-    mapName: state => state.name +' mapName'
+    roles: state => []
 }
 
 
