@@ -38,6 +38,7 @@ import {
     Card,
     notification,
     message,
+    
 } from 'ant-design-vue'
 
 
@@ -63,6 +64,7 @@ const ant = {
         Vue.component(Space.name, Space)
         Vue.component(Menu.name, Menu)
         Vue.component(Menu.Item.name, Menu.Item)
+        Vue.component(Menu.SubMenu.name, Menu.SubMenu)
         Vue.component(Pagination.name, Pagination)
         Vue.component(Calendar.name, Calendar)
         Vue.component(InputNumber.name, InputNumber)
