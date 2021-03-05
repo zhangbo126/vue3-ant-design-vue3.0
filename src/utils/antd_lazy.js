@@ -6,6 +6,7 @@
  * 当需要更多组件依赖时，在该文件加入即可
  */
 import {
+    
     Button,
     Input,
     Steps,
@@ -53,11 +54,15 @@ const ant = {
         Vue.component(DatePicker.name, DatePicker)
         Vue.component(Col.name, Col)
         Vue.component(Layout.name, Layout)
+        Vue.component(Layout.Sider.name, Layout.Sider)
+        Vue.component(Layout.Header.name, Layout.Header)
+        Vue.component(Layout.Footer.name, Layout.Footer)
         Vue.component(Icon.name, Icon)
         Vue.component(Checkbox.name, Checkbox)
         Vue.component(Switch.name, Switch)
         Vue.component(Space.name, Space)
         Vue.component(Menu.name, Menu)
+        Vue.component(Menu.Item.name, Menu.Item)
         Vue.component(Pagination.name, Pagination)
         Vue.component(Calendar.name, Calendar)
         Vue.component(InputNumber.name, InputNumber)
