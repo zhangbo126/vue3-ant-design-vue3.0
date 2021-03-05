@@ -1,7 +1,9 @@
 const getters = {
-    mapName: state => state.name +' mapName'
+    roles: state => state.login.roles,
+    addRouters: state => state.permission.addRouters,
 }
-
+ 
+  
 
 export default getters
 

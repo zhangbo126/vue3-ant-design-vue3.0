@@ -5,6 +5,7 @@ import getters from './getters'
 import mutations from './mutations'
 import actions from './actions'
 import login from './modules/login'
+import permission from './modules/async-router'
 const store = createStore({
     state,
     getters,
@@ -12,6 +13,7 @@ const store = createStore({
     actions,
     modules: {
         login,
+        permission,
     }
 })
 

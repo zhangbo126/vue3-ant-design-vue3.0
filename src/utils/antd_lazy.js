@@ -41,9 +41,10 @@ import {
 
 
 const ant = {
-    install(Vue) {        
+    install(Vue) {
         Vue.component(Button.name, Button)
         Vue.component(Input.name, Input)
+        Vue.component(Input.Password.name, Input.Password)
         Vue.component(Steps.name, Steps)
         Vue.component(Form.name, Form)
         Vue.component(Select.name, Select)
@@ -73,10 +74,12 @@ const ant = {
         Vue.component(Result.name, Result)
         Vue.component(Spin.name, Spin)
         Vue.component(Card.name, Card)
+        Vue.component(Form.Item.name, Form.Item)
+
         Vue.config.globalProperties.$message = message
         Vue.config.globalProperties.$notification = notification
         Vue.config.globalProperties.$confirm = Modal.confirm
-        Vue.config.productionTip=false
+        Vue.config.productionTip = false
     }
 }
 
