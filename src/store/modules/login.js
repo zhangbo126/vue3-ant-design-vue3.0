@@ -1,14 +1,19 @@
 
 import VueCookies from 'vue-cookies'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { getInfo } from '@/api/login'
+import { getUserInfo } from '@/api/login'
 const login = {
     state: {
-        token: ''
+        token: '',
+        roles: [],
+
     },
     mutations: {
         SET_ACCESS_TOKEN: (state, token) => {
             state.token = token
+        },
+        SET_ROLES: (state, roles) => {
+            state.roles = roles
         }
     },
     actions: {
@@ -21,7 +26,8 @@ const login = {
         },
         GetUserInfo({ commit }) {
             return new Promise((reslove, reject) => {
-                getInfo().then(res => {
+                getUserInfo().then(res => {   
+                    commit('SET_ROLES',res.result)           
                     reslove(res)
                 })
             })

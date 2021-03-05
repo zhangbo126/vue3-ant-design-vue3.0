@@ -1,7 +1,9 @@
 const getters = {
-    roles: state => []
+    roles: state => state.login.roles,
+    addRouters: state => state.permission.addRouters,
 }
-
+ 
+  
 
 export default getters
 

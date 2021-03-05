@@ -373,50 +373,7 @@ const info = (options) => {
 const userNav = (options) => {
   const nav = [
     // dashboard
-    {
-      'name': 'dashboard',
-      'parentId': 0,
-      'id': 1,
-      'meta': {
-        'icon': 'dashboard',
-        'title': '仪表盘',
-        'show': true
-      },
-      'component': 'RouteView',
-      'redirect': '/dashboard/workplace'
-    },
-    {
-      'name': 'workplace',
-      'parentId': 1,
-      'id': 7,
-      'meta': {
-        'title': '工作台',
-        'show': true
-      },
-      'component': 'Workplace'
-    },
-    {
-      'name': 'monitor',
-      'path': 'https://www.baidu.com/',
-      'parentId': 1,
-      'id': 3,
-      'meta': {
-        'title': '监控页（外部）',
-        'target': '_blank',
-        'show': true
-      }
-    },
-    {
-      'name': 'Analysis',
-      'parentId': 1,
-      'id': 2,
-      'meta': {
-        'title': '分析页',
-        'show': true
-      },
-      'component': 'Analysis',
-      'path': '/dashboard/analysis'
-    },
+ 
 
     // form
     {
@@ -458,91 +415,6 @@ const userNav = (options) => {
       'component': 'AdvanceForm'
     },
 
-    // list
-    {
-      'name': 'list',
-      'parentId': 0,
-      'id': 10010,
-      'meta': {
-        'icon': 'table',
-        'title': '列表页',
-        'show': true
-      },
-      'redirect': '/list/table-list',
-      'component': 'PageView'
-    },
-    {
-      'name': 'table-list',
-      'parentId': 10010,
-      'id': 10011,
-      'path': '/list/table-list/:pageNo([1-9]\\d*)?',
-      'meta': {
-        'title': '查询表格',
-        'show': true
-      },
-      'component': 'TableList'
-    },
-    {
-      'name': 'basic-list',
-      'parentId': 10010,
-      'id': 10012,
-      'meta': {
-        'title': '标准列表',
-        'show': true
-      },
-      'component': 'StandardList'
-    },
-    {
-      'name': 'card',
-      'parentId': 10010,
-      'id': 10013,
-      'meta': {
-        'title': '卡片列表',
-        'show': true
-      },
-      'component': 'CardList'
-    },
-    {
-      'name': 'search',
-      'parentId': 10010,
-      'id': 10014,
-      'meta': {
-        'title': '搜索列表',
-        'show': true
-      },
-      'redirect': '/list/search/article',
-      'component': 'SearchLayout'
-    },
-    {
-      'name': 'article',
-      'parentId': 10014,
-      'id': 10015,
-      'meta': {
-        'title': '搜索列表（文章）',
-        'show': true
-      },
-      'component': 'SearchArticles'
-    },
-    {
-      'name': 'project',
-      'parentId': 10014,
-      'id': 10016,
-      'meta': {
-        'title': '搜索列表（项目）',
-        'show': true
-      },
-      'component': 'SearchProjects'
-    },
-    {
-      'name': 'application',
-      'parentId': 10014,
-      'id': 10017,
-      'meta': {
-        'title': '搜索列表（应用）',
-        'show': true
-      },
-      'component': 'SearchApplications'
-    },
 
     // profile
     {

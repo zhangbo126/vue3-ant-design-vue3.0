@@ -1,6 +1,9 @@
-import { BasicLayouts, LoginView, RouteView } from '@/layouts'
+import { BasicLayouts, LoginView } from '@/layouts'
 
-
+const RouteView = {
+    name: 'RouteView',
+    render: h => h('router-view')
+}
 
 /**
  * 基础路由
@@ -38,13 +41,23 @@ export const LoginRouterMap = [
     {
         path: '/',
         component: BasicLayouts,
-        redirect: '/form/formlist',
+        redirect: '/form',
         children: [
             {
-                path: '/form/formlist',
-                name: 'FormList',
-                component: () => import('@/views/FormList/FormList'),
-                meta: { title: 'form' }
+                path: '/form',
+                name: 'Form',
+                // component: () => import('@/views/FormList/FormList'),
+                redirect: '/form/formlist',
+                component: RouteView,
+                meta: { title: 'form' },
+                children: [
+                    {
+                        path: '/form/formlist',
+                        name: 'FormList',
+                        component: () => import('@/views/FormList/FormList'),
+                        meta: { title: 'list' }
+                    }
+                ]
             },
         ]
     }
