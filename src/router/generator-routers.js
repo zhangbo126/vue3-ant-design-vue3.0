@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import * as loginService from '@/api/login'
 // eslint-disable-next-line
-import { BasicLayout, LoginView } from '@/layouts'
+import { BasicLayouts, LoginView } from '@/layouts'
 const RouteView = {
     name: 'RouteView',
     render: h => h('router-view')
@@ -9,7 +9,7 @@ const RouteView = {
 // 前端路由表
 const constantRouterComponents = {
     // 基础页面 layout 必须引入
-    BasicLayout: BasicLayout,
+    BasicLayout: BasicLayouts,
     RouteView: RouteView,
     '404': () => import(/* webpackChunkName: "error" */ '@/views/Exception/404'),
 
@@ -28,11 +28,11 @@ const rootRouter = {
     key: '',
     name: 'index',
     path: '',
-    component: 'BasicLayout',
+    component: 'BasicLayouts',
     redirect: '/dashboard',
     meta: {
         title: '首页'
-    },
+    },  
     children: []
 }
 
