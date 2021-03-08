@@ -3,7 +3,7 @@ import { routerMap,LoginRouterMap } from '@/config/router.config'
 
 
 const router = createRouter({
-  history: createWebHashHistory('/'),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes: routerMap.concat(LoginRouterMap)
 })
 
