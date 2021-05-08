@@ -1,68 +1,11 @@
-<!--<template>
-  <a-menu
-    v-model:openKeys="openKeys"
-    v-model:selectedKeys="selectedKeys"
-    mode="inline"
-    :theme="theme"
-  >
-    <template v-for="menu in menuTree" :key="menu.path">
-      <a-sub-menu :key="menu.path" :title="menu.name" v-if="menu.children">
-        <a-menu-item :key="m.path" v-for="m in menu.children"
-          ><router-link :to="m.path">{{ m.name }}</router-link></a-menu-item
-        >
-      </a-sub-menu>
-      <a-menu-item :key="menu.path" v-else>
-        <router-link :to="menu.path">{{ menu.name }}</router-link>
-      </a-menu-item>
-    </template>
-  </a-menu>
-</template>
-
-<script>
-import {
-  MailOutlined,
-  CalendarOutlined,
-  AppstoreOutlined,
-  SettingOutlined,
-} from "@ant-design/icons-vue";
-import { defineComponent, reactive, toRefs, computed } from "vue";
-import { useStore, mapState } from "vuex";
-export default {
-  setup() {
-    const state = reactive({
-      theme: "dark",
-      selectedKeys: ["1"],
-      openKeys: ["sub1"],
-    });
-    const store = useStore();
-    const menuTree = computed(() => store.state.permission.addRouters);
-
-    return { ...toRefs(state), menuTree };
-  },
-
-  components: {
-    MailOutlined,
-    CalendarOutlined,
-    AppstoreOutlined,
-    SettingOutlined,
-  },
-  data() {
-    return {};
-  },
-};
-</script>
-
-<style scoped lang="less"></style>
--->
-
 <template>
   <div>
-    <a-menu mode="inline" theme="dark" :inline-collapsed="collapsed">
+    <a-menu mode="inline" theme="dark" :inline-collapsed="collapsed" :selectedKeys="selectedKeys">
       <template v-for="item in menuTree" :key="item.path">
         <template v-if="!item.children">
           <a-menu-item :key="item.path">
             <PieChartOutlined />
-            <span>{{ item.name }}</span>
+            <router-link :to="{ path: item.path }">{{ item.name }}</router-link>
           </a-menu-item>
         </template>
         <template v-else>
@@ -73,7 +16,8 @@ export default {
   </div>
 </template>
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, reactive, watch, toRefs } from "vue";
+import { useRoute } from "vue-router";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -99,8 +43,7 @@ const SubMenu = {
       <template v-for="item in menuInfo.children" :key="item.path">
         <template v-if="!item.children">
           <a-menu-item :key="item.path">
-            <PieChartOutlined />
-            <span>{{ item.name }}</span>
+                 <router-link :to="{path:item.path}">{{ item.name }}</router-link>
           </a-menu-item>
         </template>
         <template v-else>
@@ -117,8 +60,18 @@ const SubMenu = {
 
 export default defineComponent({
   setup() {
+    const route = useRoute();
     const collapsed = ref(false);
-
+    const menuState = reactive({
+      selectedKeys: [route.path],
+    });
+    watch(
+      () => route.path,
+      (n, o) => {
+        menuState.selectedKeys = [n];
+        console.log(menuState.selectedKeys)
+      }
+    );
     const toggleCollapsed = () => {
       collapsed.value = !collapsed.value;
     };
@@ -129,6 +82,7 @@ export default defineComponent({
       collapsed,
       toggleCollapsed,
       menuTree,
+      ...toRefs(menuState),
     };
   },
 
