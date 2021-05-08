@@ -1,7 +1,7 @@
 const mutations = {
-     NAME_DEMO:(state,data)=>{
-           console.log(state,data)
-     }
+      NAME_DEMO: (state, name) => {
+            state.name = name
+      }
 }
 
 

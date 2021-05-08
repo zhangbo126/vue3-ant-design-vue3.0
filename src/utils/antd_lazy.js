@@ -6,7 +6,6 @@
  * 当需要更多组件依赖时，在该文件加入即可
  */
 import {
-    
     Button,
     Input,
     Steps,
@@ -37,8 +36,7 @@ import {
     Spin,
     Card,
     notification,
-    message,
-    
+    message,  
 } from 'ant-design-vue'
 
 
@@ -50,16 +48,21 @@ const ant = {
         Vue.component(Steps.name, Steps)
         Vue.component(Form.name, Form)
         Vue.component(Select.name, Select)
+        Vue.component(Select.OptGroup.displayName, Select.OptGroup)
+        Vue.component(Select.Option.displayName, Select.Option)
         Vue.component(Row.name, Row)
         Vue.component(Radio.name, Radio)
+        Vue.component(Radio.Group.name, Radio.Group)
         Vue.component(DatePicker.name, DatePicker)
         Vue.component(Col.name, Col)
         Vue.component(Layout.name, Layout)
         Vue.component(Layout.Sider.name, Layout.Sider)
         Vue.component(Layout.Header.name, Layout.Header)
+        Vue.component(Layout.Content.name, Layout.Content)
         Vue.component(Layout.Footer.name, Layout.Footer)
         Vue.component(Icon.name, Icon)
         Vue.component(Checkbox.name, Checkbox)
+        Vue.component(Checkbox.Group.name, Checkbox.Group)
         Vue.component(Switch.name, Switch)
         Vue.component(Space.name, Space)
         Vue.component(Menu.name, Menu)

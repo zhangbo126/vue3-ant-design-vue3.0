@@ -1,6 +1,7 @@
 import Mock from 'mockjs2'
 import { builder, getBody } from '../util'
 
+
 const username = ['admin', 'super']
 // 强硬要求 ant.design 相同密码
 // '21232f297a57a5a743894a0e4a801fc3',

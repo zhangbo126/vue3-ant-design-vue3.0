@@ -7,12 +7,12 @@
       :rules="rules"
       v-bind="layout"
     >
-      <a-form-item required name="account">
-        <a-input v-model:value="form.account" size="large" placeholder="账号" />
+      <a-form-item required name="username">
+        <a-input v-model:value="form.username" size="large" placeholder="账号" />
       </a-form-item>
-      <a-form-item required name="checkPass">
+      <a-form-item required name="password">
         <a-input-password
-          v-model:value="form.checkPass"
+          v-model:value="form.password"
           size="large"
           type="password"
           placeholder="密码"
@@ -39,16 +39,17 @@ import { mapActions } from "vuex";
 export default defineComponent({
   setup() {
     const form = reactive({
-      account: undefined,
-      checkPass: undefined,
+      useraccount: undefined,
+      password: undefined,
+
     });
-    let accountRule = async (rule, value) => {
+    let useraccountRule = async (rule, value) => {
       if (!value) {
         return Promise.reject("请输入");
       }
     };
 
-    let checkPassRule = async (rule, value) => {
+    let passwordRule = async (rule, value) => {
       if (value === "") {
         return Promise.reject("请输入");
       }
@@ -56,15 +57,15 @@ export default defineComponent({
     };
 
     const rules = {
-      account: [
+      useraccount: [
         {
-          validator: accountRule,
+          validator: useraccountRule,
           trigger: ["change", "blur"],
         },
       ],
-      checkPass: [
+      password: [
         {
-          validator: checkPassRule,
+          validator: passwordRule,
           trigger: ["change", "blur"],
         },
       ],
@@ -91,15 +92,12 @@ export default defineComponent({
       this.$refs.formRef
         .validate()
         .then((res) => {
-          this.Login().then((res) => {
-            console.log(res);
+          this.Login(this.form).then((res) => {
             this.$router.push("/form/formlist");
             this.$message.success("登录成功");
           });
         })
-        .catch((res) => {
-          console.log(res);
-        });
+        .catch(() => {});
     },
   },
 });

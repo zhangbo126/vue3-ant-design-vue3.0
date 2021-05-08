@@ -1,11 +1,12 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { routerMap,LoginRouterMap } from '@/config/router.config'
+import { createRouter, createWebHashHistory ,createWebHistory } from 'vue-router'
+import { routerMap } from '@/config/router.config'
 
 
 const router = createRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
-  routes: routerMap.concat(LoginRouterMap)
+  history: createWebHashHistory(),
+  routes: routerMap
 })
+
 
 
 export default router

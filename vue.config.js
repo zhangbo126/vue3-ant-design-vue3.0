@@ -1,6 +1,7 @@
 
 
 
+const path = require('path')
 
 
 const isProd = process.env.NODE_ENV === 'production'
@@ -23,16 +24,17 @@ const assetsCDN = {
 }
 
 const vueConfig = {
-
+ 
+    runtimeCompiler: true,
     css: {
         //设置Ant-Desint 主题
         loaderOptions: {
             less: {
                 modifyVars: {
                     // less vars，customize ant design theme
-                    'primary-color': '#1890ff',
-                    'link-color': '#1890ff',
-                    'border-radius-base': '4px'
+                    // 'primary-color': '#1890ff',
+                    // 'link-color': '#1890ff',
+                    // 'border-radius-base': '4px'
                 },
                 // DO NOT REMOVE THIS LINE
                 javascriptEnabled: true
@@ -46,14 +48,17 @@ const vueConfig = {
         // development server port 8000
         hot: true, //热加载
         open: true,
-        port: 9999
+        port: 9999,
         // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
         // proxy: {
-        //   '/api': {
-        //     target: 'https://mock.ihx.me/mock/5baf3052f7da7e07e04a5116/antd-pro',
-        //     ws: false,
-        //     changeOrigin: true
-        //   }
+        //     '/api': {
+        //         target: 'https://www.meijiavip.com',
+        //         // ws: false,
+        //         changeOrigin: true,
+        //         pathRewrite: {
+        //             '^/api': 'http://192.168.101.112:9999/'
+        //         }
+        //     }
         // }
     },
     productionSourceMap: false,

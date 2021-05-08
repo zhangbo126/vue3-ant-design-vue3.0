@@ -1,5 +1,6 @@
 const state = {
-    name: 'name'
+    name: 'ZHANG_66',
+
 }
 
 export default state

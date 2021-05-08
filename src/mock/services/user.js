@@ -385,7 +385,7 @@ const userNav = (options) => {
         'title': '表单页'
       },
       'redirect': '/form/base-form',
-      'component': 'PageView'
+      'component': 'RouteView'
     },
     {
       'name': 'basic-form',
@@ -414,42 +414,6 @@ const userNav = (options) => {
       },
       'component': 'AdvanceForm'
     },
-
-
-    // profile
-    {
-      'name': 'profile',
-      'parentId': 0,
-      'id': 10018,
-      'meta': {
-        'title': '详情页',
-        'icon': 'profile',
-        'show': true
-      },
-      'redirect': '/profile/basic',
-      'component': 'RouteView'
-    },
-    {
-      'name': 'basic',
-      'parentId': 10018,
-      'id': 10019,
-      'meta': {
-        'title': '基础详情页',
-        'show': true
-      },
-      'component': 'ProfileBasic'
-    },
-    {
-      'name': 'advanced',
-      'parentId': 10018,
-      'id': 10020,
-      'meta': {
-        'title': '高级详情页',
-        'show': true
-      },
-      'component': 'ProfileAdvanced'
-    },
-
     // result
     {
       'name': 'result',
@@ -461,7 +425,7 @@ const userNav = (options) => {
         'show': true
       },
       'redirect': '/result/success',
-      'component': 'PageView'
+      'component': 'RouteView'
     },
     {
       'name': 'success',
@@ -486,49 +450,6 @@ const userNav = (options) => {
       'component': 'ResultFail'
     },
 
-    // Exception
-    {
-      'name': 'exception',
-      'parentId': 0,
-      'id': 10024,
-      'meta': {
-        'title': '异常页',
-        'icon': 'warning',
-        'show': true
-      },
-      'redirect': '/exception/403',
-      'component': 'RouteView'
-    },
-    {
-      'name': '403',
-      'parentId': 10024,
-      'id': 10025,
-      'meta': {
-        'title': '403',
-        'show': true
-      },
-      'component': 'Exception403'
-    },
-    {
-      'name': '404',
-      'parentId': 10024,
-      'id': 10026,
-      'meta': {
-        'title': '404',
-        'show': true
-      },
-      'component': 'Exception404'
-    },
-    {
-      'name': '500',
-      'parentId': 10024,
-      'id': 10027,
-      'meta': {
-        'title': '500',
-        'show': true
-      },
-      'component': 'Exception500'
-    },
 
     // account
     {
@@ -600,28 +521,7 @@ const userNav = (options) => {
       },
       'component': 'CustomSettings'
     },
-    {
-      'name': 'BindingSettings',
-      'path': '/account/settings/binding',
-      'parentId': 10030,
-      'id': 10034,
-      'meta': {
-        'title': '账户绑定',
-        'show': false
-      },
-      'component': 'BindingSettings'
-    },
-    {
-      'name': 'NotificationSettings',
-      'path': '/account/settings/notification',
-      'parentId': 10030,
-      'id': 10034,
-      'meta': {
-        'title': '新消息通知',
-        'show': false
-      },
-      'component': 'NotificationSettings'
-    }
+  
   ]
   const json = builder(nav)
   console.log('json', json)

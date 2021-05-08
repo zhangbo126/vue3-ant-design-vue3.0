@@ -1,52 +1,21 @@
 <template>
   <a-layout style="min-height: 100vh">
-    <a-layout-sider v-model:collapsed="collapsed"  collapsible id="components-layout-demo-side">
-        <template #trigger>
-            <MenuFoldOutlined />              
-        </template>
-      <div class="logo" >23</div>
-      <a-menu theme="dark" v-model:selectedKeys="selectedKeys" mode="inline">
-        <a-menu-item key="1">
-          <pie-chart-outlined />
-          <span>Option 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <desktop-outlined />
-          <span>Option 2</span>
-        </a-menu-item>
-        <a-sub-menu key="sub1">
-          <template #title>
-            <span>
-              <user-outlined />
-              <span>User</span>
-            </span>
-          </template>
-          <a-menu-item key="3">Tom</a-menu-item>
-          <a-menu-item key="4">Bill</a-menu-item>
-          <a-menu-item key="5">Alex</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-            <span>
-              <team-outlined />
-              <span>Team</span>
-            </span>
-          </template>
-          <a-menu-item key="6">Team 1</a-menu-item>
-          <a-menu-item key="8">Team 2</a-menu-item>
-        </a-sub-menu>
-        <a-menu-item key="9">
-          <file-outlined />
-          <span>File</span>
-        </a-menu-item>
-      </a-menu>
+    <a-layout-sider
+      v-model:collapsed="collapsed"
+      collapsible
+      id="components-layout-demo-side"
+    >
+      <template #trigger>
+        <MenuFoldOutlined />
+      </template>
+      <div class="logo">23</div>
+      <s-menu></s-menu>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0" />
       <a-layout-content style="margin: 8px 16px">
-   
         <div :style="{ padding: '4px', background: '#fff', minHeight: '360px' }">
-          Bill is a cat.
+          <router-view></router-view>
         </div>
       </a-layout-content>
       <a-layout-footer style="text-align: center">
@@ -63,8 +32,10 @@ import {
   TeamOutlined,
   FileOutlined,
   MenuFoldOutlined,
-} from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+} from "@ant-design/icons-vue";
+import { defineComponent, ref, h } from "vue";
+import SMenu from "@/components/Menu/Menu";
+
 export default defineComponent({
   components: {
     PieChartOutlined,
@@ -73,15 +44,17 @@ export default defineComponent({
     TeamOutlined,
     FileOutlined,
     MenuFoldOutlined,
+    SMenu,
   },
-  setup(){
-
-  },
+  setup() {},
   data() {
     return {
       collapsed: ref(false),
-      selectedKeys: ref(['1']),
+      selectedKeys: ref(["1"]),
     };
+  },
+  created() {
+    // updateTheme("#0099cc");
   },
 });
 </script>
@@ -95,7 +68,7 @@ export default defineComponent({
 .site-layout .site-layout-background {
   background: #fff;
 }
-[data-theme='dark'] .site-layout .site-layout-background {
+[data-theme="dark"] .site-layout .site-layout-background {
   background: #141414;
 }
 </style>

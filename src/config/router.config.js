@@ -21,11 +21,12 @@ export const routerMap = [
             },
         ]
     },
-    {
-        name: '404',
-        path: '/404',
-        component: () => import('@/views/Exception/404')
-    },
+    // {
+    //     name: '404',
+    //     path: '/:pathMatch(.*)*',
+    //     component: () => import('@/views/Exception/404')
+    // },
+
     // {
     //     path: '*',
     //     redirect: '/404'
@@ -33,21 +34,53 @@ export const routerMap = [
 ]
 
 
-//需要登录访问的页面
-export const LoginRouterMap = [
+// //需要登录访问的页面
+// export const LoginRouterMap = [
+//     {
+//         path: '/',
+//         component: BasicLayouts,
+//         name: 'index',
+//         redirect: '/form/formlist',
+//         children: [
+//             {
+//                 path: '/form/formlist',
+//                 name: 'FormList',
+//                 component: () => import('@/views/FormList/FormList'),
+//                 meta: { title: 'form' }
+//             },
+            
+//         ]
+//     }
+// ]
+
+
+export const asyncRouter = [
     {
-        path: '/',
+        path: '/account',
+        redirect: '/account/accountcenter',
         component: BasicLayouts,
-        redirect: '/form/formlist',
+        name: 'AccountManage',
         children: [
             {
-                path: '/form/formlist',
-                name: 'FormList',
-                component: () => import('@/views/FormList/FormList'),
-                meta: { title: 'form' }
+                name: 'AccountCenter',
+                component: () => import('@/views/Account/AccountCenter'),
+                path: '/account/accountcenter'
+            },
+            {
+                name: 'AccountSettings',
+                component: () => import('@/views/Account/AccountSettings'),
+                path: '/account/accountsettings'
+            },
+            {
+                name: 'BaseSettings',
+                component: () => import('@/views/Account/BaseSettings'),
+                path: '/account/basesettings'
+            },
+            {
+                name: 'SecuritySettings',
+                component: () => import('@/views/Account/SecuritySettings'),
+                path: '/account/securitysettings'
             },
         ]
     }
 ]
-
-
