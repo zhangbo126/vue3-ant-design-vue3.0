@@ -8,61 +8,81 @@
       <template #trigger>
         <MenuFoldOutlined />
       </template>
-      <div class="logo">23</div>
+      <div class="logo">
+        <img src="https://store.antdv.com/pro/preview/img/logo.59818776.png" />
+        <span>AntDesignVue2.0</span>
+      </div>
       <s-menu></s-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0" />
-      <a-layout-content style="margin: 8px 16px">
-        <div :style="{ padding: '4px', background: '#fff', minHeight: '360px' }">
+      <a-layout-header style="background: #fff; padding: 0" class="layout-header">
+        <div class="trigger">
+          <MenuFoldOutlined
+            v-if="collapsed"
+            @click="collapsed = !collapsed"
+            :style="{ fontSize: '20px', cursor: 'pointer' }"
+          />
+          <MenuUnfoldOutlined
+            @click="collapsed = !collapsed"
+            :style="{ fontSize: '20px', cursor: 'pointer' }"
+            v-else
+          />
+        </div>
+      </a-layout-header>
+      <a-layout-content>
+        <s-tab></s-tab>
+        <div :style="{ background: '#fff', minHeight: '360px' }">
           <router-view></router-view>
         </div>
       </a-layout-content>
       <a-layout-footer style="text-align: center">
-        Ant Design ©2018 Created by Ant UED
+        VUE3.0 + Ant-Design-Vue 2.0
       </a-layout-footer>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import {
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileOutlined,
-  MenuFoldOutlined,
-} from "@ant-design/icons-vue";
-import { defineComponent, ref, h } from "vue";
-import SMenu from "@/components/Menu/Menu";
 
+import { defineComponent, ref } from "vue";
+import SMenu from "@/components/Menu/Menu";
+import STab from "@/components/MultiTab/MultiTab";
 export default defineComponent({
   components: {
-    PieChartOutlined,
-    DesktopOutlined,
-    UserOutlined,
-    TeamOutlined,
-    FileOutlined,
-    MenuFoldOutlined,
     SMenu,
+    STab,
   },
-  setup() {},
   data() {
     return {
       collapsed: ref(false),
-      selectedKeys: ref(["1"]),
     };
-  },
-  created() {
-    // updateTheme("#0099cc");
   },
 });
 </script>
-<style>
+<style scoped lang="less">
 #components-layout-demo-side .logo {
   height: 32px;
   margin: 16px;
-  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  img {
+    height: 32px;
+  }
+  span {
+    color: #fff;
+  }
+}
+.layout-header {
+  .trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 16px;
+    width: 40px;
+    height: 100%;
+  }
 }
 
 .site-layout .site-layout-background {

@@ -30,26 +30,36 @@ const userInfo = () => {
             redirect: '/formlist/advanceform',
             component: 'BasicLayouts',
             name: '表单中心',
+            icon: 'BarChartOutlined',
             children: [
                 {
                     name: 'AdvanceForm',
                     component: 'AdvanceForm',
-                    path: '/formlist/advanceform'
+                    path: '/formlist/advanceform',
                 },
                 {
-                    name: 'BasicForm',
+                    name: '步骤表单',
                     component: 'BasicForm',
-                    path: '/formlist/BasicForm'
+                    path: '/formlist/BasicForm',
                 },
                 {
                     name: 'Form',
                     component: 'Form',
-                    path: '/formlist/form'
+                    path: '/formlist/form',
+
                 },
                 {
-                    name: 'StepForm',
-                    component: 'StepForm',
-                    path: '/formlist/StepForm'
+                    name: '其他表单',
+                    component: 'RouteView',
+                    path: '/formlist/StepForm',
+
+                    children: [
+                        {
+                            path: '/formlist/stepform/other',
+                            component: 'StepForm',
+                            name: '三级菜单',
+                        }
+                    ]
                 },
             ]
         },
@@ -58,6 +68,7 @@ const userInfo = () => {
             redirect: '/account/accountcenter',
             component: 'BasicLayouts',
             name: '账号管理',
+            icon: 'TaobaoCircleOutlined',
             children: [
                 {
                     name: '账号中心',
@@ -80,11 +91,12 @@ const userInfo = () => {
                     path: '/account/securitysettings'
                 },
             ]
-        },  {
+        }, {
             path: '/result',
             redirect: '/result/ResultFail',
             component: 'BasicLayouts',
             name: '结构页',
+            icon: 'RedditOutlined',
             children: [
                 {
                     name: 'FormList',

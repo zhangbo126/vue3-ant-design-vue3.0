@@ -36,10 +36,11 @@ import {
     Spin,
     Card,
     notification,
-    message,  
+    message,
 } from 'ant-design-vue'
 
-
+import * as antIcons from '@ant-design/icons-vue'
+ 
 const ant = {
     install(Vue) {
         Vue.component(Button.name, Button)
@@ -75,6 +76,7 @@ const ant = {
         Vue.component(Popover.name, Popover)
         Vue.component(Table.name, Table)
         Vue.component(Tabs.name, Tabs)
+        Vue.component(Tabs.TabPane.name, Tabs.TabPane)
         Vue.component(Tooltip.name, Tooltip)
         Vue.component(Tree.name, Tree)
         Vue.component(Modal.name, Modal)
@@ -85,10 +87,13 @@ const ant = {
         Vue.component(Spin.name, Spin)
         Vue.component(Card.name, Card)
         Vue.component(Form.Item.name, Form.Item)
-
+        Object.keys(antIcons).forEach(key => {
+            Vue.component(key, antIcons[key])
+        })
         Vue.config.globalProperties.$message = message
         Vue.config.globalProperties.$notification = notification
         Vue.config.globalProperties.$confirm = Modal.confirm
+        Vue.config.globalProperties.$antIcons = antIcons
         Vue.config.productionTip = false
     }
 }

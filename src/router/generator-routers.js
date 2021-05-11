@@ -1,13 +1,10 @@
 // eslint-disable-next-line
 
-import { BasicLayouts } from '@/layouts'
+import { BasicLayouts, RouteView } from '@/layouts'
 import { getUserInfo } from '@/api/login'
 
 
-const RouteView = {
-    name: 'RouteView',
-    render: h => h('router-view')
-}
+
 // 前端路由表
 const constantRouterComponents = {
     // 基础页面 layout 必须引入
@@ -32,6 +29,14 @@ export const renderAsyncRouter = () => {
         getUserInfo().then(res => {
             const treeList = res.result
             const renderRouter = treeMap(treeList)
+            renderRouter.push(
+                {
+                    hide: true,
+                    name: '404',
+                    path: '/:pathMatch(.*)*',
+                    component: () => import('@/views/Exception/404')
+                },
+            )
             reslove(renderRouter)
         })
     })
@@ -42,10 +47,15 @@ export const renderAsyncRouter = () => {
 const treeMap = (menuTree) => {
 
     return menuTree.map(v => {
+
+        const meta = v.meta || { title: v.name, hide: v.hide || false }
         const currentRouter = {
             path: v.path,
             name: v.name,
             component: (constantRouterComponents[v.component]),
+            icon: v.icon || null,
+            hide: v.hide || false,
+            meta
         }
         // 重定向
         v.redirect && (currentRouter.redirect = v.redirect)

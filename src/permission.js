@@ -26,12 +26,10 @@ router.beforeEach(async (to, from, next) => {
 
             if (store.state.permission.addRouters.length == 0) {
                 await store.dispatch('GenerateRoutes').then((res) => {
-
                     const asyncRouter = res
                     asyncRouter.forEach(v => {
                         router.addRoute(v)
                     })
-                    // console.log(router.getRoutes())
                     next({ ...to, replace: true })
                 })
             } else {
