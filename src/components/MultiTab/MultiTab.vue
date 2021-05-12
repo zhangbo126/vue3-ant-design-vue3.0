@@ -1,12 +1,12 @@
 <template>
   <a-tabs
+   v-if="multTab.length"
     v-model:activeKey="activeKey"
     type="editable-card"
     hide-add
     @edit="onClone"
     @change="onChangeTab"
   >
-
     <a-tab-pane
       v-for="tab in multTab"
       :closable="multTab.length != 1"
@@ -60,7 +60,7 @@ export default {
 /deep/.ant-tabs-bar {
   margin: 0;
 }
-/deep/.ant-tabs-card{
+/deep/.ant-tabs-card {
   background-color: #fff;
 }
 </style>

@@ -6,7 +6,8 @@
       id="components-layout-demo-side"
     >
       <template #trigger>
-        <MenuFoldOutlined />
+        <MenuFoldOutlined v-show="collapsed" />
+        <MenuUnfoldOutlined  v-show="!collapsed" />
       </template>
       <div class="logo">
         <img src="https://store.antdv.com/pro/preview/img/logo.59818776.png" />
@@ -29,7 +30,7 @@
           />
         </div>
       </a-layout-header>
-      <a-layout-content>
+      <a-layout-content :style="{backgroundColor:'#fff'}">
         <s-tab></s-tab>
         <div :style="{ background: '#fff', minHeight: '360px' }">
           <router-view></router-view>
@@ -75,6 +76,7 @@ export default defineComponent({
   }
 }
 .layout-header {
+      border-bottom: 1px solid #f0f0f0;
   .trigger {
     display: flex;
     align-items: center;

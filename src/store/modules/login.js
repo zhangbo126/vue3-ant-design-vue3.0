@@ -1,7 +1,7 @@
 
 import VueCookies from 'vue-cookies'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { getUserInfo ,logins} from '@/api/login'
+import { getUserInfo, logins } from '@/api/login'
 const login = {
     state: {
         token: '',
@@ -19,34 +19,32 @@ const login = {
     actions: {
         Login({ commit }, userInfo) {
             return new Promise((reslove, reject) => {
-                // VueCookies.set(ACCESS_TOKEN, Math.floor(Math.random() * 199999))
-                // reslove()
-               
-                // commit('SET_ACCESS_TOKEN', Math.floor(Math.random() * 199999))
-                logins(userInfo).then(res=>{
-                     
-                    const result = res
-                    VueCookies.set(ACCESS_TOKEN, result.token, 10 * 24 * 60 * 60 * 1000)                   
-                    reslove(res)
+                logins(userInfo).then(res => {
+                    const result = res.result
+                    if (result.code == 0) {
+                        VueCookies.set(ACCESS_TOKEN, result.token, 10 * 24 * 60 * 60 * 1000)
+                        reslove(res)
+                        return
+                    }
+
+                    reject(result)
                 })
             })
         },
         GetUserInfo({ commit }) {
-
             return new Promise((reslove, reject) => {
                 getUserInfo().then(res => {
                     commit('SET_ROLES', res.result)
                     reslove(res)
                 })
-                
             })
         },
         Logout() {
             return new Promise((reslove, reject) => {
-                // VueCookies.remove(ACCESS_TOKEN)       
-                // sessionStorage.clear()
-                // localStorage.clear()
-                // location.reload()
+                VueCookies.remove(ACCESS_TOKEN)
+                sessionStorage.clear()
+                localStorage.clear()
+                location.reload()
             })
         }
     }

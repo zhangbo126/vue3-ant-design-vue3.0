@@ -1,4 +1,4 @@
-# antd-demo
+# vue3 + ant-design-vue2.0
 
 ## Project setup
 ```

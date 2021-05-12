@@ -1,26 +1,23 @@
 import Mock from 'mockjs2'
-import { builder } from '../util'
+import { builder, getBody } from '../util'
 
 
 // 强硬要求 ant.design 相同密码
 // '21232f297a57a5a743894a0e4a801fc3',
 const password = ['zhang666', '123'] // admin, ant.design
 const username = ['admin', 'super']
-const login = (options) => {
-
+const login = (option) => {
+    const options = getBody(option)
     if (!username.includes(options.username) || !password.includes(options.password)) {
         return builder({
             'msg': '账号或密码错误',
-
+            'code': 1
         })
     }
     return builder({
-        'token': '4291d7da9005377ec9aec4a71ea837f'
-
+        'token': '4291d7da9005377ec9aec4a71ea837f',
+        'code': 0
     })
-
-
-
 }
 
 const userInfo = () => {

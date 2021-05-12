@@ -26,6 +26,7 @@
           size="large"
           type="primary"
           html-type="submit"
+          :loading="loading"
           @click="onSubmit"
           >登录</a-button
         >
@@ -39,11 +40,10 @@ import { mapActions } from "vuex";
 export default defineComponent({
   setup() {
     const form = reactive({
-      useraccount: undefined,
-      password: undefined,
-
+      username: "admin",
+      password: "zhang666",
     });
-    let useraccountRule = async (rule, value) => {
+    let usernameRule = async (rule, value) => {
       if (!value) {
         return Promise.reject("请输入");
       }
@@ -57,9 +57,9 @@ export default defineComponent({
     };
 
     const rules = {
-      useraccount: [
+      username: [
         {
-          validator: useraccountRule,
+          validator: usernameRule,
           trigger: ["change", "blur"],
         },
       ],
@@ -85,17 +85,28 @@ export default defineComponent({
       layout,
     };
   },
-  created() {},
+  data() {
+    return {
+      loading: false,
+    };
+  },
   methods: {
     ...mapActions(["Login"]),
     onSubmit() {
       this.$refs.formRef
         .validate()
         .then((res) => {
-          this.Login(this.form).then((res) => {
-            this.$router.push("/form/formlist");
-            this.$message.success("登录成功");
-          });
+          this.loading = true;
+          this.Login(this.form)
+            .then((res) => {
+              this.loading = false;
+              this.$router.push("/");
+              this.$message.success("登录成功");
+            })
+            .catch((res) => {
+              this.loading = false;
+              this.$message.warning(res.msg);
+            });
         })
         .catch(() => {});
     },

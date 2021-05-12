@@ -1,6 +1,5 @@
 <template>
   <div>
-    <a-button type="primary" @click="go()">跳转</a-button>
     <ul class="head-hander">
       <li>
         <a-input v-model:value="pageInfo.pageInfo.searchProperty[0].searchValue" />
@@ -31,52 +30,19 @@
       </li>
       <li>
         <a-button type="primary" @click="searchGoods">搜索</a-button>
+      </li>
+      <li>
         <a-button @click="searchReset">重置</a-button>
       </li>
     </ul>
-    <a-table
-      :dataSource="dataSource"
-      :columns="columns"
-      :pagination="false"
-      :scroll="{ x: 2000 }"
-      bordered
-    >
-      <template #action="{ record }">
-        <a @click="edit(record)">编辑</a>
-      </template>
+    <a-table :dataSource="dataSource" :columns="columns" :scroll="{ x: 2000 }" bordered>
     </a-table>
-    <a-pagination
-      v-model:current="pageInfo.pageInfo.pageNumber"
-      @change="onChange"
-      @showSizeChange="showSizeChange"
-      size="small"
-      :total="total"
-      show-size-changer
-      show-quick-jumper
-    />
   </div>
 </template>
 
 <script>
-import {
-  h,
-  defineComponent,
-  toRefs,
-  reactive,
-  ref,
-  toRaw,
-  watch,
-  computed,
-  provide,
-  watchEffect,
-  onMounted,
-} from "vue";
-import { useStore } from "vuex";
+import { defineComponent, toRefs, reactive, ref, toRaw, onMounted } from "vue";
 
-import BasicForm from "./BasicForm";
-import { requestDemo } from "@/api/login";
-import { useRouter } from "vue-router";
-import moment from "moment";
 const columns = [
   {
     dataIndex: "serNo",
@@ -166,17 +132,8 @@ const columns = [
 export default defineComponent({
   setup(props, context) {
     const formRef = ref();
-   const dataSource = ref();
-    const formState = reactive({
-      name: "",
-      region: undefined,
-      date1: undefined,
-      delivery: false,
-      type: [],
-      resource: "",
-      desc: "",
-      total: 0,
-    });
+    const dataSource = ref([1]);
+
     const pageInfo = reactive({
       pageInfo: {
         orderProperty: [],
@@ -294,28 +251,9 @@ export default defineComponent({
         },
       ],
     };
-    const onSubmit = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          console.log("values", formState, toRaw(formState));
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
-    };
-    const getList = () => {
-      requestDemo(pageInfo).then((res) => {
-     
-        // dataSource.value =res.data
-     
-        // formState.total = res.count;
-      });
-    };
-    const edit = (obj) => {
-      // console.log(obj);
-      
-    };
+
+    const getList = () => {};
+
     const searchGoods = () => {
       pageInfo.pageInfo.pageNumber = 1;
       getList();
@@ -352,13 +290,9 @@ export default defineComponent({
       wrapperCol: {
         span: 14,
       },
-      other: "",
-      ...toRefs(formState),
       rules,
-      onSubmit,
       resetForm,
       columns,
-      edit,
       searchGoods,
       searchReset,
       pageInfo,
@@ -367,20 +301,6 @@ export default defineComponent({
       dataSource,
     };
   },
-  components: {
-    BasicForm,
-  },
-  data() {
-    const steName = () => {
-      this.defineName = "哈哈哈哈哈哈哈哈";
-    };
-    return {};
-  },
-  methods: {
-    go(){
-        this.$router.push('/result/ResultFail')
-    }
-  },
 });
 </script>
 
@@ -388,6 +308,7 @@ export default defineComponent({
 .head-hander {
   display: flex;
   list-style: none;
+  margin-top: 20px;
   li {
     margin-right: 8px;
   }

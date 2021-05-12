@@ -3,8 +3,6 @@
 import { BasicLayouts, RouteView } from '@/layouts'
 import { getUserInfo } from '@/api/login'
 
-
-
 // 前端路由表
 const constantRouterComponents = {
     // 基础页面 layout 必须引入
@@ -45,9 +43,7 @@ export const renderAsyncRouter = () => {
 
 
 const treeMap = (menuTree) => {
-
     return menuTree.map(v => {
-
         const meta = v.meta || { title: v.name, hide: v.hide || false }
         const currentRouter = {
             path: v.path,
@@ -60,7 +56,6 @@ const treeMap = (menuTree) => {
         // 重定向
         v.redirect && (currentRouter.redirect = v.redirect)
         if (v.children && v.children.length > 0) {
-
             currentRouter.children = treeMap(v.children)
         }
         return currentRouter
