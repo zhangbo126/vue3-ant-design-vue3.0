@@ -40,12 +40,13 @@ import {
 } from 'ant-design-vue'
 
 import * as antIcons from '@ant-design/icons-vue'
- 
+
 const ant = {
     install(Vue) {
         Vue.component(Button.name, Button)
         Vue.component(Input.name, Input)
         Vue.component(Input.Password.name, Input.Password)
+        Vue.component(Input.TextArea.name, Input.TextArea)
         Vue.component(Steps.name, Steps)
         Vue.component(Form.name, Form)
         Vue.component(Select.name, Select)
@@ -95,6 +96,7 @@ const ant = {
         Vue.config.globalProperties.$confirm = Modal.confirm
         Vue.config.globalProperties.$antIcons = antIcons
         Vue.config.productionTip = false
+        
     }
 }
 

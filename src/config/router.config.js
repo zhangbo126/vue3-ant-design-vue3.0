@@ -1,4 +1,4 @@
-import { BasicLayouts, LoginView, RouteView } from '@/layouts'
+import { BasicLayouts, LoginView, RouteView, BlankLayout } from '@/layouts'
 
 
 
@@ -21,37 +21,29 @@ export const routerMap = [
             },
         ]
     },
-    // {
-    //     name: '404',
-    //     path: '/:pathMatch(.*)*',
-    //     component: () => import('@/views/Exception/404')
-    // },
+    {
+        path: '/not',
+        component: BlankLayout,
+        redirect: '/not/notrole',
+        children: [
+            {
+                path: '/not/notrole',
+                component: () => import('@/views/Exception/NoRole'),
+                name: 'NoRole',
+            }
 
-    // {
-    //     path: '*',
-    //     redirect: '/404'
-    // }
+        ]
+    }
+
 ]
 
 
-// //需要登录访问的页面
-// export const LoginRouterMap = [
-//     {
-//         path: '/',
-//         component: BasicLayouts,
-//         name: 'index',
-//         redirect: '/form/formlist',
-//         children: [
-//             {
-//                 path: '/form/formlist',
-//                 name: 'FormList',
-//                 component: () => import('@/views/FormList/FormList'),
-//                 meta: { title: 'form' }
-//             },
-            
-//         ]
-//     }
-// ]
+//需要登录访问的页面
+export const LoginRouterMap = [
+
+]
+
+
 
 
 export const asyncRouter = [
@@ -77,9 +69,14 @@ export const asyncRouter = [
                 path: '/account/basesettings'
             },
             {
-                name: 'SecuritySettings',
-                component: () => import('@/views/Account/SecuritySettings'),
-                path: '/account/securitysettings'
+                name: 'UserRole',
+                component: () => import('@/views/userCenter/userRole'),
+                path: '/usercenter/userrole'
+            },
+            {
+                name: 'menuList',
+                component: () => import('@/views/userCenter/menuList'),
+                path: '/usercenter/menulist'
             },
         ]
     }

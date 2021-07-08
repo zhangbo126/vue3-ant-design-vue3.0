@@ -5,21 +5,12 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations, mapActions, useStore } from "vuex";
-import {
-  onMounted,
-  reactive,
-  computed,
-  toRefs,
-  isReactive,
-  readonly,
-  shallowReactive,
-  toRaw,
-} from "vue";
+import { useStore } from "vuex";
+import { reactive, computed, toRefs } from "vue";
+import publicInfo from '@/config/publicConfig'
 export default {
   setup() {
     const store = useStore();
-
     const state = reactive({
       name: computed(() => {
         return store.state.name;
@@ -48,18 +39,11 @@ export default {
   data() {
     return {};
   },
-  computed: {},
-  created() {
-    //  console.log(store)
+  provide: {
+    publicInfo,
+  
   },
-  methods: {},
 };
 </script>
 
-<style lang="less" scoped>
-// .b{
-//   .c{
-//     color: red;
-//   }
-// }
-</style>
+<style lang="less" scoped></style>

@@ -1,12 +1,12 @@
 
 import VueCookies from 'vue-cookies'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { getUserInfo, logins } from '@/api/login'
-const login = {
+import { getUserInfo, login } from '@/api/login'
+
+const logins = {
     state: {
         token: '',
         roles: [],
-
     },
     mutations: {
         SET_ACCESS_TOKEN: (state, token) => {
@@ -19,9 +19,9 @@ const login = {
     actions: {
         Login({ commit }, userInfo) {
             return new Promise((reslove, reject) => {
-                logins(userInfo).then(res => {
-                    const result = res.result
-                    if (result.code == 0) {
+                login(userInfo).then(res => {
+                    const result = res.data
+                    if (res.code == 1) {
                         VueCookies.set(ACCESS_TOKEN, result.token, 10 * 24 * 60 * 60 * 1000)
                         reslove(res)
                         return
@@ -34,8 +34,13 @@ const login = {
         GetUserInfo({ commit }) {
             return new Promise((reslove, reject) => {
                 getUserInfo().then(res => {
-                    commit('SET_ROLES', res.result)
-                    reslove(res)
+                    if (res.code == 1) {
+                        commit('SET_ROLES', res.result)
+                        reslove(res)
+                    }
+                    if (res.code == -1) {
+                        reject(-1)
+                    }
                 })
             })
         },
@@ -51,4 +56,4 @@ const login = {
 }
 
 
-export default login
+export default logins

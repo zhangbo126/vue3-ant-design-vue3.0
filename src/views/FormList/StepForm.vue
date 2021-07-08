@@ -3,9 +3,12 @@
 </template>
 
 <script>
+import {getCurrentInstance } from 'vue'
 export default {
-    data(){
-      return{}
+    setup(){
+      const  inter = getCurrentInstance()
+      console.log(inter)
+        
     }
 }
 </script>

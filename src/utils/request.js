@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-
 import { message } from 'ant-design-vue'
 import VueCookies from 'vue-cookies'
 
@@ -11,6 +10,9 @@ const request = axios.create({
 
 request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
 request.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
+request.defaults.headers['Access-Control-Allow-Origin'] = '*'
+
+
 //请求错误处理
 const errorHandler = (error) => {
     // store.dispatch('Logout').then(() => {
@@ -25,12 +27,15 @@ const errorHandler = (error) => {
 request.interceptors.request.use(config => {
     const token = VueCookies.get(ACCESS_TOKEN)
     if (token) {
-        config.headers['Authorization'] = 'Bearer ' + token
+        config.headers['authorization'] = token
     }
     return config
 }, errorHandler)
 //请求返回数据格式同意处理
 request.interceptors.response.use((response) => {
+    if (response.data.code == 0) {
+        return message.warning(response.data.message)
+    }
     return response.data
 }, errorHandler)
 

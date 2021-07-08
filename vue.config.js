@@ -50,16 +50,16 @@ const vueConfig = {
         open: true,
         port: 9999,
         // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
-        // proxy: {
-        //     '/api': {
-        //         target: 'https://www.meijiavip.com',
-        //         // ws: false,
-        //         changeOrigin: true,
-        //         pathRewrite: {
-        //             '^/api': 'http://192.168.101.112:9999/'
-        //         }
-        //     }
-        // }
+        proxy: {
+            '/api': {
+                target: 'http://192.168.101.112:99/',
+                // ws: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': 'http://192.168.101.112:9999/'
+                }
+            }
+        }
     },
     productionSourceMap: false,
     lintOnSave: false,

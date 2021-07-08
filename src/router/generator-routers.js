@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 
 import { BasicLayouts, RouteView } from '@/layouts'
-import { getUserInfo } from '@/api/login'
+import {LoginRouterMap} from '@/config/router.config.js'
 
 // 前端路由表
 const constantRouterComponents = {
@@ -22,21 +22,39 @@ const constantRouterComponents = {
     'SecuritySettings': () => import('@/views/Account/SecuritySettings'),
 }
 
-export const renderAsyncRouter = () => {
+
+// 根级菜单
+const rootRouter = {
+    key: '',
+    name: 'index',
+    path: '/',
+    component: 'BasicLayout',
+    meta: {
+        title: '首页'
+    },
+    children: []
+}
+
+
+export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
-        getUserInfo().then(res => {
-            const treeList = res.result
-            const renderRouter = treeMap(treeList)
-            renderRouter.push(
-                {
-                    hide: true,
-                    name: '404',
-                    path: '/:pathMatch(.*)*',
-                    component: () => import('@/views/Exception/404')
-                },
-            )
-            reslove(renderRouter)
-        })
+        const treeList = menuList
+        const renderRouter = []
+        // rootRouter.children =treeMap(treeList)
+        rootRouter.children.push(...LoginRouterMap)
+
+        renderRouter.push(
+            {
+                hide: true,
+                name: '404',
+                path: '/:pathMatch(.*)*',
+                component: () => import('@/views/Exception/404')
+            },
+            rootRouter,
+        )
+
+     
+        reslove(renderRouter)
     })
 
 }

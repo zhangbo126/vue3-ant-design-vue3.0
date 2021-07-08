@@ -7,12 +7,12 @@
       :rules="rules"
       v-bind="layout"
     >
-      <a-form-item required name="username">
-        <a-input v-model:value="form.username" size="large" placeholder="账号" />
+      <a-form-item required name="userAccount">
+        <a-input v-model:value="form.userAccount" size="large" placeholder="账号" />
       </a-form-item>
-      <a-form-item required name="password">
+      <a-form-item required name="passWord">
         <a-input-password
-          v-model:value="form.password"
+          v-model:value="form.passWord"
           size="large"
           type="password"
           placeholder="密码"
@@ -40,8 +40,8 @@ import { mapActions } from "vuex";
 export default defineComponent({
   setup() {
     const form = reactive({
-      username: "admin",
-      password: "zhang666",
+      userAccount: "ZHANG_666",
+      passWord: "123456",
     });
     let usernameRule = async (rule, value) => {
       if (!value) {
@@ -57,13 +57,13 @@ export default defineComponent({
     };
 
     const rules = {
-      username: [
+      userAccount: [
         {
           validator: usernameRule,
           trigger: ["change", "blur"],
         },
       ],
-      password: [
+      passWord: [
         {
           validator: passwordRule,
           trigger: ["change", "blur"],
@@ -105,7 +105,7 @@ export default defineComponent({
             })
             .catch((res) => {
               this.loading = false;
-              this.$message.warning(res.msg);
+              this.$message.warning(res.message);
             });
         })
         .catch(() => {});

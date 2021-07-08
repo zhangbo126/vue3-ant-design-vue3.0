@@ -17,15 +17,12 @@ const permission = {
         }
     },
     actions: {
-        GenerateRoutes({ commit }, data) {
-            return new Promise(reslove => {
-
-                renderAsyncRouter().then(res => {
-              
+        GenerateRoutes({ commit }, menuList) {
+            return new Promise((reslove, reject) => {
+                renderAsyncRouter(menuList).then(res => {
                     commit('SET_ROUTERS', res)
                     reslove(res)
                 })
-
             })
         }
     }
