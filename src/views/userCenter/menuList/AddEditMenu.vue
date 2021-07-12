@@ -24,6 +24,7 @@
           v-model:value="form.parentId"
           placeholder="父级菜单"
           show-search
+          :allowClear="true"
           :filter-option="filterOptionPartent"
         >
           <a-select-option v-for="menu in menuList" :value="menu._id" :key="menu._id">{{
@@ -91,8 +92,8 @@ const rules = {
     { required: true, message: "请选择", trigger: ["change", "blur"], type: "string" },
   ],
 };
-import { reactive, ref, toRefs, nextTick } from "vue";
-import { addMenuTree, getMenuList } from "@/api/UserCenter";
+import { reactive, ref, toRefs } from "vue";
+import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenter";
 import { message } from "ant-design-vue";
 export default {
   setup(props, context) {
@@ -104,6 +105,7 @@ export default {
       component: null,
       sort: null,
       parentId: null,
+      id: null,
     });
     const formRef = ref();
     const parametr = reactive({
@@ -114,13 +116,14 @@ export default {
 
     const submitHandle = () => {
       formRef.value.validate().then(() => {
-        addMenuTree(form).then((res) => {
-          if (res.code == 1) {
-            message.success("操作成功");
-            context.emit("refresh");
-
-            parametr.visible = false;
-          }
+        if (parametr.type == 1) {
+          addMenuTree(form).then((res) => {
+            handleSuccessTip(res);
+          });
+          return;
+        }
+        editMenuTree(form).then((res) => {
+          handleSuccessTip(res);
         });
       });
     };
@@ -128,18 +131,47 @@ export default {
     const showAddModal = async () => {
       parametr.visible = true;
       parametr.type = 1;
-      nextTick(() => {
-        formRef.resetFields();
-        getMenu();
-      });
+      getMenu();
     };
+
+    const showEditModal = (obj) => {
+      const { name, url, _id, component, sort, parentId, key, redirectUrl } = obj;
+      Object.assign(form, {
+        name,
+        url,
+        id:_id,
+        component,
+        sort,
+        parentId,
+        key,
+        redirectUrl,
+      });
+      parametr.visible = true;
+      parametr.type = 2;
+       getMenu();
+    };
+
     const getMenu = () => {
       getMenuList().then((res) => {
         if (res.code == 1) {
           parametr.menuList = res.data;
+          //如果是编辑 则过滤 当前菜单
+          parametr.menuList = parametr.menuList.filter(v=>v.id!=form.id)
+           
         }
       });
     };
+
+    const handleSuccessTip = (res) => {
+      if (res.code == 1) {
+     
+        formRef.value.resetFields();
+        message.success("操作成功");
+        context.emit("refresh");
+        parametr.visible = false;
+      }
+    };
+
     const filterOption = (input, option) => {
       return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
@@ -153,6 +185,7 @@ export default {
       formRef,
       submitHandle,
       showAddModal,
+      showEditModal,
       filterOption,
       filterOptionPartent,
     };

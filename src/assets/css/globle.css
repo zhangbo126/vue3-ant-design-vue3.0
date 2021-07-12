@@ -1,0 +1,9 @@
+.table-action {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.table-action li {
+    margin: 2px 6px;
+}

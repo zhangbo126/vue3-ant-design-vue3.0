@@ -5,7 +5,8 @@ const api = {
     getAddMenuList: '/role/addGetMenuTree',
     getMenuTree: '/menu/getMenuTree',
     addMenuTree: '/menu/addMenu',
-    getMenuList: '/menu/getMenuList'
+    getMenuList: '/menu/getMenuList',
+    editMenuTree: '/menu/editMenu',
 }
 
 
@@ -53,7 +54,14 @@ export function addMenuTree(data) {
 }
 
 
-
+//编辑菜单
+export function editMenuTree(data) {
+    return request({
+        url: api.editMenuTree,
+        method: 'post',
+        data
+    })
+}
 
 
 

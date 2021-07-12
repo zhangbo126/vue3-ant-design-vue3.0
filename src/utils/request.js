@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { message } from 'ant-design-vue'
 import VueCookies from 'vue-cookies'
-
+import store from '@/store/'
 const request = axios.create({
     baseURL: process.env.VUE_APP_API_BASE_URL,
     timeout: 6000,
@@ -15,11 +15,16 @@ request.defaults.headers['Access-Control-Allow-Origin'] = '*'
 
 //请求错误处理
 const errorHandler = (error) => {
-    // store.dispatch('Logout').then(() => {
-    //     setTimeout(() => {
-    //         message.warning('异常退出')
-    //     }, 1000)
-    // })
+    console.log(error.response)
+    const status = error.response.status
+    if (status == 401) {
+        store.dispatch('Logout').then(() => {
+            setTimeout(() => {
+                message.warning('授权登录过期')
+            }, 1000)
+        })
+    }
+
 
 }
 

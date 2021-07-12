@@ -12,7 +12,10 @@
             </div>
           </template>
           <template #action="{ text, record }">
-            <a> 编辑 </a>
+             <ul>
+                <li><a @click="editMenu(record)"> 编辑 </a></li>
+                <li><a @click="editMenu(record)"> 删除 </a></li>
+             </ul>
           </template>
         </a-table>
       </a-card>
@@ -98,9 +101,14 @@ export default {
     addMenu() {
       this.$refs.menu.showAddModal();
     },
+    //编辑
+    editMenu(obj){
+     this.$refs.menu.showEditModal(obj); 
+    },
     getList() {
       getMenuTree(this.queryInfo).then((res) => {
         this.data = res.data;
+
       });
     },
     statusMapFilter(type) {
