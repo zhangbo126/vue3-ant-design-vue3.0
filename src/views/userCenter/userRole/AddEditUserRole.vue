@@ -18,16 +18,31 @@
         <a-input v-model:value="form.name" />
       </a-form-item>
 
-      <a-form-item label="角色描述" name="desc">
-        <a-textarea v-model:value="form.desc" />
+      <a-form-item label="角色描述" name="describe">
+        <a-textarea v-model:value="form.describe" />
       </a-form-item>
 
-      <a-form-item label="角色权限">
+      <a-form-item label="角色权限" name="menuList">
         <ul class="role-menu">
-          <li v-for="menu in menuList" :key="menu._id">
-            <a-checkbox v-model:checked="menu.isChecked">{{ menu.name }}</a-checkbox>
-            <div class="menu-t2" v-for="m in menu.children" :key="m._id">
-              <a-checkbox v-model:checked="m.isChecked">{{ m.name }}</a-checkbox>
+          <li v-for="t1Menu in menuList" :key="t1Menu._id">
+            <a-checkbox
+              v-model:checked="t1Menu.isChecked"
+              @change="(e) => onChangeT1(e, t1Menu)"
+              >{{ t1Menu.name }}</a-checkbox
+            >
+            <div class="menu-t2" v-for="t2Menu in t1Menu.children" :key="t2Menu._id">
+              <a-checkbox
+                v-model:checked="t2Menu.isChecked"
+                @change="(e) => onChangeT2(e, t2Menu, t1Menu)"
+                >{{ t2Menu.name }}</a-checkbox
+              >
+              <div class="menu-t3" v-for="t3Menu in t2Menu.children" :key="t3Menu._id">
+                <a-checkbox
+                  v-model:checked="t3Menu.isChecked"
+                  @change="() => onChangeT3(t1Menu, t2Menu)"
+                  >{{ t3Menu.name }}</a-checkbox
+                >
+              </div>
             </div>
           </li>
         </ul>
@@ -46,7 +61,7 @@ const rules = {
       type: "string",
     },
   ],
-  desc: [
+  describe: [
     {
       required: true,
       message: "请输入",
@@ -55,14 +70,15 @@ const rules = {
     },
   ],
 };
-import { reactive, ref, toRefs, watch, computed } from "vue";
-import { getAddMenuList } from "@/api/UserCenter";
-
+import { reactive, ref, toRefs } from "vue";
+import { getAddMenuList, addRole, getEditMenuList, eidtRole } from "@/api/UserCenter";
+import { message } from "ant-design-vue";
 export default {
   setup(props, context) {
     const form = reactive({
       name: null,
-      desc: null,
+      describe: null,
+      id: null,
       roleMenuList: [],
     });
     const parametr = reactive({
@@ -74,15 +90,46 @@ export default {
 
     const submitHandle = () => {
       parametr.formRef.validate().then(() => {
-        console.log(form.menuList);
+        setCheckId(parametr.menuList, form.roleMenuList);
+        //新增提交
+        if (parametr.type == 1) {
+          addRole(form).then((res) => {
+            handleSuccessTip(res);
+          });
+          return;
+        }
+        //编辑提交
+        eidtRole(form).then((res) => {
+          handleSuccessTip(res);
+        });
       });
     };
-    const showAddModal = (e) => {
-      parametr.visible = true;
+    const showAddModal = async (e) => {
+      parametr.type = 1;
+      resultForm();
       getMenuList();
     };
+    const showEditModal = (obj) => {
+      parametr.type = 2;
+      resultForm();
+      const { name, describe, _id } = obj;
+      Object.assign(form, {
+        name,
+        describe,
+        id: _id,
+      });
+      getMenuListEdit();
+    };
+    //新增获取菜单
     const getMenuList = () => {
       getAddMenuList().then((res) => {
+        parametr.menuList = res.data;
+        setMenuChange(parametr.menuList);
+      });
+    };
+    //编辑获取菜单
+    const getMenuListEdit = () => {
+      getEditMenuList(form.id).then((res) => {
         parametr.menuList = res.data;
         setMenuChange(parametr.menuList);
       });
@@ -90,9 +137,71 @@ export default {
     const setMenuChange = (menuList) => {
       menuList.forEach((v) => {
         v.isChecked = false;
-        if (v.children.length > 0) {
-          setMenuChange(v.children);
+        if (v.isChange == 1) {
+          v.isChecked = true;
         }
+        if (v.children.length > 0) {
+          setMenuChange(v.children, v.isChecked);
+        }
+      });
+    };
+
+    const handleSuccessTip = (res) => {
+      if (res.code == 1) {
+        parametr.formRef.resetFields();
+        message.success("操作成功");
+        context.emit("refresh");
+        parametr.visible = false;
+      }
+    };
+
+    //递归处理已勾选的菜单ID
+    const setCheckId = (roleMenuList, menuIdList) => {
+      roleMenuList.forEach((v) => {
+        if (v.isChecked) {
+          menuIdList.push(v._id);
+        }
+        if (v.children.length > 0) {
+          setCheckId(v.children, menuIdList);
+        }
+      });
+    };
+
+    //递归调用选中
+    const checkHandle = (list, checked) => {
+      list.forEach((v) => {
+        v.isChecked = checked;
+        if (v.children.length > 0) {
+          checkHandle(v.children, checked);
+        }
+      });
+
+      // console.log(parametr.formRef)
+    };
+    //一级菜单选择
+    const onChangeT1 = (e, t1Menu) => {
+      checkHandle(t1Menu.children, e.target.checked);
+    };
+    //二级菜单选择
+    const onChangeT2 = (e, t2Menu, t1Menu) => {
+      checkHandle(t2Menu.children, e.target.checked);
+      t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
+    };
+    //三级菜单选择
+    const onChangeT3 = (t1Menu, t2Menu) => {
+      t2Menu.isChecked = t2Menu.children.every((v) => v.isChecked);
+      t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
+    };
+
+    //重置表单
+    const resultForm = () => {
+      parametr.visible = true;
+      parametr.menuList = [];
+      Object.assign(form, {
+        name: null,
+        describe: null,
+        id: null,
+        roleMenuList: [],
       });
     };
 
@@ -103,7 +212,11 @@ export default {
       ...toRefs(parametr),
       submitHandle,
       showAddModal,
+      showEditModal,
       getMenuList,
+      onChangeT1,
+      onChangeT2,
+      onChangeT3,
     };
   },
 };
@@ -113,6 +226,9 @@ export default {
 .role-menu {
   .menu-t2 {
     margin-left: 30px;
+    .menu-t3 {
+      margin-left: 30px;
+    }
   }
 }
 </style>

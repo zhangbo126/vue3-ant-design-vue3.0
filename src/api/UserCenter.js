@@ -3,10 +3,15 @@ import request from '@/utils/request'
 const api = {
     getRoleList: '/role/getRoleList',
     getAddMenuList: '/role/addGetMenuTree',
+    getEditMenuList: '/role/editGetMenuTree',
+    addRole: '/role/addRole',
+    eidtRole: '/role/editRole',
+    removeRole: '/role/removeRole',
     getMenuTree: '/menu/getMenuTree',
     addMenuTree: '/menu/addMenu',
     getMenuList: '/menu/getMenuList',
     editMenuTree: '/menu/editMenu',
+    removeMenuTree: '/menu/removeMenu',
 }
 
 
@@ -18,11 +23,51 @@ export function getRoleList(data) {
         data
     })
 }
+
+//新增角色
+export function addRole(data) {
+    return request({
+        url: api.addRole,
+        method: 'post',
+        data
+    })
+}
+//编辑角色
+export function eidtRole(data) {
+    return request({
+        url: api.eidtRole,
+        method: 'post',
+        data
+    })
+}
+
+//删除角色
+export function removeRole(id) {
+    return request({
+        url: api.removeRole,
+        method: 'post',
+        data: {
+            id
+        }
+    })
+}
+
 //新增时获取菜单
 export function getAddMenuList() {
     return request({
         url: api.getAddMenuList,
         method: 'post',
+    })
+}
+
+//编辑时获取菜单
+export function getEditMenuList(id) {
+    return request({
+        url: api.getEditMenuList,
+        method: 'post',
+        data: {
+            id
+        }
     })
 }
 
@@ -44,6 +89,7 @@ export function getMenuList() {
     })
 }
 
+
 //新增菜单
 export function addMenuTree(data) {
     return request({
@@ -60,6 +106,16 @@ export function editMenuTree(data) {
         url: api.editMenuTree,
         method: 'post',
         data
+    })
+}
+//删除菜单
+export function removeMenuTree(id) {
+    return request({
+        url: api.removeMenuTree,
+        method: 'post',
+        data:{
+            id
+        }
     })
 }
 

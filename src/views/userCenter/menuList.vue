@@ -12,10 +12,10 @@
             </div>
           </template>
           <template #action="{ text, record }">
-             <ul>
-                <li><a @click="editMenu(record)"> 编辑 </a></li>
-                <li><a @click="editMenu(record)"> 删除 </a></li>
-             </ul>
+            <ul>
+              <li><a @click="editMenu(record)"> 编辑 </a></li>
+              <li><a @click="removeMenu(record._id)"> 删除 </a></li>
+            </ul>
           </template>
         </a-table>
       </a-card>
@@ -25,9 +25,10 @@
 </template>
 
 <script>
-import { getMenuTree } from "@/api/UserCenter";
-import AddEditMenu from './menuList/AddEditMenu.vue';
-
+import { getMenuTree, removeMenuTree } from "@/api/UserCenter";
+import AddEditMenu from "./menuList/AddEditMenu.vue";
+import { reactive, ref, toRefs, onMounted } from "vue";
+import { Modal, message } from "ant-design-vue";
 const statusMap = {
   0: "已停用",
   1: "使用中",
@@ -36,12 +37,12 @@ const columns = [
   {
     title: "菜单名称",
     dataIndex: "name",
-    align:'center'
+    align: "center",
   },
   {
     title: "状态",
     dataIndex: "status",
-    align:'center',
+    align: "center",
     slots: {
       customRender: "status",
     },
@@ -49,32 +50,32 @@ const columns = [
   {
     title: "使用组件",
     dataIndex: "component",
-    align:'center',
+    align: "center",
   },
   {
     title: "路由地址",
     dataIndex: "url",
-    align:'center',
+    align: "center",
   },
   {
     title: "路由重定向地址",
     dataIndex: "redirectUrl",
-    align:'center',
+    align: "center",
   },
   {
     title: "唯一标识",
     dataIndex: "key",
-    align:'center',
+    align: "center",
   },
   {
     title: "排序",
     dataIndex: "sort",
-    align:'center',
+    align: "center",
   },
   {
     title: "操作",
     dataIndex: "action",
-    align:'center',
+    align: "center",
     slots: {
       customRender: "action",
     },
@@ -82,41 +83,65 @@ const columns = [
 ];
 export default {
   components: { AddEditMenu },
-  data() {
-    return {
-      data: [],
-      columns,
-      statusMap,
+  setup() {
+    const data = ref([]);
+    const menu = ref(null);
+    const pageData = reactive({
       queryInfo: {
         pageSize: 10,
         pageNumber: 1,
       },
-    };
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    //新增角色
-    addMenu() {
-      this.$refs.menu.showAddModal();
-    },
-    //编辑
-    editMenu(obj){
-     this.$refs.menu.showEditModal(obj); 
-    },
-    getList() {
-      getMenuTree(this.queryInfo).then((res) => {
-        this.data = res.data;
-
+    });
+    const getList = () => {
+      getMenuTree(pageData.queryInfo).then((res) => {
+        data.value = res.data;
       });
-    },
-    statusMapFilter(type) {
+    };
+    //新增角色
+    const addMenu = () => {
+      menu.value.showAddModal();
+    };
+    const editMenu = (obj) => {
+      menu.value.showEditModal(obj);
+    };
+    const removeMenu = (id) => {
+      Modal.confirm({
+        title: "确认要执行操作吗?",
+        okText: "确认",
+        cancelText: "取消",
+        onOk() {
+          removeMenuTree(id).then((res) => {
+            if (res.code == 1) {
+              message.success("操作成功");
+              getList();
+            }
+          });
+        },
+      });
+    };
+    const statusMapFilter = (type) => {
       return statusMap[type];
-    },
-    refresh(){
-        this.getList()
-    }
+    };
+    const refresh = () => {
+      getList();
+    };
+    onMounted(() => {
+      getList();
+    });
+
+    return {
+      data,
+      menu,
+      ...toRefs(pageData),
+      columns,
+      statusMap,
+      getList,
+      addMenu,
+      editMenu,
+      statusMapFilter,
+      refresh,
+      removeMenu,
+    };
   },
 };
 </script>
