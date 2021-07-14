@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
     to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${domTitle}-${to.meta.title}`))
     //判断是否登录
 
-    return next()
+// return next()
     if (VueCookies.get(ACCESS_TOKEN)) {
         if (to.path == '/loginview/login') {
             next({ path: '/form/formlist' })
@@ -29,7 +29,7 @@ router.beforeEach(async (to, from, next) => {
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
                         })
-                        console.log(router.getRoutes())
+                        console.log(router.getRoutes()) 
                         next({ ...to, replace: true })
                     })
                 }).catch(() => {

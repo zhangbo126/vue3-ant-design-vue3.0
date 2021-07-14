@@ -70,7 +70,13 @@
           show-search
           :filter-option="filterOption"
         >
-          <a-select-option key="1" value="userCenter">userCenter</a-select-option>
+          <a-select-option
+            v-for="com in componentList"
+            :value="com.component"
+            :key="com.component"
+          >
+            {{ com.name }}
+          </a-select-option>
         </a-select>
       </a-form-item>
     </a-form>
@@ -95,6 +101,7 @@ const rules = {
 import { reactive, ref, toRefs } from "vue";
 import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenter";
 import { message } from "ant-design-vue";
+import componentList from "@/config/componentName.js";
 export default {
   setup(props, context) {
     const form = reactive({
@@ -139,7 +146,7 @@ export default {
       Object.assign(form, {
         name,
         url,
-        id:_id,
+        id: _id,
         component,
         sort,
         parentId,
@@ -148,7 +155,7 @@ export default {
       });
       parametr.visible = true;
       parametr.type = 2;
-       getMenu();
+      getMenu();
     };
 
     const getMenu = () => {
@@ -156,15 +163,13 @@ export default {
         if (res.code == 1) {
           parametr.menuList = res.data;
           //如果是编辑 则过滤 当前菜单
-          parametr.menuList = parametr.menuList.filter(v=>v.id!=form.id)
-           
+          parametr.menuList = parametr.menuList.filter((v) => v.id != form.id);
         }
       });
     };
 
     const handleSuccessTip = (res) => {
       if (res.code == 1) {
-     
         formRef.value.resetFields();
         message.success("操作成功");
         context.emit("refresh");
@@ -179,6 +184,7 @@ export default {
       return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
     return {
+      componentList,
       form,
       rules,
       ...toRefs(parametr),

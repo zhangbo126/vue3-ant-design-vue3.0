@@ -38,6 +38,7 @@ const columns = [
     title: "角色名称",
     dataIndex: "name",
     align: "center",
+   
   },
   {
     title: "状态",

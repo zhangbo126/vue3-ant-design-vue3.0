@@ -12,6 +12,12 @@ const api = {
     getMenuList: '/menu/getMenuList',
     editMenuTree: '/menu/editMenu',
     removeMenuTree: '/menu/removeMenu',
+    getAccountList: '/users/getAccountList',
+    addAccount: '/users/addAccount',
+    delAccount: '/users/delAccount',
+    accountStatusSet: '/users/accountStatusSet',
+    resultPassWord: '/users/resultPassWord',
+    roleAssignment: '/users/roleAssignment',
 }
 
 
@@ -113,9 +119,62 @@ export function removeMenuTree(id) {
     return request({
         url: api.removeMenuTree,
         method: 'post',
+        data: {
+            id
+        }
+    })
+}
+
+
+//获取账号列表
+export function getAccountList() {
+    return request({
+        url: api.getAccountList,
+        method: 'post',
+
+    })
+}
+
+// 新增账号
+export function addAccount(data) {
+    return request({
+        url: api.addAccount,
+        method: 'post',
+        data
+    })
+}
+// 删除账户
+export function delAccount(id) {
+    return request({
+        url: api.delAccount,
+        method: 'post',
         data:{
             id
         }
+    })
+}
+// 账号启用 / 禁用
+export function accountStatusSet(data) {
+    return request({
+        url: api.accountStatusSet,
+        method: 'post',
+        data
+    })
+}
+// 重置密码
+export function resultPassWord(data) {
+    return request({
+        url: api.resultPassWord,
+        method: 'post',
+        data
+    })
+}
+// 角色分配
+export function roleAssignment(data) {
+    return request({
+        url: api.roleAssignment,
+        method: 'post',
+        data
     })
 }
 

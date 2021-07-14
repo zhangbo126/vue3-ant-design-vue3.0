@@ -78,6 +78,11 @@ export const asyncRouter = [
                 component: () => import('@/views/userCenter/menuList'),
                 path: '/usercenter/menulist'
             },
+            {
+                name: 'userAccount',
+                component: () => import('@/views/userCenter/userAccount'),
+                path: '/usercenter/useraccount'
+            },
         ]
     }
 ]
