@@ -18,40 +18,37 @@ const constantRouterComponents = {
 
 // 根级菜单
 const rootRouter = {
-    name: 'index',
+    name: 'BasicLayouts',
     path: '/',
-    component: 'BasicLayouts',
+    component: BasicLayouts,
     meta: {
         title: '首页'
     },
-    children: []
+    redirect: '/usercenter',
+    
 }
 
 
 export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
         const treeList = menuList
-        const renderRouter = []
         const addRouter = []
         treeMap(treeList, addRouter, null)
-        // rootRouter.redirect = rootRouter.children[0].path
-
-        const asyncRouter = generator(addRouter)
-
-        renderRouter.push(
-            rootRouter,
+        const renderRouter = generator(addRouter)
+         const asyncRouter = []
+        rootRouter.children=renderRouter
+         
+        asyncRouter.push(
             {
                 hide: true,
                 name: '404',
                 path: '/:pathMatch(.*)*',
                 component: () => import('@/views/Exception/404')
             },
-
+            rootRouter
         )
-        renderRouter[0].children = asyncRouter
-        renderRouter[0].redirect = asyncRouter[0].path
-    
-        reslove(renderRouter)
+
+        reslove(asyncRouter)
     })
 
 }

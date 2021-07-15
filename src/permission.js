@@ -7,19 +7,18 @@ import NProgress from 'nprogress' // progress bar
 import '@/components/NProgress/nprogress.less' // progress bar custom style
 NProgress.configure({ showSpinner: false })
 const whiteList = ['login', 'NoRole'] //免登录白名单
-import {asyncRouter} from '@/config/router.config'
 
 router.beforeEach(async (to, from, next) => {
     NProgress.start()
     to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${domTitle}-${to.meta.title}`))
     //判断是否登录
-   
+  
     // return next()
     if (VueCookies.get(ACCESS_TOKEN)) {
         if (to.path == '/loginview/login') {
             next({ path: '/usercenter/menulist' })
         } else {
-          
+
             if (store.state.permission.addRouters.length == 0) {
 
                 store.dispatch('GetUserInfo').then(user => {
@@ -27,12 +26,17 @@ router.beforeEach(async (to, from, next) => {
                     //生成动态路由
                     store.dispatch('GenerateRoutes', menuList).then(async (res) => {
                         const asyncRouter = res
-                        // console.log(asyncRouter)
-                      
+                        asyncRouter.forEach(v => {
+                            router.addRoute(v)
 
-                        console.log(router.getRoutes())
+                        })
+
+                       
+                        next({ ...to, replace: true })
                         const redirect = decodeURIComponent(from.query.redirect || to.path)
-                        await next({ ...to, replace: true })
+
+
+
 
                     })
                 }).catch(() => {
