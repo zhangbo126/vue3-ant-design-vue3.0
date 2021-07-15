@@ -44,7 +44,7 @@ export const routerMap = [
 
 export const asyncRouter = [
     {
-        path: '/account',
+        path: '/',
         redirect: '/account/accountcenter',
         component: BasicLayouts,
         name: 'AccountManage',
