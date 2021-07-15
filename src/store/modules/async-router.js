@@ -8,11 +8,13 @@ import { renderAsyncRouter } from '@/router/generator-routers'
 const permission = {
     state: {
         routers: [],
-        addRouters: []
+        addRouters: [],
+   
     },
     mutations: {
         SET_ROUTERS: (state, routers) => {
-            state.addRouters = routers
+            state.addRouters = routers[1].children
+            
             state.routers = routerMap.concat(routers)
         }
     },

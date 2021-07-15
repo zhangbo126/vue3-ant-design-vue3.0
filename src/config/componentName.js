@@ -1,7 +1,7 @@
 
 const ComponetNames = [
     {
-        name: '用户中心',
+        name: '一级菜单',
         component: 'RouteView',
         describe:'一级菜单'
     },
@@ -13,6 +13,11 @@ const ComponetNames = [
     {
         name: '菜单管理',
         component: 'menuList',
+        describe:'二级菜单'
+    },
+    {
+        name: '账号管理',
+        component: 'userAccount',
         describe:'二级菜单'
     },
 ]

@@ -4,7 +4,7 @@ import { routerMap,asyncRouter } from '@/config/router.config'
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: routerMap.concat(asyncRouter)
+  routes: routerMap
 })
 
 

@@ -38,10 +38,6 @@ export const routerMap = [
 ]
 
 
-//需要登录访问的页面
-export const LoginRouterMap = [
-
-]
 
 
 

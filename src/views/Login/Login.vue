@@ -40,7 +40,7 @@ import { mapActions } from "vuex";
 export default defineComponent({
   setup() {
     const form = reactive({
-      userAccount: "ZHANG_666",
+      userAccount: "admin",
       passWord: "123456",
     });
     let usernameRule = async (rule, value) => {

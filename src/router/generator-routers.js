@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 
 import { BasicLayouts, RouteView } from '@/layouts'
-import {LoginRouterMap} from '@/config/router.config.js'
+
 
 // 前端路由表
 const constantRouterComponents = {
@@ -10,25 +10,17 @@ const constantRouterComponents = {
     RouteView: RouteView,
     '404': () => import(/* webpackChunkName: "error" */ '@/views/Exception/404'),
     // 你需要动态引入的页面组件
-    'Form': () => import('@/views/FormList/Form'),
-    'BasicForm': () => import('@/views/FormList/BasicForm'),
-    'StepForm': () => import('@/views/FormList/StepForm'),
-    'AdvanceForm': import('@/views/FormList/AdvanceForm'),
-    'ResultSuccess': () => import('@/views/Result/ResultSuccess'),
-    'ResultFail': () => import('@/views/Result/ResultFail'),
-    'AccountCenter': () => import('@/views/Account/AccountCenter'),
-    'AccountSettings': () => import('@/views/Account/AccountSettings'),
-    'BaseSettings': () => import('@/views/Account/BaseSettings'),
-    'SecuritySettings': () => import('@/views/Account/SecuritySettings'),
+    'userRole': () => import('@/views/userCenter/userRole'),
+    'userAccount': () => import('@/views/userCenter/userAccount'),
+    'menuList': () => import('@/views/userCenter/menuList'),
 }
 
 
 // 根级菜单
 const rootRouter = {
-    key: '',
     name: 'index',
     path: '/',
-    component: 'BasicLayout',
+    component: 'BasicLayouts',
     meta: {
         title: '首页'
     },
@@ -40,43 +32,86 @@ export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
         const treeList = menuList
         const renderRouter = []
-        // rootRouter.children =treeMap(treeList)
-        rootRouter.children.push(...LoginRouterMap)
+        const addRouter = []
+        treeMap(treeList, addRouter, null)
+        // rootRouter.redirect = rootRouter.children[0].path
+
+        const asyncRouter = generator(addRouter)
 
         renderRouter.push(
+            rootRouter,
             {
                 hide: true,
                 name: '404',
                 path: '/:pathMatch(.*)*',
                 component: () => import('@/views/Exception/404')
             },
-            rootRouter,
-        )
 
-     
+        )
+        renderRouter[0].children = asyncRouter
+        renderRouter[0].redirect = asyncRouter[0].path
+    
         reslove(renderRouter)
     })
 
 }
 
+export const generator = (routerMap, parent) => {
+    return routerMap.map(item => {
 
-const treeMap = (menuTree) => {
-    return menuTree.map(v => {
-        const meta = v.meta || { title: v.name, hide: v.hide || false }
         const currentRouter = {
-            path: v.path,
-            name: v.name,
-            component: (constantRouterComponents[v.component]),
-            icon: v.icon || null,
-            hide: v.hide || false,
-            meta
+            // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
+            path: item.url,
+            // 路由名称，建议唯一
+            name: item.name,
+            // 该路由对应页面的 组件 :方案1
+            component: constantRouterComponents[item.component],
+            // 该路由对应页面的 组件 :方案2 (动态加载)
+
+            // component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
+            // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
+            meta: {
+                title: item.title,
+                icon: item.icon || undefined,
+
+            }
         }
-        // 重定向
-        v.redirect && (currentRouter.redirect = v.redirect)
-        if (v.children && v.children.length > 0) {
-            currentRouter.children = treeMap(v.children)
+        item.redirect && (currentRouter.redirect = item.redirect)
+        // 是否有子菜单，并递归处理
+        if (item.children && item.children.length > 0) {
+            // Recursion
+            currentRouter.children = generator(item.children, currentRouter)
         }
         return currentRouter
+    })
+}
+
+/*
+
+list 结构转 树型
+
+*/
+
+const treeMap = (menuTree, tree, partentId) => {
+
+    menuTree.forEach(item => {
+        if (item.parentId == partentId) {
+            const child = {
+                name: item.key,
+                title: item.name,
+                children: [],
+                redirect: item.redirectUrl,
+                component: item.component,
+                url: item.url,
+            }
+
+            treeMap(menuTree, child.children, item._id)
+            if (child.children.length == 0) {
+                delete child.children
+            }
+
+            tree.push(child)
+        }
     })
 }
 

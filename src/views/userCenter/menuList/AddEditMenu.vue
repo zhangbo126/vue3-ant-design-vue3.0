@@ -136,12 +136,14 @@ export default {
     };
 
     const showAddModal = async () => {
-      parametr.visible = true;
+      resultForm();
       parametr.type = 1;
       getMenu();
     };
 
     const showEditModal = (obj) => {
+      parametr.visible = true;
+      parametr.type = 2;
       const { name, url, _id, component, sort, parentId, key, redirectUrl } = obj;
       Object.assign(form, {
         name,
@@ -153,8 +155,7 @@ export default {
         key,
         redirectUrl,
       });
-      parametr.visible = true;
-      parametr.type = 2;
+
       getMenu();
     };
 
@@ -182,6 +183,20 @@ export default {
     };
     const filterOptionPartent = (input, option) => {
       return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    };
+
+    const resultForm = () => {
+      parametr.visible = true;
+      Object.assign(form, {
+        name: null,
+        url: null,
+        redirectUrl: null,
+        key: null,
+        component: null,
+        sort: null,
+        parentId: null,
+        id: null,
+      });
     };
     return {
       componentList,

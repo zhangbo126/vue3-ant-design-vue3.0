@@ -47,7 +47,7 @@
 import { defineComponent, ref } from "vue";
 import SMenu from "@/components/Menu/Menu";
 import STab from "@/components/MultiTab/MultiTab";
-export default defineComponent({
+export default {
   components: {
     SMenu,
     STab,
@@ -57,7 +57,7 @@ export default defineComponent({
       collapsed: ref(false),
     };
   },
-});
+};
 </script>
 <style scoped lang="less">
 #components-layout-demo-side .logo {
