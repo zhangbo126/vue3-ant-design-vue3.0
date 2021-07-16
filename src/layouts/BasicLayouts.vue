@@ -44,7 +44,7 @@
 </template>
 <script>
 
-import { defineComponent, ref } from "vue";
+import {  ref } from "vue";
 import SMenu from "@/components/Menu/Menu";
 import STab from "@/components/MultiTab/MultiTab";
 export default {

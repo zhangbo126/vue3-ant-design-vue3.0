@@ -1,9 +1,9 @@
 
 
 
-const path = require('path')
 
 
+<<<<<<< HEAD
 const isProd = process.env.NODE_ENV === 'production'
 const assetsCDN = {
     // webpack build externals
@@ -22,10 +22,15 @@ const assetsCDN = {
         '//cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js'
     ]
 }
+=======
+
+
+
+>>>>>>> 200fc77b26a0739711afba309603cf8a7382f0e3
 
 const vueConfig = {
- 
-    runtimeCompiler: true,
+    publicPath: './',
+
     css: {
         //设置Ant-Desint 主题
         loaderOptions: {
@@ -41,15 +46,13 @@ const vueConfig = {
             }
         }
     },
-    configureWebpack: {
-        externals: isProd ? assetsCDN.externals : {}
-    },
+
     devServer: {
         // development server port 8000
         hot: true, //热加载
         open: true,
         port: 9999,
-        // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
+
         proxy: {
             '/api': {
                 target: 'http://192.168.101.112:99/',
@@ -61,8 +64,7 @@ const vueConfig = {
             }
         }
     },
-    productionSourceMap: false,
-    lintOnSave: false,
+
 
 }
 
