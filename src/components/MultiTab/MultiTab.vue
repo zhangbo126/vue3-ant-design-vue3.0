@@ -1,6 +1,6 @@
 <template>
   <a-tabs
-   v-if="multTab.length"
+    v-if="multTab.length"
     v-model:activeKey="activeKey"
     type="editable-card"
     hide-add
@@ -57,10 +57,10 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/.ant-tabs-bar {
+:deep(.ant-tabs-bar) {
   margin: 0;
 }
-/deep/.ant-tabs-card {
+:deep(.ant-tabs-card) {
   background-color: #fff;
 }
 </style>

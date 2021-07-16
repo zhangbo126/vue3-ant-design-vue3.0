@@ -11,6 +11,7 @@ import OverallMethod from "./core/overall";  //自定义封装全局方法
 // import './mock'
 import './permission'
 const app = createApp(App)
+ 
 
 
 app.use(Antd).use(Filters).use(OverallMethod).use(router).use(store).mount('#app')
