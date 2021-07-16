@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
     //判断是否登录
     if (VueCookies.get(ACCESS_TOKEN)) {
         if (to.path == '/loginview/login') {
-            next({ path: from.path })
+            next({ path: from.path || '/loginview/login' })
         } else {
             if (store.state.permission.addRouters.length == 0) {
                 store.dispatch('GetUserInfo').then(user => {

@@ -41,6 +41,8 @@ const logins = {
                     if (res.code == -1) {
                         reject(-1)
                     }
+                }).catch(()=>{
+                    reject()
                 })
             })
         },

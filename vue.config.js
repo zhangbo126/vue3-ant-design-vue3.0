@@ -3,7 +3,6 @@
 
 
 
-<<<<<<< HEAD
 const isProd = process.env.NODE_ENV === 'production'
 const assetsCDN = {
     // webpack build externals
@@ -22,11 +21,6 @@ const assetsCDN = {
         '//cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js'
     ]
 }
-=======
-
-
-
->>>>>>> 200fc77b26a0739711afba309603cf8a7382f0e3
 
 const vueConfig = {
     publicPath: './',
@@ -64,6 +58,8 @@ const vueConfig = {
             }
         }
     },
+    productionSourceMap: false,
+    lintOnSave: false,
 
 
 }
