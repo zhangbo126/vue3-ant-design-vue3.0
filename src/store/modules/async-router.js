@@ -3,6 +3,7 @@
  */
 import { routerMap } from '@/config/router.config'
 import { renderAsyncRouter } from '@/router/generator-routers'
+import router from '../../router'
 
 
 const permission = {
@@ -13,9 +14,8 @@ const permission = {
     },
     mutations: {
         SET_ROUTERS: (state, routers) => {
-            state.addRouters = routers
-            
-            state.routers = routerMap.concat(routers)
+            state.addRouters = routers.renderRouter
+            state.routers = routerMap.concat(routers.asyncRouter)
         }
     },
     actions: {

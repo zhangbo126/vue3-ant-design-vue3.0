@@ -24,7 +24,7 @@ const rootRouter = {
     meta: {
         title: '首页'
     },
-    redirect: '/usercenter',
+  
     
 }
 
@@ -37,7 +37,7 @@ export const renderAsyncRouter = (menuList) => {
         const renderRouter = generator(addRouter)
          const asyncRouter = []
         rootRouter.children=renderRouter
-         
+        rootRouter.redirect = renderRouter[0].url
         asyncRouter.push(
             {
                 hide: true,
@@ -48,7 +48,7 @@ export const renderAsyncRouter = (menuList) => {
             rootRouter
         )
 
-        reslove(asyncRouter)
+        reslove({asyncRouter,renderRouter})
     })
 
 }

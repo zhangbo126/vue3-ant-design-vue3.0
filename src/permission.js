@@ -12,35 +12,26 @@ router.beforeEach(async (to, from, next) => {
     NProgress.start()
     to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${domTitle}-${to.meta.title}`))
     //判断是否登录
-  
-    // return next()
     if (VueCookies.get(ACCESS_TOKEN)) {
         if (to.path == '/loginview/login') {
-            next({ path: '/usercenter/menulist' })
+            next({ path: from.path })
         } else {
-
             if (store.state.permission.addRouters.length == 0) {
-
                 store.dispatch('GetUserInfo').then(user => {
                     const menuList = user.data.menuList
                     //生成动态路由
                     store.dispatch('GenerateRoutes', menuList).then(async (res) => {
-                        const asyncRouter = res
+                        const asyncRouter = res.asyncRouter
+                        const addRouter = res.renderRouter
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
 
                         })
-
-                       
-                        next({ ...to, replace: true })
-                        const redirect = decodeURIComponent(from.query.redirect || to.path)
-
-
-
-
+                        const asyncPath = addRouter[0].path  //跳转到动态路由
+                        router.push({ path: asyncPath })
                     })
                 }).catch(() => {
-                    // VueCookies.remove(ACCESS_TOKEN)
+                    VueCookies.remove(ACCESS_TOKEN)
                     next({ path: '/not/notrole' })
                 })
 
