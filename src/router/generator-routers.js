@@ -24,20 +24,23 @@ const rootRouter = {
     meta: {
         title: '首页'
     },
-  
-    
+    redirect: '/home/page'
+
 }
 
 
 export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
         const treeList = menuList
+
         const addRouter = []
+        console.log(treeList)
         treeMap(treeList, addRouter, null)
         const renderRouter = generator(addRouter)
-         const asyncRouter = []
-        rootRouter.children=renderRouter
-        rootRouter.redirect = renderRouter[0].url
+       
+        const asyncRouter = []
+        rootRouter.children = renderRouter
+        // rootRouter.redirect = renderRouter[0].path 
         asyncRouter.push(
             {
                 hide: true,
@@ -48,7 +51,7 @@ export const renderAsyncRouter = (menuList) => {
             rootRouter
         )
 
-        reslove({asyncRouter,renderRouter})
+        reslove({ asyncRouter, renderRouter })
     })
 
 }

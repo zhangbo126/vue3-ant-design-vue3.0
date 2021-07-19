@@ -15,11 +15,11 @@
       :wrapper-col="{ span: 14 }"
     >
       <a-form-item ref="name" label="角色名称" name="name">
-        <a-input v-model:value="form.name" />
+        <a-input v-model:value.trim="form.name" />
       </a-form-item>
 
       <a-form-item label="角色描述" name="describe">
-        <a-textarea v-model:value="form.describe" />
+        <a-textarea v-model:value.trim="form.describe" />
       </a-form-item>
 
       <a-form-item label="角色权限" name="menuList">
@@ -148,8 +148,7 @@ export default {
 
     const handleSuccessTip = (res) => {
       if (res.code == 1) {
-        parametr.formRef.resetFields();
-        message.success("操作成功");
+          message.success("操作成功");
         context.emit("refresh");
         parametr.visible = false;
       }

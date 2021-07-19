@@ -17,16 +17,11 @@ request.defaults.headers['Access-Control-Allow-Origin'] = '*'
 const errorHandler = (error) => {
     console.log(error.response)
     const status = error.response.status
-    if (status == 401) {
-
-        store.dispatch('Logout').then(() => {
-            setTimeout(() => {
-                message.warning('授权登录过期')
-            }, 1000)
-        })
-    }           
-
-
+    store.dispatch('Logout').then(() => {
+        setTimeout(() => {
+            message.warning('登录异常')
+        }, 1000)
+    })
 }
 
 //请求头同意处理

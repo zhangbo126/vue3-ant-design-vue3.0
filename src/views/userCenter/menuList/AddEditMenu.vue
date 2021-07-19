@@ -4,7 +4,7 @@
     :width="600"
     ok-text="确认"
     cancel-text="取消"
-    :title="type == 1 ? '新增角色' : '编辑角色'"
+    :title="type == 1 ? '新增菜单' : '编辑菜单'"
     @ok="submitHandle"
     @cancel="formRef.resetFields()"
   >
@@ -16,7 +16,11 @@
       :wrapper-col="{ span: 14 }"
     >
       <a-form-item ref="name" label="菜单名称" name="name">
-        <a-input placeholder="菜单名称" style="width: 220px" v-model:value="form.name" />
+        <a-input
+          placeholder="菜单名称"
+          style="width: 220px"
+          v-model:value.trim="form.name"
+        />
       </a-form-item>
       <a-form-item ref="parentId" label="父级菜单" name="parentId">
         <a-select
@@ -75,7 +79,7 @@
             :value="com.component"
             :key="com.component"
           >
-            {{ com.name }}
+            {{ com.component }}
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -113,6 +117,7 @@ export default {
       sort: null,
       parentId: null,
       id: null,
+      status:null
     });
     const formRef = ref();
     const parametr = reactive({
@@ -154,6 +159,7 @@ export default {
         parentId,
         key,
         redirectUrl,
+        status,
       });
 
       getMenu();
@@ -163,6 +169,10 @@ export default {
       getMenuList().then((res) => {
         if (res.code == 1) {
           parametr.menuList = res.data;
+          if (parametr.type == 1) {
+            parametr.menuList = parametr.menuList;
+            return;
+          }
           //如果是编辑 则过滤 当前菜单
           parametr.menuList = parametr.menuList.filter((v) => v.id != form.id);
         }
@@ -196,6 +206,7 @@ export default {
         sort: null,
         parentId: null,
         id: null,
+        status:null
       });
     };
     return {

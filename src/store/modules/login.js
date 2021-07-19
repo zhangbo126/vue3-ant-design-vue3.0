@@ -51,6 +51,7 @@ const logins = {
                 VueCookies.remove(ACCESS_TOKEN)
                 sessionStorage.clear()
                 localStorage.clear()
+               
                 location.reload()
             })
         }

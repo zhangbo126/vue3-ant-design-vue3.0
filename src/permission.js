@@ -5,8 +5,13 @@ import { setDocumentTitle, domTitle } from '@/utils/domUtil'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import NProgress from 'nprogress' // progress bar
 import '@/components/NProgress/nprogress.less' // progress bar custom style
+
 NProgress.configure({ showSpinner: false })
 const whiteList = ['login', 'NoRole'] //免登录白名单
+
+
+
+
 
 router.beforeEach(async (to, from, next) => {
     NProgress.start()
@@ -22,14 +27,11 @@ router.beforeEach(async (to, from, next) => {
                     //生成动态路由
                     store.dispatch('GenerateRoutes', menuList).then(async (res) => {
                         const asyncRouter = res.asyncRouter
-                        const addRouter = res.renderRouter
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
-
                         })
-                        const asyncPath = addRouter[0].path  //跳转到动态路由
-                     
-                        router.push({ path: asyncPath})
+
+                        router.replace()
                     })
                 }).catch(() => {
                     VueCookies.remove(ACCESS_TOKEN)

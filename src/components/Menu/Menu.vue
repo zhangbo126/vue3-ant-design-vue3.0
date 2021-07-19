@@ -3,11 +3,11 @@
     <a-menu
       mode="inline"
       theme="dark"
-    
+      :forceSubMenuRender="true"
+      :overflowedIndicator="renderIcon"
       v-model:selectedKeys="selectedKeys"
     >
-   
-  <!-- :inline-collapsed="collapsed" -->
+      <!-- :inline-collapsed="collapsed" -->
       <template v-for="item in menuTree" :key="item.path">
         <template v-if="!item.children">
           <a-menu-item :key="item.path" v-if="!item.hide">
@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { defineComponent,h } from "vue";
+import { defineComponent, h } from "vue";
 import { mapState } from "vuex";
 const SubMenu = {
   name: "SubMenu",
@@ -74,11 +74,11 @@ export default defineComponent({
       menuTree: (state) => state.permission.addRouters,
     }),
   },
-  methods:{
-    menuIcon(){
-      console.log(1)
-       return h('div',1)
+  methods: {
+    renderIcon() {
+      console.log(1);
+      return h("div", 1);
     },
-  }
+  },
 });
 </script>

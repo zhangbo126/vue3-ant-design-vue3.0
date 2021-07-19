@@ -33,52 +33,25 @@ export const routerMap = [
             }
 
         ]
-    }
-
-]
-
-
-
-
-
-
-export const asyncRouter = [
+    },
     {
-        path: '/account',
-        redirect:'/account/accountcenter',
+        path: '/home',
         component: BasicLayouts,
-        name: 'AccountManage',
-        // children: [
-        //     {
-        //         name: 'AccountCenter',
-        //         component: () => import('@/views/Account/AccountCenter'),
-        //         path: '/account/accountcenter'
-        //     },
-        //     {
-        //         name: 'AccountSettings',
-        //         component: () => import('@/views/Account/AccountSettings'),
-        //         path: '/account/accountsettings'
-        //     },
-        //     {
-        //         name: 'BaseSettings',
-        //         component: () => import('@/views/Account/BaseSettings'),
-        //         path: '/account/basesettings'
-        //     },
-        //     {
-        //         name: 'UserRole',
-        //         component: () => import('@/views/userCenter/userRole'),
-        //         path: '/usercenter/userrole'
-        //     },
-        //     {
-        //         name: 'menuList',
-        //         component: () => import('@/views/userCenter/menuList'),
-        //         path: '/usercenter/menulist'
-        //     },
-        //     {
-        //         name: 'userAccount',
-        //         component: () => import('@/views/userCenter/userAccount'),
-        //         path: '/usercenter/useraccount'
-        //     },
-        // ]
-    }
+        redirect: '/home/page',
+        children: [
+            {
+                path: '/home/page',
+                component: () => import('@/views/Home/Home'),
+                name: 'Home',
+                meta: { title: '首页' }
+            }
+
+        ]
+    },
+
 ]
+
+
+
+
+
