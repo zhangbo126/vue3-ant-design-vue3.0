@@ -14,6 +14,7 @@ const permission = {
     },
     mutations: {
         SET_ROUTERS: (state, routers) => {
+           
             state.addRouters = routers.renderRouter
             state.routers = routerMap.concat(routers.asyncRouter)
         }

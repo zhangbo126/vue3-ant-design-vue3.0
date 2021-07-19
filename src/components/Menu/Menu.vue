@@ -11,7 +11,7 @@
       <template v-for="item in menuTree" :key="item.path">
         <template v-if="!item.children">
           <a-menu-item :key="item.path" v-if="!item.hide">
-            <router-link :to="{ path: item.path }">{{ item.name }}</router-link>
+            <router-link :to="{ path: item.path }">{{ item.meta.title }}</router-link>
           </a-menu-item>
         </template>
         <template v-else>
@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { defineComponent } from "vue";
+import { defineComponent,h } from "vue";
 import { mapState } from "vuex";
 const SubMenu = {
   name: "SubMenu",
@@ -36,13 +36,13 @@ const SubMenu = {
     <a-sub-menu :key="menuInfo.path" v-bind="$attrs">
       <template #title>
         <span>
-         <component :is="$antIcons[menuInfo.icon]" /><span>{{ menuInfo.name }}</span>
+         <component :is="$antIcons[menuInfo.icon]" /><span>{{ menuInfo.meta.title }}</span>
         </span>
       </template>
       <template v-for="item in menuInfo.children" :key="item.path">
         <template v-if="!item.children">
           <a-menu-item :key="item.path" v-if="!item.hide">
-                 <router-link :to="{path:item.path}">{{ item.name }}</router-link>
+                 <router-link :to="{path:item.path}">{{ item.meta.title }}</router-link>
           </a-menu-item>
         </template>
         <template v-else>
@@ -74,5 +74,11 @@ export default defineComponent({
       menuTree: (state) => state.permission.addRouters,
     }),
   },
+  methods:{
+    menuIcon(){
+      console.log(1)
+       return h('div',1)
+    },
+  }
 });
 </script>

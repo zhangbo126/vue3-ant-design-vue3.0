@@ -28,7 +28,8 @@ router.beforeEach(async (to, from, next) => {
 
                         })
                         const asyncPath = addRouter[0].path  //跳转到动态路由
-                        router.push({ path: asyncPath })
+                     
+                        router.push({ path: asyncPath})
                     })
                 }).catch(() => {
                     VueCookies.remove(ACCESS_TOKEN)
