@@ -6,7 +6,6 @@
     cancel-text="取消"
     :title="type == 1 ? '新增菜单' : '编辑菜单'"
     @ok="submitHandle"
-    @cancel="formRef.resetFields()"
   >
     <a-form
       ref="formRef"
@@ -83,6 +82,21 @@
           </a-select-option>
         </a-select>
       </a-form-item>
+      <a-form-item label="图标">
+        <a-select
+          placeholder="图标"
+          style="width: 220px"
+          v-model:value="form.icon"
+          show-search
+          :filter-option="filterOption"
+          :allowClear="true"
+        >
+          <a-select-option v-for="icon in IconList" :value="icon" :key="icon">
+           <span> {{ icon }}</span>
+           <span> <component :is="$antIcons[icon]" /></span>
+          </a-select-option>
+        </a-select>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -102,10 +116,10 @@ const rules = {
     { required: true, message: "请选择", trigger: ["change", "blur"], type: "string" },
   ],
 };
-import { reactive, ref, toRefs } from "vue";
+import { reactive, ref, toRefs, toRaw } from "vue";
 import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenter";
 import { message } from "ant-design-vue";
-import componentList from "@/config/componentName.js";
+import { componentList, IconList } from "@/config/asyncRouter.js";
 export default {
   setup(props, context) {
     const form = reactive({
@@ -117,7 +131,8 @@ export default {
       sort: null,
       parentId: null,
       id: null,
-      status:null
+      status: null,
+      icon: null,
     });
     const formRef = ref();
     const parametr = reactive({
@@ -127,17 +142,22 @@ export default {
     });
 
     const submitHandle = () => {
-      formRef.value.validate().then(() => {
-        if (parametr.type == 1) {
-          addMenuTree(form).then((res) => {
+      formRef.value
+        .validate()
+        .then(() => {
+          if (parametr.type == 1) {
+            addMenuTree(form).then((res) => {
+              handleSuccessTip(res);
+            });
+            return;
+          }
+          editMenuTree(form).then((res) => {
             handleSuccessTip(res);
           });
-          return;
-        }
-        editMenuTree(form).then((res) => {
-          handleSuccessTip(res);
+        })
+        .catch((error) => {
+          // console.log(error)
         });
-      });
     };
 
     const showAddModal = async () => {
@@ -149,7 +169,7 @@ export default {
     const showEditModal = (obj) => {
       parametr.visible = true;
       parametr.type = 2;
-      const { name, url, _id, component, sort, parentId, key, redirectUrl } = obj;
+      const { name, url, _id, component, sort, parentId, key, redirectUrl, icon } = obj;
       Object.assign(form, {
         name,
         url,
@@ -160,6 +180,7 @@ export default {
         key,
         redirectUrl,
         status,
+        icon,
       });
 
       getMenu();
@@ -206,11 +227,13 @@ export default {
         sort: null,
         parentId: null,
         id: null,
-        status:null
+        status: null,
+        icon: null,
       });
     };
     return {
       componentList,
+      IconList,
       form,
       rules,
       ...toRefs(parametr),

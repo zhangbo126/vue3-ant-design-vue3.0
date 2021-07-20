@@ -1,9 +1,13 @@
-<script>
-import { defineComponent} from "vue";
+<template>
+  <router-view></router-view>
+</template>
 
-export default defineComponent({
-  render() {
-    return <router-view></router-view>;
-  },
-});
+<script>
+export default {
+
+}
 </script>
+
+<style>
+
+</style>

@@ -5,11 +5,20 @@
         <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addMenu"
           >新增菜单+</a-button
         >
-        <a-table :dataSource="data" bordered rowKey="_id" :columns="columns">
+        <a-table
+          :dataSource="data"
+          bordered
+          rowKey="_id"
+          :columns="columns"
+          :scroll="{ x: 1400 }"
+        >
           <template #status="{ text }">
             <div>
               {{ statusMapFilter(text) }}
             </div>
+          </template>
+          <template #icon="{ text }">
+            <component :is="$antIcons[text]" />
           </template>
           <template #action="{ text, record }">
             <ul>
@@ -42,6 +51,7 @@ const columns = [
   {
     title: "状态",
     dataIndex: "status",
+    width: 120,
     align: "center",
     slots: {
       customRender: "status",
@@ -49,6 +59,7 @@ const columns = [
   },
   {
     title: "使用组件",
+    width: 120,
     dataIndex: "component",
     align: "center",
   },
@@ -64,18 +75,31 @@ const columns = [
   },
   {
     title: "唯一标识",
+    width: 130,
     dataIndex: "key",
     align: "center",
   },
   {
     title: "排序",
+    width: 130,
     dataIndex: "sort",
     align: "center",
+  },
+  {
+    title: "图标",
+    width: 130,
+    dataIndex: "icon",
+    align: "center",
+    slots: {
+      customRender: "icon",
+    },
   },
   {
     title: "操作",
     dataIndex: "action",
     align: "center",
+    fixed: "right",
+    width: 120,
     slots: {
       customRender: "action",
     },

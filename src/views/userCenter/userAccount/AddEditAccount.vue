@@ -6,7 +6,6 @@
     cancel-text="取消"
     :title="type == 1 ? '新增账号' : '编辑账号'"
     @ok="submitHandle"
-    @cancel="formRef.resetFields()"
   >
     <a-form
       ref="formRef"
@@ -30,7 +29,7 @@
           v-model:value.trim="form.phone"
         />
       </a-form-item>
-      <a-form-item label="邮箱" name="email">
+      <a-form-item label="邮箱" name="email" required>
         <a-input
           placeholder="邮箱"
           type="email"
@@ -47,7 +46,6 @@ const rules = {
   userAccount: [
     { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
     {
-      required: true,
       message: "字符长度限制40字符",
       max: 40,
       trigger: ["change", "blur"],
@@ -57,7 +55,6 @@ const rules = {
   phone: [
     { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
     {
-      required: true,
       message: "手机格式不正确",
       pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
       trigger: ["change", "blur"],
@@ -67,7 +64,6 @@ const rules = {
   email: [
     { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
     {
-      required: true,
       message: "邮箱格式不正确",
       pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
       trigger: ["change", "blur"],
@@ -113,7 +109,6 @@ export default {
       resultForm();
     };
 
-
     const handleSuccessTip = (res) => {
       if (res.code == 1) {
         message.success("操作成功");
@@ -144,7 +139,6 @@ export default {
       formRef,
       submitHandle,
       showAddModal,
-
       filterOption,
       filterOptionPartent,
     };

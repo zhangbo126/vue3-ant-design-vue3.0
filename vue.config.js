@@ -23,7 +23,7 @@ const assetsCDN = {
 }
 
 const vueConfig = {
-    publicPath: './',
+
     runtimeCompiler: true,
     css: {
         //设置Ant-Desint 主题

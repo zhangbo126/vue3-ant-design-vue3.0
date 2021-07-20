@@ -34,7 +34,7 @@ export const renderAsyncRouter = (menuList) => {
         const treeList = menuList
 
         const addRouter = []
-        console.log(treeList)
+    
         treeMap(treeList, addRouter, null)
         const renderRouter = generator(addRouter)
        
@@ -103,6 +103,7 @@ const treeMap = (menuTree, tree, partentId) => {
                 redirect: item.redirectUrl,
                 component: item.component,
                 url: item.url,
+                icon:item.icon
             }
 
             treeMap(menuTree, child.children, item._id)

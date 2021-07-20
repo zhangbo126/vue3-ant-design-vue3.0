@@ -7,7 +7,7 @@
 <script>
 import { useStore } from "vuex";
 import { reactive, computed, toRefs } from "vue";
-import publicInfo from '@/config/publicConfig'
+import publicInfo from "@/config/publicConfig";
 export default {
   setup() {
     const store = useStore();
@@ -18,17 +18,6 @@ export default {
       roles: computed(() => {
         return store.state.permission.routers;
       }),
-      txt: "篮网总冠军",
-      arr: [
-        {
-          name: "内容1",
-          content: 2,
-        },
-        {
-          name: "内容1",
-          content: 2,
-        },
-      ],
     });
 
     return {
@@ -36,12 +25,9 @@ export default {
       state,
     };
   },
-  data() {
-    return {};
-  },
+
   provide: {
     publicInfo,
-  
   },
 };
 </script>

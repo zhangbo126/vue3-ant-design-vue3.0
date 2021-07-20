@@ -9,10 +9,6 @@ import '@/components/NProgress/nprogress.less' // progress bar custom style
 NProgress.configure({ showSpinner: false })
 const whiteList = ['login', 'NoRole'] //免登录白名单
 
-
-
-
-
 router.beforeEach(async (to, from, next) => {
     NProgress.start()
     to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${domTitle}-${to.meta.title}`))
@@ -30,8 +26,8 @@ router.beforeEach(async (to, from, next) => {
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
                         })
-
                         router.replace()
+                        console.log(router.getRoutes())
                     })
                 }).catch(() => {
                     VueCookies.remove(ACCESS_TOKEN)
@@ -45,7 +41,6 @@ router.beforeEach(async (to, from, next) => {
         }
 
     } else {
-
         //免登录菜单
         if (whiteList.includes(to.name)) {
             next()

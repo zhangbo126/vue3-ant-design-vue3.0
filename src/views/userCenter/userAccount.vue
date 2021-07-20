@@ -57,7 +57,7 @@ const columns = [
     title: "角色名称",
     dataIndex: "userAccount",
     align: "center",
-     width:140,
+    width: 140,
   },
   {
     title: "状态",
@@ -118,9 +118,9 @@ export default {
     const getList = () => {
       getAccountList(pageData.queryInfo).then((res) => {
         data.value = res.data;
-        data.value.forEach(v=>{
-            v.userRoleName = v.userRoleName.join(',')
-        })
+        data.value.forEach((v) => {
+          v.userRoleName = v.userRoleName.join(",");
+        });
       });
     };
     const refresh = () => {

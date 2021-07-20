@@ -28,7 +28,7 @@
 import { getRoleList, removeRole } from "@/api/UserCenter";
 import AddEditUserRole from "./userRole/AddEditUserRole.vue";
 import { reactive, ref, toRefs, onMounted } from "vue";
-import { Modal ,message} from "ant-design-vue";
+import { Modal, message } from "ant-design-vue";
 const statusMap = {
   0: "已停用",
   1: "使用中",
@@ -38,7 +38,6 @@ const columns = [
     title: "角色名称",
     dataIndex: "name",
     align: "center",
-   
   },
   {
     title: "状态",
@@ -88,14 +87,12 @@ export default {
       getList();
     };
     const addRole = () => {
-      // this.$refs.role.showAddModal();
       role.value.showAddModal();
     };
     const editRole = (obj) => {
       role.value.showEditModal(obj);
     };
     const delRole = (id) => {
-      //  removeRole(id).then()
       Modal.confirm({
         title: "确认要执行操作吗?",
         okText: "确认",
@@ -103,7 +100,7 @@ export default {
         onOk() {
           removeRole(id).then((res) => {
             if (res.code == 1) {
-              message.success('操作成功')
+              message.success("操作成功");
               getList();
             }
           });

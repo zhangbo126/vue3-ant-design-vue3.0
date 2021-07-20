@@ -1,5 +1,5 @@
-# vue3 + ant-design-vue2.0
-[ant-design-vue](https://2x.antdv.com/components/overview-cn/)
+# vue4
+
 ## Project setup
 ```
 yarn install
@@ -13,11 +13,6 @@ yarn serve
 ### Compiles and minifies for production
 ```
 yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
 ```
 
 ### Customize configuration

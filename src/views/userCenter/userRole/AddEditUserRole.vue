@@ -27,6 +27,7 @@
           <li v-for="t1Menu in menuList" :key="t1Menu._id">
             <a-checkbox
               v-model:checked="t1Menu.isChecked"
+              :indeterminate="t1Menu.indeterminate"
               @change="(e) => onChangeT1(e, t1Menu)"
               >{{ t1Menu.name }}</a-checkbox
             >
@@ -34,6 +35,7 @@
               <a-checkbox
                 v-model:checked="t2Menu.isChecked"
                 @change="(e) => onChangeT2(e, t2Menu, t1Menu)"
+                 :indeterminate="t2Menu.indeterminate"
                 >{{ t2Menu.name }}</a-checkbox
               >
               <div class="menu-t3" v-for="t3Menu in t2Menu.children" :key="t3Menu._id">
@@ -137,6 +139,7 @@ export default {
     const setMenuChange = (menuList) => {
       menuList.forEach((v) => {
         v.isChecked = false;
+        v.indeterminate=false
         if (v.isChange == 1) {
           v.isChecked = true;
         }
@@ -148,7 +151,7 @@ export default {
 
     const handleSuccessTip = (res) => {
       if (res.code == 1) {
-          message.success("操作成功");
+        message.success("操作成功");
         context.emit("refresh");
         parametr.visible = false;
       }
