@@ -35,7 +35,7 @@
               <a-checkbox
                 v-model:checked="t2Menu.isChecked"
                 @change="(e) => onChangeT2(e, t2Menu, t1Menu)"
-                 :indeterminate="t2Menu.indeterminate"
+                :indeterminate="t2Menu.indeterminate"
                 >{{ t2Menu.name }}</a-checkbox
               >
               <div class="menu-t3" v-for="t3Menu in t2Menu.children" :key="t3Menu._id">
@@ -139,7 +139,7 @@ export default {
     const setMenuChange = (menuList) => {
       menuList.forEach((v) => {
         v.isChecked = false;
-        v.indeterminate=false
+        v.indeterminate = false;
         if (v.isChange == 1) {
           v.isChecked = true;
         }
@@ -160,7 +160,7 @@ export default {
     //递归处理已勾选的菜单ID
     const setCheckId = (roleMenuList, menuIdList) => {
       roleMenuList.forEach((v) => {
-        if (v.isChecked) {
+        if (v.isChecked || v.indeterminate) {
           menuIdList.push(v._id);
         }
         if (v.children.length > 0) {
@@ -187,12 +187,25 @@ export default {
     //二级菜单选择
     const onChangeT2 = (e, t2Menu, t1Menu) => {
       checkHandle(t2Menu.children, e.target.checked);
+      t2Menu.indeterminate=false
       t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
+      /*一级菜单选中*/
+      const t1Len =t1Menu.children.filter(v=>v.isChecked).length
+      t1Menu.indeterminate =t1Len !=t1Menu.children.length && t1Len!=0
+
     };
     //三级菜单选择
     const onChangeT3 = (t1Menu, t2Menu) => {
-      t2Menu.isChecked = t2Menu.children.every((v) => v.isChecked);
+      /*二级菜单选中判断*/
+      const t2Len = t2Menu.children.filter((v) => v.isChecked).length;
+      t2Menu.indeterminate = t2Len != 0 && t2Len != t2Menu.children.length;
+      t2Menu.isChecked = t2Len == t2Menu.children.length;
+
+      /*一级级菜单选中判断*/
       t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
+      const t1Lenminate = t1Menu.children.some((v) => v.indeterminate);
+      const t1Lenchecked = t1Menu.children.every((v) => v.isChecked);
+      t1Menu.indeterminate = t1Lenminate || !t1Lenchecked 
     };
 
     //重置表单
@@ -209,7 +222,6 @@ export default {
 
     return {
       form,
-      rules,
       rules,
       ...toRefs(parametr),
       submitHandle,

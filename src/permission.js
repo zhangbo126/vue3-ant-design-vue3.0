@@ -30,8 +30,9 @@ router.beforeEach(async (to, from, next) => {
                         console.log(router.getRoutes())
                     })
                 }).catch(() => {
+                    //当前账号没有权限时
                     VueCookies.remove(ACCESS_TOKEN)
-                    next({ path: '/not/notrole' })
+                    router.push('/not/notrole' )
                 })
 
                 next()
