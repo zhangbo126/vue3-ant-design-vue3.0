@@ -1,7 +1,7 @@
 <template>
   <a-modal
     v-model:visible="visible"
-    :width="600"
+    :width="690"
     ok-text="确认"
     cancel-text="取消"
     :title="type == 1 ? '新增菜单' : '编辑菜单'"
@@ -65,6 +65,7 @@
           style="width: 220px"
           v-model:value.trim="form.key"
         />
+        ( 建议英文+下滑线组合)
       </a-form-item>
       <a-form-item label="使用组件" name="component">
         <a-select
@@ -79,7 +80,7 @@
             :value="com.component"
             :key="com.component"
           >
-            {{ com.component }}
+            {{ com.component }}({{ com.name }})
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -155,7 +156,6 @@ export default {
           editMenuTree(form).then((res) => {
             handleSuccessTip(res);
           });
-        
         })
         .catch((error) => {
           // console.log(error)

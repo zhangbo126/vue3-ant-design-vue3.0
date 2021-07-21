@@ -71,7 +71,7 @@ export default defineComponent({
   setup() {
     const form = reactive({
       userAccount: "admin",
-      passWord: "123456",
+      passWord: "zb123456",
     });
     const loading = ref();
     const formRef = ref();
