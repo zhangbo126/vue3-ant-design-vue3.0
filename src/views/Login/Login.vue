@@ -35,41 +35,65 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive } from "vue";
-import { mapActions } from "vuex";
+import { defineComponent, reactive, ref } from "vue";
+import { useStore } from "vuex";
+import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
+
+let usernameRule = async (rule, value) => {
+  if (!value) {
+    return Promise.reject("请输入");
+  }
+};
+
+let passwordRule = async (rule, value) => {
+  if (value === "") {
+    return Promise.reject("请输入");
+  }
+  return Promise.resolve();
+};
+
+const rules = {
+  userAccount: [
+    {
+      validator: usernameRule,
+      trigger: ["change", "blur"],
+    },
+  ],
+  passWord: [
+    {
+      validator: passwordRule,
+      trigger: ["change", "blur"],
+    },
+  ],
+};
 export default defineComponent({
   setup() {
     const form = reactive({
       userAccount: "admin",
       passWord: "123456",
     });
-    let usernameRule = async (rule, value) => {
-      if (!value) {
-        return Promise.reject("请输入");
-      }
+    const loading = ref();
+    const formRef = ref();
+    const store = useStore();
+    const router = useRouter();
+
+    const onSubmit = () => {
+      formRef.value.validate().then((res) => {
+        store
+          .dispatch("Login", form)
+          .then(() => {
+            loading.value = true;
+            router.push("/");
+            message.success("登录成功");
+          })
+          .catch((res) => {
+            loading.value = false;
+            message.warning(res.message);
+          });
+      });
     };
 
-    let passwordRule = async (rule, value) => {
-      if (value === "") {
-        return Promise.reject("请输入");
-      }
-      return Promise.resolve();
-    };
-
-    const rules = {
-      userAccount: [
-        {
-          validator: usernameRule,
-          trigger: ["change", "blur"],
-        },
-      ],
-      passWord: [
-        {
-          validator: passwordRule,
-          trigger: ["change", "blur"],
-        },
-      ],
-    };
     const layout = {
       labelCol: {
         span: 0,
@@ -83,33 +107,11 @@ export default defineComponent({
       form,
       rules,
       layout,
+      onSubmit,
+      store,
+      loading,
+      formRef,
     };
-  },
-  data() {
-    return {
-      loading: false,
-    };
-  },
-  methods: {
-    ...mapActions(["Login"]),
-    onSubmit() {
-      this.$refs.formRef
-        .validate()
-        .then((res) => {
-          this.loading = true;
-          this.Login(this.form)
-            .then((res) => {
-              this.loading = false;
-              this.$router.push("/");
-              this.$message.success("登录成功");
-            })
-            .catch((res) => {
-              this.loading = false;
-              this.$message.warning(res.message);
-            });
-        })
-        .catch(() => {});
-    },
   },
 });
 </script>

@@ -6,6 +6,7 @@
     cancel-text="取消"
     title="定义角色"
     @ok="submitHandle"
+    @cancel="cancel"
   >
     <a-form
       ref="formRef"
@@ -93,7 +94,9 @@ export default {
         id: null,
       });
     };
-
+    const cancel = () => {
+      formRef.value.resetFields();
+    };
     return {
       form,
       rules,
@@ -101,6 +104,7 @@ export default {
       formRef,
       submitHandle,
       showModal,
+      cancel,
     };
   },
 };

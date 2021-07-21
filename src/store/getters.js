@@ -7,7 +7,6 @@ const getters = {
       return  state.permission.routers
     },
     addRouters: state => {
-   
       return state.permission.addRouters
     },
     

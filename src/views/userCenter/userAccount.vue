@@ -29,6 +29,9 @@
               <li v-if="record.status == 1">
                 <a @click="setRole(record)"> 定义角色 </a>
               </li>
+              <li v-if="record.status == 1">
+                <a @click="resultPass(record.id)"> 重置密码 </a>
+              </li>
             </ul>
           </template>
         </a-table>
@@ -42,7 +45,7 @@
 </template>
 
 <script>
-import { getAccountList, delAccount, accountStatusSet } from "@/api/UserCenter";
+import { getAccountList, delAccount, accountStatusSet,resultPassWord } from "@/api/UserCenter";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 import moment from "moment";
@@ -166,6 +169,22 @@ export default {
     const setRole = (obj) => {
       role.value.showModal(obj);
     };
+    //重置密码
+    const resultPass = (id) => {
+      Modal.confirm({
+        title: "确认要执行操作吗?",
+        okText: "确认",
+        cancelText: "取消",
+        onOk() {
+          resultPassWord(id).then((res) => {
+            if (res.code == 1) {
+              message.success("操作成功");
+              getList();
+            }
+          });
+        },
+      });
+    };
     onMounted(() => {
       getList();
     });
@@ -189,9 +208,10 @@ export default {
       moment,
       setAccountStatus,
       setRole,
+      resultPass,
     };
   },
 };
 </script>
 
-<style></style>
+

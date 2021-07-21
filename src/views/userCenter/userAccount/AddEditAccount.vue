@@ -6,6 +6,7 @@
     cancel-text="取消"
     :title="type == 1 ? '新增账号' : '编辑账号'"
     @ok="submitHandle"
+    @cancel="cancel"
   >
     <a-form
       ref="formRef"
@@ -46,8 +47,8 @@ const rules = {
   userAccount: [
     { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
     {
-      message: "字符长度限制40字符",
-      max: 40,
+      message: "账号名由英文或者数字6-18位组成",
+      pattern: /^[a-zA-Z\d]{6,18}$/,
       trigger: ["change", "blur"],
       type: "string",
     },
@@ -123,6 +124,9 @@ export default {
     const filterOptionPartent = (input, option) => {
       return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
+    const cancel = () => {
+      formRef.value.resetFields();
+    };
     const resultForm = () => {
       parametr.visible = true;
       Object.assign(form, {
@@ -133,6 +137,7 @@ export default {
       });
     };
     return {
+      cancel,
       form,
       rules,
       ...toRefs(parametr),

@@ -26,13 +26,13 @@ router.beforeEach(async (to, from, next) => {
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
                         })
-                        router.replace()
                         console.log(router.getRoutes())
+                        router.replace()
                     })
                 }).catch(() => {
                     //当前账号没有权限时
                     VueCookies.remove(ACCESS_TOKEN)
-                    router.push('/not/notrole' )
+                    router.push('/not/notrole')
                 })
 
                 next()

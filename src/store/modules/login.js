@@ -5,15 +5,13 @@ import { getUserInfo, login } from '@/api/login'
 
 const logins = {
     state: {
-        token: '',
-        roles: [],
+        userInfo: {}
     },
     mutations: {
-        SET_ACCESS_TOKEN: (state, token) => {
-            state.token = token
-        },
-        SET_ROLES: (state, roles) => {
-            state.roles = roles
+
+        SET_USER_INFO: (state, result) => {
+            state.userInfo = result.userInfo
+    
         }
     },
     actions: {
@@ -26,7 +24,6 @@ const logins = {
                         reslove(res)
                         return
                     }
-
                     reject(result)
                 })
             })
@@ -35,13 +32,13 @@ const logins = {
             return new Promise((reslove, reject) => {
                 getUserInfo().then(res => {
                     if (res.code == 1) {
-                        commit('SET_ROLES', res.result)
+                        commit('SET_USER_INFO', res.data)
                         reslove(res)
                     }
                     if (res.code == -1) {
                         reject(-1)
                     }
-                }).catch(()=>{
+                }).catch(() => {
                     reject()
                 })
             })
@@ -51,7 +48,6 @@ const logins = {
                 VueCookies.remove(ACCESS_TOKEN)
                 sessionStorage.clear()
                 localStorage.clear()
-               
                 location.reload()
             })
         }

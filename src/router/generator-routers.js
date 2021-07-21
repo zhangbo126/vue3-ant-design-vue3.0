@@ -32,12 +32,9 @@ const rootRouter = {
 export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
         const treeList = menuList
-
-        const addRouter = []
-    
+        const addRouter = []   
         treeMap(treeList, addRouter, null)
         const renderRouter = generator(addRouter)
-       
         const asyncRouter = []
         rootRouter.children = renderRouter
         // rootRouter.redirect = renderRouter[0].path 

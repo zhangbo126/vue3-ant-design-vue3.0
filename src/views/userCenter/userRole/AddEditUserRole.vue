@@ -6,6 +6,7 @@
     cancel-text="取消"
     :title="type == 1 ? '新增角色' : '编辑角色'"
     @ok="submitHandle"
+    @cancel="cancel"
   >
     <a-form
       ref="formRef"
@@ -177,22 +178,20 @@ export default {
           checkHandle(v.children, checked);
         }
       });
-
-      // console.log(parametr.formRef)
     };
     //一级菜单选择
     const onChangeT1 = (e, t1Menu) => {
       checkHandle(t1Menu.children, e.target.checked);
+      t1Menu.indeterminate=false
     };
     //二级菜单选择
     const onChangeT2 = (e, t2Menu, t1Menu) => {
       checkHandle(t2Menu.children, e.target.checked);
-      t2Menu.indeterminate=false
+      t2Menu.indeterminate = false;
       t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
       /*一级菜单选中*/
-      const t1Len =t1Menu.children.filter(v=>v.isChecked).length
-      t1Menu.indeterminate =t1Len !=t1Menu.children.length && t1Len!=0
-
+      const t1Len = t1Menu.children.filter((v) => v.isChecked).length;
+      t1Menu.indeterminate = t1Len != t1Menu.children.length && t1Len != 0;
     };
     //三级菜单选择
     const onChangeT3 = (t1Menu, t2Menu) => {
@@ -205,7 +204,7 @@ export default {
       t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
       const t1Lenminate = t1Menu.children.some((v) => v.indeterminate);
       const t1Lenchecked = t1Menu.children.every((v) => v.isChecked);
-      t1Menu.indeterminate = t1Lenminate || !t1Lenchecked 
+      t1Menu.indeterminate = t1Lenminate || !t1Lenchecked;
     };
 
     //重置表单
@@ -219,7 +218,9 @@ export default {
         roleMenuList: [],
       });
     };
-
+    const cancel = () => {
+      parametr.formRef.resetFields();
+    };
     return {
       form,
       rules,
@@ -231,6 +232,7 @@ export default {
       onChangeT1,
       onChangeT2,
       onChangeT3,
+      cancel,
     };
   },
 };

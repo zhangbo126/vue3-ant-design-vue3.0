@@ -17,6 +17,8 @@ const api = {
     delAccount: '/users/delAccount',
     accountStatusSet: '/users/accountStatusSet',
     resultPassWord: '/users/resultPassWord',
+    editPassword: '/users/editPassword',
+    editPasswordTesting: '/users/editPasswordTesting',
     roleAssignment: '/users/roleAssignment',
 }
 
@@ -148,7 +150,7 @@ export function delAccount(id) {
     return request({
         url: api.delAccount,
         method: 'post',
-        data:{
+        data: {
             id
         }
     })
@@ -179,5 +181,25 @@ export function roleAssignment(data) {
 }
 
 
+// 修改密码
+
+export function editPassword(data) {
+    return request({
+        url: api.editPassword,
+        method: 'post',
+        data
+    })
+}
+
+// 修改密码 验证
+export function editPasswordTesting(passWord) {
+    return request({
+        url: api.editPasswordTesting,
+        method: 'post',
+        data: {
+            passWord
+        }
+    })
+}
 
 

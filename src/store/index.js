@@ -8,7 +8,7 @@ import login from './modules/login'
 import permission from './modules/async-router'
 
 export default createStore({
- 
+
     modules: {
         login,
         permission,

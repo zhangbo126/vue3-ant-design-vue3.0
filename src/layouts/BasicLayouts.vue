@@ -7,7 +7,7 @@
     >
       <template #trigger>
         <MenuFoldOutlined v-show="collapsed" />
-        <MenuUnfoldOutlined  v-show="!collapsed" />
+        <MenuUnfoldOutlined v-show="!collapsed" />
       </template>
       <div class="logo">
         <img src="https://store.antdv.com/pro/preview/img/logo.59818776.png" />
@@ -29,8 +29,11 @@
             v-else
           />
         </div>
+        <div class="user-menu">
+          <user-menus></user-menus>
+        </div>
       </a-layout-header>
-      <a-layout-content :style="{backgroundColor:'#fff'}">
+      <a-layout-content :style="{ backgroundColor: '#fff' }">
         <s-tab></s-tab>
         <div :style="{ background: '#fff', minHeight: '360px' }">
           <router-view></router-view>
@@ -43,18 +46,20 @@
   </a-layout>
 </template>
 <script>
-
-import {  ref } from "vue";
+import { ref } from "vue";
 import SMenu from "@/components/Menu/Menu";
 import STab from "@/components/MultiTab/MultiTab";
+import UserMenus from "../tools/UserMenus.vue";
 export default {
   components: {
     SMenu,
     STab,
+    UserMenus,
   },
-  data() {
+  setup() {
+    const collapsed = ref(false);
     return {
-      collapsed: ref(false),
+      collapsed,
     };
   },
 };
@@ -76,7 +81,9 @@ export default {
   }
 }
 .layout-header {
-      border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
   .trigger {
     display: flex;
     align-items: center;
