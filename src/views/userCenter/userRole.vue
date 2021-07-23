@@ -5,7 +5,40 @@
         <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addRole"
           >新增角色+</a-button
         >
-        <a-table :dataSource="data" bordered rowKey="_id" :columns="columns">
+        <ul class="query-handle">
+          <li>
+            <a-input
+              style="width: 140px"
+              v-model:value.trim="queryInfo.name"
+              placeholder="角色名称"
+            />
+          </li>
+          <li>
+            <a-select
+              style="width: 140px"
+              v-model:value="queryInfo.status"
+              placeholder="角色状态"
+              @change="onChangeStatus"
+            >
+              <a-select-option key="1" :value="1">使用中 </a-select-option>
+              <a-select-option key="2" :value="0">已停用 </a-select-option>
+            </a-select>
+          </li>
+          <li>
+            <a-space>
+              <a-button @click="onSearch" type="primary">搜索</a-button>
+              <a-button @click="onResult">重置</a-button>
+            </a-space>
+          </li>
+        </ul>
+
+        <a-table
+          :dataSource="data"
+          :pagination="false"
+          bordered
+          rowKey="_id"
+          :columns="columns"
+        >
           <template #status="{ text }">
             <div>
               {{ statusMapFilter(text) }}
@@ -18,6 +51,15 @@
             </ul>
           </template>
         </a-table>
+        <a-pagination
+          size="small"
+          :total="total"
+          @change="onChangePage"
+          @showSizeChange="handlePageSizeChange"
+          :show-total="(total) => `总计${total}`"
+          show-size-changer
+          show-quick-jumper
+        />
       </a-card>
     </a-col>
     <add-edit-user-role ref="role" @refresh="refresh"></add-edit-user-role>
@@ -54,7 +96,7 @@ const columns = [
   },
   {
     title: "角色权限",
-    dataIndex: "name",
+    dataIndex: "roleMenuNameList",
     align: "center",
   },
   {
@@ -75,12 +117,19 @@ export default {
       queryInfo: {
         pageSize: 10,
         pageNumber: 1,
+        name: null,
+        status: null,
       },
+      total: 0,
     });
 
     const getList = () => {
       getRoleList(pageData.queryInfo).then((res) => {
         data.value = res.data;
+        data.value.forEach((v) => {
+          v.roleMenuNameList = v.roleMenuNameList.join(",");
+        });
+        pageData.total = res.count;
       });
     };
     const refresh = () => {
@@ -107,6 +156,35 @@ export default {
         },
       });
     };
+
+    const onChangePage = (current) => {
+      pageData.queryInfo.pageNumber = current;
+      getList();
+    };
+    const handlePageSizeChange = (current, size) => {
+      pageData.queryInfo.pageNumber = 1;
+      pageData.queryInfo.pageSize = size;
+      getList();
+    };
+    const onChangeStatus = () => {
+      getList();
+    };
+    const onSearch = () => {
+      pageData.queryInfo.pageNumber = 1;
+      getList();
+    };
+
+    const onResult = () => {
+      Object.assign(pageData.queryInfo, {
+        pageNumber: 1,
+        pageSize: 10,
+        name: null,
+        status: null,
+      });
+
+      getList();
+    };
+
     onMounted(() => {
       getList();
     });
@@ -126,9 +204,20 @@ export default {
       editRole,
       delRole,
       role,
+      onChangePage,
+      onChangeStatus,
+      handlePageSizeChange,
+      onSearch,
+      onResult,
     };
   },
 };
 </script>
-
-<style></style>
+<style scoped lang="less">
+.query-handle {
+  display: flex;
+  li {
+    margin-right: 8px;
+  }
+}
+</style>

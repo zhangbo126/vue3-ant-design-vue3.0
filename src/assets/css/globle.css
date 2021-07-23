@@ -8,3 +8,8 @@
 .table-action li {
     margin: 2px 6px;
 }
+
+.ant-pagination{
+    text-align: center;
+    margin-top: 20px;
+}
