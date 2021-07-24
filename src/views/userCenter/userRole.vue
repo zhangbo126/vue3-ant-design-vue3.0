@@ -11,6 +11,7 @@
               style="width: 140px"
               v-model:value.trim="queryInfo.name"
               placeholder="角色名称"
+              @keyup.enter="onChangeStatus"
             />
           </li>
           <li>

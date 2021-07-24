@@ -129,11 +129,11 @@ export function removeMenuTree(id) {
 
 
 //获取账号列表
-export function getAccountList() {
+export function getAccountList(data) {
     return request({
         url: api.getAccountList,
         method: 'post',
-
+        data
     })
 }
 

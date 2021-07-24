@@ -5,6 +5,42 @@
         <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addAccount"
           >新增账号+</a-button
         >
+        <ul class="query-handle">
+          <li>
+            <a-input
+              style="width: 140px"
+              v-model:value.trim="queryInfo.userAccount"
+              placeholder="账号"
+              @keyup.enter="onChangeStatus"
+            />
+          </li>
+          <li>
+            <a-input
+              style="width: 140px"
+              v-model:value.trim="queryInfo.email"
+              placeholder="邮箱"
+                @keyup.enter="onChangeStatus"
+            />
+          </li>
+          <li>
+            <a-select
+              style="width: 140px"
+              v-model:value="queryInfo.status"
+              placeholder="角色状态"
+              @change="onChangeStatus"
+            >
+              <a-select-option key="1" :value="1">使用中 </a-select-option>
+              <a-select-option key="2" :value="0">已停用 </a-select-option>
+            </a-select>
+          </li>
+          <li>
+            <a-space>
+              <a-button @click="onSearch" type="primary">搜索</a-button>
+              <a-button @click="onResult">重置</a-button>
+            </a-space>
+          </li>
+        </ul>
+
         <a-table
           :dataSource="data"
           bordered
@@ -35,6 +71,17 @@
             </ul>
           </template>
         </a-table>
+        <a-pagination
+          size="small"
+          :total="total"
+          @change="onChangePage"
+          @showSizeChange="handlePageSizeChange"
+          :show-total="(total) => `总计${total}`"
+          :pageSize="queryInfo.pageSize"
+          :current="queryInfo.pageNumber"
+          show-size-changer
+          show-quick-jumper
+        />
       </a-card>
     </a-col>
     <!-- 新增账户 -->
@@ -45,7 +92,12 @@
 </template>
 
 <script>
-import { getAccountList, delAccount, accountStatusSet,resultPassWord } from "@/api/UserCenter";
+import {
+  getAccountList,
+  delAccount,
+  accountStatusSet,
+  resultPassWord,
+} from "@/api/UserCenter";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 import moment from "moment";
@@ -57,7 +109,7 @@ const statusMap = {
 };
 const columns = [
   {
-    title: "角色名称",
+    title: "账号",
     dataIndex: "userAccount",
     align: "center",
     width: 140,
@@ -115,7 +167,11 @@ export default {
       queryInfo: {
         pageSize: 10,
         pageNumber: 1,
+        userAccount: null,
+        email: null,
+        status: null,
       },
+      total: 0,
     });
 
     const getList = () => {
@@ -189,6 +245,34 @@ export default {
       getList();
     });
 
+    const onChangePage = (current) => {
+      pageData.queryInfo.pageNumber = current;
+      getList();
+    };
+    const handlePageSizeChange = (current, size) => {
+      pageData.queryInfo.pageNumber = 1;
+      pageData.queryInfo.pageSize = size;
+      getList();
+    };
+    const onChangeStatus = () => {
+      getList();
+    };
+    const onSearch = () => {
+      pageData.queryInfo.pageNumber = 1;
+      getList();
+    };
+
+    const onResult = () => {
+      Object.assign(pageData.queryInfo, {
+        pageNumber: 1,
+        pageSize: 10,
+        userAccount: null,
+        email: null,
+        status: null,
+      });
+      getList();
+    };
+
     const statusMapFilter = (type) => {
       return statusMap[type];
     };
@@ -209,9 +293,21 @@ export default {
       setAccountStatus,
       setRole,
       resultPass,
+      onChangePage,
+      onChangeStatus,
+      handlePageSizeChange,
+      onSearch,
+      onResult,
     };
   },
 };
 </script>
 
-
+<style scoped lang="less">
+.query-handle {
+  display: flex;
+  li {
+    margin-right: 8px;
+  }
+}
+</style>
