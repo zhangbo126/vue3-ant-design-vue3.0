@@ -57,6 +57,8 @@
           @change="onChangePage"
           @showSizeChange="handlePageSizeChange"
           :show-total="(total) => `总计${total}`"
+          :pageSize="queryInfo.pageSize"
+          :current="queryInfo.pageNumber"
           show-size-changer
           show-quick-jumper
         />
@@ -181,7 +183,6 @@ export default {
         name: null,
         status: null,
       });
-
       getList();
     };
 
