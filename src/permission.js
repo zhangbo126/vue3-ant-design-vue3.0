@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
                     //当前账号没有权限时
                     VueCookies.remove(ACCESS_TOKEN)
                     router.push('/not/notrole')
-                })  
+                })
                 next()
             } else {
                 next()

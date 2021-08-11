@@ -47,6 +47,7 @@
           rowKey="_id"
           :scroll="{ x: 1300 }"
           :columns="columns"
+          :pagination="false"
         >
           <template #status="{ text }">
             <div>
@@ -177,6 +178,7 @@ export default {
     const getList = () => {
       getAccountList(pageData.queryInfo).then((res) => {
         data.value = res.data;
+        pageData.total = res.count
         data.value.forEach((v) => {
           v.userRoleName = v.userRoleName.join(",");
         });
@@ -304,10 +306,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-.query-handle {
-  display: flex;
-  li {
-    margin-right: 8px;
-  }
-}
+
 </style>

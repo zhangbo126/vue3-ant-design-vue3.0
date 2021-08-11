@@ -115,6 +115,21 @@ const componentList = [
         component: 'userAccount',
         describe: '二级菜单'
     },
+    {
+        name: '商品品牌',
+        component: 'commodityBrand',
+        describe: '二级菜单'
+    },
+    {
+        name: '商品分类',
+        component: 'commodityClass',
+        describe: '二级菜单'
+    },
+    {
+        name: '商品库',
+        component: 'commodityLibrary',
+        describe: '二级菜单'
+    },
 ]
 
 

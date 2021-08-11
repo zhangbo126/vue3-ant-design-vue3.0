@@ -9,7 +9,17 @@
     margin: 2px 6px;
 }
 
-.ant-pagination{
+.ant-pagination {
     text-align: center;
     margin-top: 20px;
+}
+
+
+.query-handle {
+    display: flex;
+
+}
+
+.query-handle li {
+    margin-right: 8px;
 }

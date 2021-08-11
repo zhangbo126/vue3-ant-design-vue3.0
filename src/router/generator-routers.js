@@ -13,6 +13,9 @@ const constantRouterComponents = {
     'userRole': () => import('@/views/userCenter/userRole'),
     'userAccount': () => import('@/views/userCenter/userAccount'),
     'menuList': () => import('@/views/userCenter/menuList'),
+    'commodityBrand': () => import('@/views/commodityCenter/commodityBrand'),
+    'commodityClass': () => import('@/views/commodityCenter/commodityClass'),
+    'commodityLibrary': () => import('@/views/commodityCenter/commodityLibrary'),
 }
 
 
@@ -32,7 +35,7 @@ const rootRouter = {
 export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
         const treeList = menuList
-        const addRouter = []   
+        const addRouter = []
         treeMap(treeList, addRouter, null)
         const renderRouter = generator(addRouter)
         const asyncRouter = []
@@ -100,7 +103,7 @@ const treeMap = (menuTree, tree, partentId) => {
                 redirect: item.redirectUrl,
                 component: item.component,
                 url: item.url,
-                icon:item.icon
+                icon: item.icon
             }
 
             treeMap(menuTree, child.children, item._id)

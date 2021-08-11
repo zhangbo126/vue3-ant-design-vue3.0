@@ -1,11 +1,11 @@
 <template>
-  <div>SecuritySet1sdsddddddddddddddddddddddtings</div>
+  <div>ResultSuccess</div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {};
+  setup() {
+     return{}
   },
 };
 </script>
