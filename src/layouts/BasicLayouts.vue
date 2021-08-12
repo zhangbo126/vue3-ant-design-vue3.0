@@ -15,7 +15,7 @@
       </div>
       <s-menu></s-menu>
     </a-layout-sider>
-    <a-layout>
+    <a-layout class="layout-content">
       <a-layout-header style="background: #fff; padding: 0" class="layout-header">
         <div class="trigger">
           <MenuFoldOutlined
@@ -33,13 +33,14 @@
           <user-menus></user-menus>
         </div>
       </a-layout-header>
-      <a-layout-content :style="{ backgroundColor: '#fff' }">
+      <div :style="{height:'64px'}"></div>
+      <a-layout-content :style="{ backgroundColor: '#fff' ,paddingLeft:'200px'}">
         <s-tab></s-tab>
         <div :style="{ background: '#fff', minHeight: '360px' }">
           <router-view></router-view>
         </div>
       </a-layout-content>
-      <a-layout-footer style="text-align: center">
+      <a-layout-footer style="text-align: center;padding-left:210px">
         VUE3.0 + Ant-Design-Vue 2.0
       </a-layout-footer>
     </a-layout>
@@ -65,6 +66,11 @@ export default {
 };
 </script>
 <style scoped lang="less">
+#components-layout-demo-side{
+  position: fixed;
+  z-index: 1000;
+  min-height: 100vh;
+}
 #components-layout-demo-side .logo {
   height: 32px;
   margin: 16px;
@@ -80,10 +86,20 @@ export default {
     color: #fff;
   }
 }
+.layout-content{
+  display: flex;
+ flex-direction: column;
+}
+
 .layout-header {
   border-bottom: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
+  position: fixed;
+  top:0;
+  z-index: 1000;
+  width: calc(100% - 200px);
+  right: 0;
   .trigger {
     display: flex;
     align-items: center;
@@ -96,6 +112,7 @@ export default {
 
 .site-layout .site-layout-background {
   background: #fff;
+
 }
 [data-theme="dark"] .site-layout .site-layout-background {
   background: #141414;

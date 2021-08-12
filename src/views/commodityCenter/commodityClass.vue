@@ -109,6 +109,11 @@ const columns = [
     align: "center",
   },
   {
+    title: "排序",
+    dataIndex: "sort",
+    align: "center",
+  },
+  {
     title: "操作",
     dataIndex: "action",
     align: "center",

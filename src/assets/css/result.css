@@ -1,9 +1,11 @@
 
 @import url('./globle.css');
+@import url('./ant_ui.css');
 
 html {
-    overflow-x:auto;
-    overflow-y:scroll;
+    /* overflow-x:auto;
+    overflow-y:scroll; */
+    overflow: auto;
     }
     body, dl, dt, dd, ul, ol, li, pre, form, fieldset, input, p, blockquote, th, td {
     font-weight:400;
