@@ -2,7 +2,7 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onEditclass"
+        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass"
           >新增分类+</a-button
         >
         <!-- 查询区域 -->
@@ -15,7 +15,6 @@
               @keyup.enter="onChangeSearch"
             />
           </li>
-
           <li>
             <a-select
               style="width: 140px"
@@ -114,7 +113,6 @@ const columns = [
     dataIndex: "action",
     align: "center",
     width: 130,
-    fixed: "right",
     slots: {
       customRender: "action",
     },
@@ -125,8 +123,9 @@ const statusMap = {
   1: "使用中",
 };
 import { reactive, toRefs, ref, onMounted } from "vue";
-import { getClassList } from "@/api/commodityCenter";
+import { getClassList, delClass } from "@/api/commodityCenter";
 import AddEditClass from "./commodityClass/AddEditClass.vue";
+import { Modal, message } from "ant-design-vue";
 export default {
   components: {
     AddEditClass,
@@ -144,7 +143,21 @@ export default {
       total: 0,
     });
 
-    const onDelclass = () => {};
+    const onDelclass = (id) => {
+      Modal.confirm({
+        title: "确认要执行操作吗?",
+        okText: "确认",
+        cancelText: "取消",
+        onOk() {
+          delClass(id).then((res) => {
+            if (res.code == 1) {
+              message.success("操作成功");
+              getList();
+            }
+          });
+        },
+      });
+    };
     const getList = () => {
       getClassList(pageData.queryInfo).then((res) => {
         if (res.code != 1) {
@@ -210,7 +223,7 @@ export default {
       onResult,
       onAddclass,
       onDelclass,
-        onEditclass,
+      onEditclass,
       refresh,
     };
   },

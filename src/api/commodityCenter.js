@@ -7,7 +7,10 @@ const api = {
     delClass: '/class/delClass',
     getClassList: '/class/getClassList',
     getPartentClass: '/class/getPartentClass',
-
+    addBrand:'/brand/addBrand',
+    editBrand:'/brand/editBrand',
+    delBrand:'/brand/delBrand',
+    getBrandList:'/brand/getBrandList',
 }
 
 
@@ -60,5 +63,41 @@ export function delClass(_id) {
         data: {
             _id
         }
+    })
+}
+
+//新增品牌
+export function addBrand(data) {
+    return request({
+        url: api.addBrand,
+        method: 'post',
+        data
+    })
+}
+//编辑品牌
+export function editBrand(data) {
+    return request({
+        url: api.editBrand,
+        method: 'post',
+        data
+    })
+}
+
+//删除品牌
+export function delBrand(_id) {
+    return request({
+        url: api.delBrand,
+        method: 'post',
+        data:{
+            _id
+        }
+    })
+}
+//获取品牌列表
+export function getBrandList(data) {
+    return request({
+        url: api.getBrandList,
+        method: 'post',
+        data
     })
 }
