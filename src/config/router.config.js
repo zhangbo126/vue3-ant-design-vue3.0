@@ -49,9 +49,24 @@ export const routerMap = [
         ]
     },
 
+
 ]
 
-
+/*隐藏路由菜单*/
+export const hideRouter = [
+    {
+        path: '/home',
+        component: RouteView,
+        children: [
+            {
+                path: '/commoditycenter/commoditylibrary/addeditcommoditylibrary',
+                component: () => import('@/views/commodityCenter/commodityLibrary/AddEditCommodityLibrary'),
+                name: 'commodityLibraryDetail',
+                meta: { title: '商品库新增/编辑' }
+            }
+        ]
+    },
+]
 
 
 

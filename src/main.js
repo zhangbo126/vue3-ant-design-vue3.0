@@ -9,6 +9,7 @@ import Antd_Lazy from './utils/antd_lazy'
 import Filters from './utils/filters'
 import OverallMethod from "./core/overall";  //自定义封装全局方法
 
+
 import './permission'
 const app = createApp(App)
 app.use(Filters).use(OverallMethod).use(router).use(store).use(Antd).use(Antd_Lazy).mount('#app')

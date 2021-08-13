@@ -151,8 +151,10 @@ const columns = [
   },
 ];
 import { reactive, toRefs, ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import $urls from "@/utils/routerPath";
 export default {
-  setup() {
+  setup(props, context) {
     const data = ref([]);
     const pageData = reactive({
       queryInfo: {
@@ -167,8 +169,12 @@ export default {
       },
       total: 0,
     });
+    const router = useRouter();
+
     const getList = () => {};
-    const onAddgoods = () => {};
+    const onAddgoods = () => {
+      router.push({ path: $urls.Add_Edit_Commodity_Library });
+    };
 
     const handlePageSizeChange = (current, size) => {
       pageData.queryInfo.pageNumber = 1;
@@ -202,6 +208,9 @@ export default {
     const refresh = () => {
       getList();
     };
+    onMounted(() => {
+      getList();
+    });
     return {
       columns,
       data,

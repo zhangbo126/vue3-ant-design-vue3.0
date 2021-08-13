@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 
 import { BasicLayouts, RouteView } from '@/layouts'
-
+import { hideRouter } from '@/config/router.config.js'
 
 // 前端路由表
 const constantRouterComponents = {
@@ -39,8 +39,9 @@ export const renderAsyncRouter = (menuList) => {
         treeMap(treeList, addRouter, null)
         const renderRouter = generator(addRouter)
         const asyncRouter = []
-        rootRouter.children = renderRouter
+        rootRouter.children = renderRouter.concat(hideRouter)
         // rootRouter.redirect = renderRouter[0].path 
+
         asyncRouter.push(
             {
                 hide: true,
