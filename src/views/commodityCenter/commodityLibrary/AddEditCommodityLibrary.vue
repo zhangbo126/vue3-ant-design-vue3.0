@@ -108,7 +108,7 @@
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns" :data-source="data"> </a-table>
+          <a-table bordered :columns="columns" :pagination="false" :data-source="data"> </a-table>
         </div>
       </a-card>
     </a-col>
@@ -207,8 +207,8 @@ export default {
     //监听规格项数据变化
     watch(mixMaxItem.value, (newValue, oldValue) => {
       const attrColumns = columns.value[0].children;
-      columns.value[0].children = watchMix(newValue, oldValue, attrColumns,data).columns;
-
+      columns.value[0].children = watchMix(newValue, oldValue, attrColumns, data).columns;
+      data.value =  watchMix(newValue, oldValue, attrColumns, data.value).data
     });
     // 添加大项
     const onAddMixItem = () => {
@@ -230,7 +230,7 @@ export default {
     const onAddMaxValue = (index) => {
       const minMin = {
         mixName: "",
-        key: Math.random()*1000,
+        key: Math.random() * 1000,
         isShowInp: true,
       };
       mixMaxItem.value[index].mixList.push(minMin);
@@ -347,5 +347,9 @@ export default {
       }
     }
   }
+ 
 }
+ .mix-table{
+    margin-top: 20px;
+  }
 </style>
