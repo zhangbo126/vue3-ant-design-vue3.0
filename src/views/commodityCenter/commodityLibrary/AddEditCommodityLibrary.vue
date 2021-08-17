@@ -108,7 +108,11 @@
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns" :pagination="false" :data-source="data"> </a-table>
+          <a-table bordered :columns="columns" :pagination="false" :data-source="data">
+            <template #price="{ record }">
+              <a-input-number v-model:value="record.price" />
+            </template>
+          </a-table>
         </div>
       </a-card>
     </a-col>
@@ -149,8 +153,8 @@ const column = [
     children: [
       {
         title: "",
-        dataIndex: "attr1",
-        key: "attr1",
+        dataIndex: "mixName1",
+        key: "mixName1",
         align: "center",
         width: 200,
       },
@@ -161,6 +165,9 @@ const column = [
     dataIndex: "price",
     width: 100,
     align: "center",
+    slots: {
+      customRender: "price",
+    },
   },
 
   {
@@ -207,8 +214,9 @@ export default {
     //监听规格项数据变化
     watch(mixMaxItem.value, (newValue, oldValue) => {
       const attrColumns = columns.value[0].children;
-      columns.value[0].children = watchMix(newValue, oldValue, attrColumns, data).columns;
-      data.value =  watchMix(newValue, oldValue, attrColumns, data.value).data
+      const result = watchMix(newValue, oldValue, attrColumns, data.value);
+      columns.value[0].children = result.column;
+      data.value = result.data;
     });
     // 添加大项
     const onAddMixItem = () => {
@@ -347,9 +355,8 @@ export default {
       }
     }
   }
- 
 }
- .mix-table{
-    margin-top: 20px;
-  }
+.mix-table {
+  margin-top: 20px;
+}
 </style>

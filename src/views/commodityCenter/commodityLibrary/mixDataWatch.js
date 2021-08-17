@@ -4,68 +4,100 @@ import { toRaw } from 'vue'
 export const watchMix = (newValue, oldValue, columns, oldData) => {
 
     /*动态处理表头*/
-    columns = newValue.map((v, i) => {
+
+    let column = []
+    newValue.forEach((v, i) => {
+        if (!v.mixList.length) {
+            return
+        }
         let map = {
             title: v.spaceName,
-            dataIndex: `attr${i + 1}`,
+            dataIndex: `mixName${i + 1}`,
             align: "center",
             width: 200,
         }
-        return map
+        column.push(map)
     })
 
 
-    let attr = []
+    const attrInfo = {}
+    let spaceLen = 0
     newValue.forEach((v, i) => {
         if (v.mixList.length) {
-            attr.push(toRaw(v.mixList))
+            attrInfo[`attr${i + 1}`] = toRaw(v.mixList)
+            spaceLen++
         }
     })
 
-    /*笛卡尔乘积处理 商品规格*/
-    function cartesian(arr) {
-        const result = arr.reduce((accArr, currentArr) => {
-            let result = []
-            currentArr.forEach(c => {
-                if (accArr.length) {
-                    accArr.forEach(a => {
-                        result.push(a.concat(c))
-                    })
-                } else {
-                    result.push([c])
+    const { attr1, attr2, attr3, attr4 } = attrInfo
+
+    const renderData = () => {
+        let data = []
+        if (spaceLen == 1) {
+            attr1.forEach(t1 => {
+                let res = {
+                    mixName1: t1.mixName,
                 }
+                data.push(res)
             })
-            return result
-        }, [])
-        return result
+            return data
+        }
+        if (spaceLen == 2) {
+            attr1.forEach(t1 => {
+                attr2.forEach(t2 => {
+                    let res = {
+                        mixName1: t1.mixName,
+                        mixName2: t2.mixName,
+                    }
+                    data.push(res)
+                })
+
+            })
+            return data
+        }
+        if (spaceLen == 3) {
+            attr1.forEach(t1 => {
+                attr2.forEach(t2 => {
+                    attr3.forEach(t3 => {
+                        let res = {
+                            mixName1: t1.mixName,
+                            mixName2: t2.mixName,
+                            mixName3: t3.mixName,
+                        }
+                        data.push(res)
+                    })
+                })
+
+            })
+            return data
+        }
+        if (spaceLen == 4) {
+            attr1.forEach(t1 => {
+                attr2.forEach(t2 => {
+                    attr3.forEach(t3 => {
+                        attr4.forEach(t4 => {
+                            let res = {
+                                mixName1: t1.mixName,
+                                mixName2: t2.mixName,
+                                mixName3: t3.mixName,
+                                mixName4: t4.mixName,
+                            }
+                            data.push(res)
+                        })
+                    })
+                })
+
+            })
+            return data
+        }
     }
 
-    const towList = cartesian(attr)
-
-    const data = towList.map((v) => {
-
-        let b = {}
-        v[0] ? v[0] : v[0] = {}
-        v[1] ? v[1] : v[1] = {}
-        v[2] ? v[2] : v[2] = {}
-        v[3] ? v[3] : v[3] = {}
-
-        b.attr1 = v[0].mixName
-        b.attr2 = v[1].mixName
-        b.attr3 = v[2].mixName
-        b.attr4 = v[3].mixName
-        return b
-
-    })
-
-
-
-
+    let data = renderData()
+    console.log(data,toRaw(oldData))
     return {
-        columns,
+        column,
         data
     }
-
 }
 
 
