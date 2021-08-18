@@ -22,6 +22,14 @@ const api = {
         data
     })
 } 
+ //商品中心图片批量上传
+ export function imgBatchUpload(data) {
+    return request({
+        url: '/upload/batchimage',
+        method: 'post',
+        data
+    })
+} 
 
 
 //获取分类列表

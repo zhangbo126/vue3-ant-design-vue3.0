@@ -108,9 +108,33 @@
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns" :pagination="false" :data-source="data">
+          <a-table bordered :columns="columns" rowKey="key" size="small"  :pagination="false" :data-source="data">
             <template #price="{ record }">
               <a-input-number v-model:value="record.price" />
+            </template>
+            <template #size="{ record }">
+              <div class="size">
+               <a-input-number placeholder="长" v-model:value="record.mixLength" />*
+                <a-input-number placeholder="宽" v-model:value="record.mixWidth" />*
+                <a-input-number placeholder="高" v-model:value="record.mixHeight" />
+              </div>
+            </template>
+            <template #designSketch="{ record }">
+              <div class="design-img">
+                <a-upload
+                  :multiple="true"
+                  list-type="picture-card"
+                  name="file"
+                  v-model:file-list="record.designSketch"
+                  :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)"
+                  :customRequest="(e) => onCustomRequest(e, record)"
+                >
+                  <div v-if="record.designSketch.length < 8">
+                    <plus-outlined />
+                    <div class="ant-upload-text">上传</div>
+                  </div>
+                </a-upload>
+              </div>
             </template>
           </a-table>
         </div>
@@ -154,7 +178,6 @@ const column = [
       {
         title: "",
         dataIndex: "mixName1",
-        key: "mixName1",
         align: "center",
         width: 200,
       },
@@ -181,13 +204,14 @@ const column = [
   },
   {
     title: "商品效果图",
-    dataIndex: "img",
+    dataIndex: "designSketch",
     align: "center",
     slots: {
-      customRender: "img",
+      customRender: "designSketch",
     },
   },
 ];
+import { imgBatchUpload } from "@/api/commodityCenter";
 export default {
   setup() {
     const form = reactive({
@@ -201,6 +225,8 @@ export default {
     const parametr = reactive({
       classList: [],
       brandList: [],
+      beforeImgFile: [],
+      afterImgFile: [],
     });
     const data = ref([]);
     const columns = ref(column);
@@ -256,6 +282,64 @@ export default {
       minList.splice(i, 1);
     };
 
+    //上传图片前检测
+    const onBeforeUpload = (file, fileList, record) => {
+      return new Promise(async (reslove, reject) => {
+        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        parametr.beforeImgFile.push(file);
+        if (!isJpgOrPng || !isLt2M) {
+        } else {
+          parametr.afterImgFile.push(file);
+        }
+        // 判断批量上传图格式是否符合要求
+        //符合要求的数量 和已上传的数量不能超过 8
+        if (
+          parametr.afterImgFile.length > 8 ||
+          parametr.afterImgFile.length + record.designSketch.length > 8
+        ) {
+          parametr.beforeImgFile = [];
+          parametr.afterImgFile = [];
+          return message.error("效果图最多上传八张");
+        }
+
+        if (parametr.beforeImgFile.length == fileList.length) {
+          if (parametr.afterImgFile.length == fileList.length) {
+            return reslove();
+          }
+          parametr.beforeImgFile = [];
+          parametr.afterImgFile = [];
+          return message.error("图片格式jpg/png!，图片大小限制2MB!");
+        }
+      });
+    };
+    //图片上传
+    const onCustomRequest = (file, record) => {
+      const formData = new FormData();
+      parametr.afterImgFile.forEach((v) => {
+        formData.append("file", v);
+      });
+
+      imgBatchUpload(formData).then((res) => {
+        const imgArr = res.data;
+        const addImg = imgArr.map((v) => {
+          let file = {
+            uid: v.path,
+            name: v.path,
+            status: "done",
+            url: v.path,
+          };
+          return file;
+        });
+
+        record.designSketch = record.designSketch
+          .concat(addImg)
+          .filter((v) => v.status == "done");
+        parametr.beforeImgFile = [];
+        parametr.afterImgFile = [];
+      });
+    };
+
     const filterOptionPartent = (input, option) => {
       return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
@@ -272,6 +356,8 @@ export default {
       onBlurMixValue,
       onRemoveMinValue,
       ...toRefs(parametr),
+      onCustomRequest,
+      onBeforeUpload,
       filterOptionPartent,
     };
   },
@@ -358,5 +444,16 @@ export default {
 }
 .mix-table {
   margin-top: 20px;
+  .size {
+    display: flex;
+    align-items: center;
+    color: red;
+  }
+  /deep/ .ant-input-number-handler-wrap {
+    display: none;
+  }
+  /deep/ .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    left: 0;
+  }
 }
 </style>
