@@ -2,15 +2,11 @@
 
 import { toRaw } from 'vue'
 export const watchMix = (newValue, oldValue, columns, oldData) => {
-
-
-
     const attrInfo = {}
     //过滤出有属性的值
     newValue = newValue.filter(v => {
         return v.mixList.length > 0
     })
-
 
     /*动态处理表头*/
     let column = []
@@ -27,11 +23,6 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
         }
         column.push(map)
     })
-
-
-
-
-
 
 
     newValue.forEach((v, i) => {
@@ -146,22 +137,144 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
     }
 
     if (column.length == 2) {
-        column[0].customRender = ({ text, i }) => {
+        column[0].customRender = ({ text, index, record }) => {
             const obj = {
                 children: text,
-                props: {},
+                props: {
+                    rowSpan: 0
+                },
             }
-            console.log(data[i-1])
-            if(data[i-1] && data[i-1].mixName1 == data[i].mixName1){
-                obj.props.rowSpan = 2;
+
+            let prev = data[index - 1]  //上一项
+            let next = data[index + 1]  //下一项
+            let current = data[index] //当前项
+            let rowSpanNum = data.length / attr1.length  //相同的值要被合并的数量
+            let isRow
+            const isRowFlag1 = attr2.length == 1
+            const isRowFlag2 = attr2.length == 1 && attr1.length > 1
+            if (isRowFlag1 || isRowFlag2) {
+                isRow = true
             }
+
+            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'mixName1', prev, next, current, isRow)
+            return obj
+        }
+
+
+    }
+    if (column.length == 3) {
+        column[0].customRender = ({ text, index, record }) => {
+            const obj = {
+                children: text,
+                props: {
+                    rowSpan: 0
+                },
+            }
+
+            let prev = data[index - 1]  //上一项
+            let next = data[index + 1]  //下一项
+            let current = data[index] //当前项
+            let rowSpanNum = data.length / attr1.length  //相同的值要被合并的数量
+            let isRow
+            const isRowFlag1 =  attr2.length>1 || attr3.length>1
+  
+            if (!isRowFlag1) {
+                isRow = true
+            }
+            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'mixName1', prev, next, current,isRow)
+            return obj
+        }
+
+        column[1].customRender = ({ text, index, record }) => {
+            const obj = {
+                children: text,
+                props: {
+                    rowSpan: 0
+                },
+            }
+            let prev = data[index - 1]  //上一项
+            let next = data[index + 1]  //下一项
+            let current = data[index] //当前项
+            let rowSpanNum = data.length / attr2.length / attr1.length  //相同的值要被合并的数量
+            let isRow
+            const isRowFlag1 = attr1.length >1  || (attr2.length>1 && attr1.length==1 && attr3.length==1)
+         
+            if (isRowFlag1 ) {
+                isRow = true
+            }
+            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'mixName2', prev, next, current, isRow)
+         
+            return obj
+        }
+    }
+    if (column.length == 4) {
+        column[0].customRender = ({ text, index, record }) => {
+            const obj = {
+                children: text,
+                props: {
+                    rowSpan: 0
+                },
+            }
+
+            let prev = data[index - 1]  //上一项
+            let next = data[index + 1]  //下一项
+            let current = data[index] //当前项
+            let rowSpanNum = data.length / attr1.length  //相同的值要被合并的数量
+            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'mixName1', prev, next, current, attr1.length * attr2.length * attr3.length * attr4.length)
+            return obj
+        }
+
+        column[1].customRender = ({ text, index, record }) => {
+            const obj = {
+                children: text,
+                props: {
+                    rowSpan: 0
+                },
+            }
+            let prev = data[index - 1]  //上一项
+            let next = data[index + 1]  //下一项
+            let current = data[index] //当前项
+            let rowSpanNum = data.length / attr2.length / attr1.length  //相同的值要被合并的数量
+            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'mixName2', prev, next, current, attr1.length * attr2.length * attr3.length * attr4.length)
+            return obj
+        }
+        column[2].customRender = ({ text, index, record }) => {
+            const obj = {
+                children: text,
+                props: {
+                    rowSpan: 0
+                },
+            }
+            let prev = data[index - 1]  //上一项
+            let next = data[index + 1]  //下一项
+            let current = data[index] //当前项
+            let rowSpanNum = data.length / attr3.length / attr2.length / attr1.length   //相同的值要被合并的数量
+            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'mixName3', prev, next, current, attr1.length * attr2.length * attr3.length * attr4.length)
             return obj
         }
     }
 
-
-    // console.log( toRaw(oldData))
-
+    /*
+        rowSpanNum 合并数量
+        mixName 操作列参数名
+        prev  上一项
+        next 下一项
+        current 当前项
+        len 当前规格数量
+    */
+    const rowSpanMerge = (rowSpanNum, mixName, prev, next, current, isRow) => {
+        //判断只有一行数据时
+        if (next && next[mixName] == current[mixName] && !prev) {
+            return rowSpanNum
+        }
+        if ((next && next[mixName] == current[mixName] && prev && prev[mixName] != current[mixName])) {
+            return rowSpanNum
+        }
+        if (isRow) {
+            return 1
+        }
+        return 0
+    }
     return {
         column,
         data
