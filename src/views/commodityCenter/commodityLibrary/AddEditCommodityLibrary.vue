@@ -29,7 +29,11 @@
                 show-search
                 :filter-option="filterOptionPartent"
               >
-                <a-select-option v-for="c in classList" :key="c._id" :value="c._id">
+                <a-select-option
+                  v-for="c in classList"
+                  :key="c._id"
+                  :value="c._id"
+                >
                   {{ c.name }}
                 </a-select-option>
               </a-select>
@@ -43,7 +47,11 @@
                 show-search
                 :filter-option="filterOptionPartent"
               >
-                <a-select-option v-for="c in brandList" :key="c._id" :value="c._id">
+                <a-select-option
+                  v-for="c in brandList"
+                  :key="c._id"
+                  :value="c._id"
+                >
                   {{ c.name }}
                 </a-select-option>
               </a-select>
@@ -61,7 +69,11 @@
         <div class="mix-containter">
           <div class="mix-title">商品规格</div>
           <div class="mix-item">
-            <div class="item-bar" v-for="(mixMax, index) in mixMaxItem" :key="mixMax.key">
+            <div
+              class="item-bar"
+              v-for="(mixMax, index) in mixMaxItem"
+              :key="mixMax.key"
+            >
               <div class="bar-nav">
                 <div class="nav-lf">
                   <p>规格项:</p>
@@ -82,15 +94,25 @@
                     v-for="(mixMin, i) in mixMax.mixList"
                     :key="mixMin.key"
                   >
-                    <a-input
-                      @blur="onBlurMixValue(mixMin)"
-                      v-model:value.trim="mixMin.mixName"
-                      :style="{ width: '120px', marginRight: '10px' }"
-                      v-if="mixMin.isShowInp"
-                    />
+                    <div class="inp-txt" v-if="mixMin.isShowInp">
+                      <a-input
+                        @blur="onBlurMixValue(mixMin)"
+                        v-model:value.trim="mixMin.specValue"
+                        :style="{ width: '120px', marginRight: '10px' }"
+                      />
+                      <span
+                        class="ico"
+                        @click="onRemoveMinValue(mixMax.mixList, i)"
+                      >
+                        <CloseCircleOutlined />
+                      </span>
+                    </div>
                     <span class="txt" v-else @click="onCheckoutValue(mixMin)"
-                      >{{ mixMin.mixName }}
-                      <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
+                      >{{ mixMin.specValue }}
+                      <span
+                        class="ico"
+                        @click="onRemoveMinValue(mixMax.mixList, i)"
+                      >
                         <CloseCircleOutlined />
                       </span>
                     </span>
@@ -102,21 +124,48 @@
               </div>
             </div>
             <div class="add-btn">
-              <a-button type="primary" @click="onAddMixItem">添加规格项+</a-button>
+              <a-button type="primary" @click="onAddMixItem">
+                添加规格项+
+              </a-button>
             </div>
           </div>
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns" rowKey="key" size="small"  :pagination="false" :data-source="data">
+          <a-table
+            bordered
+            :columns="columns"
+            rowKey="key"
+            size="small"
+            :pagination="false"
+            :data-source="data"
+          >
             <template #price="{ record }">
-              <a-input-number v-model:value="record.price" />
+              <a-input-number
+                :max="1000000"
+                v-model:value.trim="record.price"
+              />
+            </template>
+            <template #skuName="{ record }">
+              <a-input-number v-model:value.trim="record.skuName" />
             </template>
             <template #size="{ record }">
               <div class="size">
-               <a-input-number placeholder="长" v-model:value="record.mixLength" />*
-                <a-input-number placeholder="宽" v-model:value="record.mixWidth" />*
-                <a-input-number placeholder="高" v-model:value="record.mixHeight" />
+                <a-input-number
+                  placeholder="长"
+                  v-model:value.trim="record.mixLength"
+                  :max="1000000"
+                />*
+                <a-input-number
+                  placeholder="宽"
+                  v-model:value.trim="record.mixWidth"
+                  :max="1000000"
+                />*
+                <a-input-number
+                  placeholder="高"
+                  v-model:value.trim="record.mixHeight"
+                  :max="1000000"
+                />
               </div>
             </template>
             <template #designSketch="{ record }">
@@ -126,7 +175,9 @@
                   list-type="picture-card"
                   name="file"
                   v-model:file-list="record.designSketch"
-                  :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)"
+                  :before-upload="
+                    (e, fileList) => onBeforeUpload(e, fileList, record)
+                  "
                   :customRequest="(e) => onCustomRequest(e, record)"
                 >
                   <div v-if="record.designSketch.length < 8">
@@ -138,18 +189,26 @@
             </template>
           </a-table>
         </div>
+        <div class="save-submit">
+          <a-button type="primary" @click="onSaveSubmit"> 保存 </a-button>
+        </div>
       </a-card>
     </a-col>
   </a-row>
 </template>
 
 <script>
-import { reactive, ref, toRefs, watch } from "vue";
+import { reactive, ref, toRefs, watch, onMounted } from "vue";
 import { message } from "ant-design-vue";
 import { watchMix } from "./mixDataWatch"; //处理数据变化方法
 const rules = {
   goodsName: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
     {
       message: "商品名称长度由0-18位组成",
       min: 0,
@@ -159,13 +218,35 @@ const rules = {
     },
   ],
   categoryId: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "number" },
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
   brandId: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "number" },
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
   goodsNo: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
+    {
+      message: "字符长度限制20",
+      min: 0,
+      max: 20,
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
 };
 const column = [
@@ -177,11 +258,20 @@ const column = [
     children: [
       {
         title: "",
-        dataIndex: "mixName1",
+        dataIndex: "specValue1",
         align: "center",
         width: 200,
       },
     ],
+  },
+  {
+    title: "SKU名称",
+    dataIndex: "skuName",
+    width: 100,
+    align: "center",
+    slots: {
+      customRender: "skuName",
+    },
   },
   {
     title: "商品价格",
@@ -211,13 +301,16 @@ const column = [
     },
   },
 ];
-import { imgBatchUpload } from "@/api/commodityCenter";
+import {
+  imgBatchUpload,
+  getBrandList,
+  getClassList,
+} from "@/api/commodityCenter";
 export default {
   setup() {
     const form = reactive({
       goodsName: null,
       categoryId: null,
-      sort: null,
       brandId: null,
       _id: null,
       goodsNo: null,
@@ -227,8 +320,11 @@ export default {
       brandList: [],
       beforeImgFile: [],
       afterImgFile: [],
+      brandList: [],
+      classList: [],
     });
     const data = ref([]);
+    const formRef = ref();
     const columns = ref(column);
     const mixMaxItem = ref([
       {
@@ -237,6 +333,11 @@ export default {
         mixList: [],
       },
     ]);
+    //页面加载获取数据
+    onMounted(() => {
+      getBrandAndClassList();
+    });
+
     //监听规格项数据变化
     watch(mixMaxItem.value, (newValue, oldValue) => {
       const attrColumns = columns.value[0].children;
@@ -251,8 +352,8 @@ export default {
         key: Math.random() * 1000,
         mixList: [],
       };
-      if (mixMaxItem.value.length >= 4) {
-        return message.warning("最多添加4项");
+      if (mixMaxItem.value.length >= 3) {
+        return message.warning("最多添加3项");
       }
       mixMaxItem.value.push(minMax);
     };
@@ -263,7 +364,7 @@ export default {
     //添加小项
     const onAddMaxValue = (index) => {
       const minMin = {
-        mixName: "",
+        specValue: "",
         key: Math.random() * 1000,
         isShowInp: true,
       };
@@ -285,7 +386,8 @@ export default {
     //上传图片前检测
     const onBeforeUpload = (file, fileList, record) => {
       return new Promise(async (reslove, reject) => {
-        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        const isJpgOrPng =
+          file.type === "image/jpeg" || file.type === "image/png";
         const isLt2M = file.size / 1024 / 1024 < 2;
         parametr.beforeImgFile.push(file);
         if (!isJpgOrPng || !isLt2M) {
@@ -339,9 +441,66 @@ export default {
         parametr.afterImgFile = [];
       });
     };
+    //保存提交
+    const onSaveSubmit = () => {
+      formRef.value.validate().then(() => {});
+      if (mixMaxItem.value.length == 0) {
+        return message.warning("请添加规格项");
+      }
+      const specValueRule = mixMaxItem.value.every((v) => v.spaceName != "");
+      if (!specValueRule) {
+        return message.warning("请填写规格项名称");
+      }
 
+      //价格是否输入验证
+      const priceRule = data.value.every(
+        (v) => v.price != "" && v.price != null
+      );
+      if (!priceRule) {
+        return message.warning("请填写商品价格");
+      }
+      //尺寸长宽高验证
+      const mixLengthRule = data.value.every(
+        (v) => v.mixLength != "" && v.mixLength != null
+      );
+      const mixWidthRule = data.value.every(
+        (v) => v.mixWidth != "" && v.mixWidth != null
+      );
+      const mixHeightRule = data.value.every(
+        (v) => v.mixHeight != "" && v.mixHeight != null
+      );
+      if (!mixLengthRule || !mixWidthRule || !mixHeightRule) {
+        return message.warning("请填写商品尺寸");
+      }
+      //效果图验证
+      const designSketchRule = data.value.every(
+        (v) => v.designSketch.length != 0
+      );
+      if (!designSketchRule) {
+        return message.warning("请上传商品效果图");
+      }
+
+      const submitData = {
+        mixInfo: form,
+        mixList: data.value,
+      };
+      console.log(JSON.stringify(submitData));
+    };
+    //获取品牌  分类
+    const getBrandAndClassList = () => {
+      getBrandList().then((res) => {
+        parametr.brandList = res.data;
+      });
+      getClassList().then((res) => {
+        parametr.classList = res.data;
+      });
+    };
     const filterOptionPartent = (input, option) => {
-      return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return (
+        option.children[0].children
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     };
     return {
       data,
@@ -349,6 +508,7 @@ export default {
       rules,
       form,
       mixMaxItem,
+      formRef,
       onAddMixItem,
       onRemoveMixItem,
       onAddMaxValue,
@@ -357,7 +517,9 @@ export default {
       onRemoveMinValue,
       ...toRefs(parametr),
       onCustomRequest,
+      onSaveSubmit,
       onBeforeUpload,
+      getBrandAndClassList,
       filterOptionPartent,
     };
   },
@@ -437,6 +599,32 @@ export default {
               display: block;
             }
           }
+          .inp-txt {
+            position: relative;
+            padding: 0px 20px;
+            display: inline-block;
+
+            line-height: 30px;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            height: 30px;
+            font-size: 12px;
+            left: 0px;
+            text-align: center;
+            cursor: pointer;
+            .ico {
+              position: absolute;
+              top: -15px;
+              right: 25px;
+              cursor: pointer;
+              display: none;
+            }
+            &:hover .ico {
+              display: block;
+            }
+          }
         }
       }
     }
@@ -455,5 +643,9 @@ export default {
   /deep/ .ant-upload-list-picture-card .ant-upload-list-item-info::before {
     left: 0;
   }
+}
+.save-submit {
+  margin: 20px 0px;
+  text-align: center;
 }
 </style>

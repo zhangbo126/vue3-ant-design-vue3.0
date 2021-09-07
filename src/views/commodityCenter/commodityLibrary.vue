@@ -2,7 +2,10 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddgoods"
+        <a-button
+          type="primary"
+          :style="{ margin: '10px 0px' }"
+          @click="onAddgoods"
           >新增商品+</a-button
         >
         <!-- 查询区域 -->
@@ -133,13 +136,11 @@ const columns = [
     dataIndex: "categoryName",
     align: "center",
   },
-
   {
     title: "规格名称",
     dataIndex: "mixName",
     align: "center",
   },
-
   {
     title: "操作",
     dataIndex: "action",
