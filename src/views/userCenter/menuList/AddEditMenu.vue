@@ -31,9 +31,12 @@
           :allowClear="true"
           :filter-option="filterOptionPartent"
         >
-          <a-select-option v-for="menu in menuList" :value="menu._id" :key="menu._id">{{
-            menu.name
-          }}</a-select-option>
+          <a-select-option
+            v-for="menu in menuList"
+            :value="menu._id"
+            :key="menu._id"
+            >{{ menu.name }}</a-select-option
+          >
         </a-select>
       </a-form-item>
       <a-form-item label="路由地址" name="url">
@@ -106,16 +109,36 @@
 <script>
 const rules = {
   name: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
   url: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
   key: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
   component: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
   ],
 };
 import { reactive, ref, toRefs } from "vue";
@@ -171,7 +194,17 @@ export default {
     const showEditModal = (obj) => {
       parametr.visible = true;
       parametr.type = 2;
-      const { name, url, _id, component, sort, parentId, key, redirectUrl, icon } = obj;
+      const {
+        name,
+        url,
+        _id,
+        component,
+        sort,
+        parentId,
+        key,
+        redirectUrl,
+        icon,
+      } = obj;
       Object.assign(form, {
         name,
         url,
@@ -215,7 +248,11 @@ export default {
       return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
     const filterOptionPartent = (input, option) => {
-      return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return (
+        option.children[0].children
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     };
 
     const resultForm = () => {

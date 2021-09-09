@@ -7,29 +7,32 @@ const api = {
     delClass: '/class/delClass',
     getClassList: '/class/getClassList',
     getPartentClass: '/class/getPartentClass',
-    addBrand:'/brand/addBrand',
-    editBrand:'/brand/editBrand',
-    delBrand:'/brand/delBrand',
-    getBrandList:'/brand/getBrandList',
+    addBrand: '/brand/addBrand',
+    editBrand: '/brand/editBrand',
+    delBrand: '/brand/delBrand',
+    getBrandList: '/brand/getBrandList',
+    addGoods: '/goods/addGoods',
+    getGoodsList: '/goods/getGoodsList',
+    getEditGoodsInfo: '/goods/getEditGoodsInfo',
 }
 
 
- //商品中心图片上传
- export function imgUpload(data) {
+//商品中心图片上传
+export function imgUpload(data) {
     return request({
         url: '/upload/image',
         method: 'post',
         data
     })
-} 
- //商品中心图片批量上传
- export function imgBatchUpload(data) {
+}
+//商品中心图片批量上传
+export function imgBatchUpload(data) {
     return request({
         url: '/upload/batchimage',
         method: 'post',
         data
     })
-} 
+}
 
 
 //获取分类列表
@@ -96,7 +99,7 @@ export function delBrand(_id) {
     return request({
         url: api.delBrand,
         method: 'post',
-        data:{
+        data: {
             _id
         }
     })
@@ -107,5 +110,38 @@ export function getBrandList(data) {
         url: api.getBrandList,
         method: 'post',
         data
+    })
+}
+
+
+//新增商品
+export function addGoods(data) {
+    return request({
+        url: api.addGoods,
+        method: 'post',
+        data
+    })
+}
+//获取商品列表
+export function getGoodsList(data) {
+    return request({
+        url: api.getGoodsList,
+        method: 'post',
+        data
+    })
+}
+
+
+//编辑获取商品信息
+
+
+
+export function getEditGoodsInfo(goodsId) {
+    return request({
+        url: api.getEditGoodsInfo,
+        method: 'post',
+        data: {
+            goodsId
+        }
     })
 }

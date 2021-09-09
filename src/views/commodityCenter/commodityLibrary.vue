@@ -6,8 +6,9 @@
           type="primary"
           :style="{ margin: '10px 0px' }"
           @click="onAddgoods"
-          >新增商品+</a-button
         >
+          新增商品+
+        </a-button>
         <!-- 查询区域 -->
         <ul class="query-handle">
           <li>
@@ -45,7 +46,7 @@
           <li>
             <a-input
               style="width: 140px"
-              v-model:value.trim="queryInfo.mixName"
+              v-model:value.trim="queryInfo.skuName"
               placeholder="规格名称"
               @keyup.enter="onChangeSearch"
             />
@@ -82,7 +83,11 @@
             </div>
           </template>
           <template #action="{ text, record }">
-            <ul class="table-action"></ul>
+            <ul class="table-action">
+              <li>
+                <a @click="onEditGoods(record)">编辑</a>
+              </li>
+            </ul>
           </template>
         </a-table>
 
@@ -138,7 +143,7 @@ const columns = [
   },
   {
     title: "规格名称",
-    dataIndex: "mixName",
+    dataIndex: "skuName",
     align: "center",
   },
   {
@@ -151,6 +156,7 @@ const columns = [
     },
   },
 ];
+import { getGoodsList } from "@/api/commodityCenter";
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import $urls from "@/utils/routerPath";
@@ -166,15 +172,31 @@ export default {
         categoryName: null,
         brandName: null,
         goodsNo: null,
-        mixName: null,
+        skuName: null,
       },
       total: 0,
     });
     const router = useRouter();
 
-    const getList = () => {};
+    const getList = () => {
+      getGoodsList(pageData.queryInfo).then((res) => {
+        if (res.code != 1) {
+          return;
+        }
+        data.value = res.data;
+        pageData.total = res.count;
+      });
+    };
+    //新增
     const onAddgoods = () => {
       router.push({ path: $urls.Add_Edit_Commodity_Library });
+    };
+    //编辑
+    const onEditGoods = (record) => {
+      router.push({
+        path: $urls.Add_Edit_Commodity_Library,
+        query: { goodsId: record.goodsId },
+      });
     };
 
     const handlePageSizeChange = (current, size) => {
@@ -202,7 +224,7 @@ export default {
         categoryName: null,
         brandName: null,
         goodsNo: null,
-        mixName: null,
+        skuName: null,
       });
       getList();
     };
@@ -217,6 +239,7 @@ export default {
       data,
       ...toRefs(pageData),
       onAddgoods,
+      onEditGoods,
       onChangeSearch,
       handlePageSizeChange,
       onChangePage,

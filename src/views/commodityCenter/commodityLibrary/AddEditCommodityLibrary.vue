@@ -143,11 +143,12 @@
             <template #price="{ record }">
               <a-input-number
                 :max="1000000"
+                :min="1"
                 v-model:value.trim="record.price"
               />
             </template>
             <template #skuName="{ record }">
-              <a-input-number v-model:value.trim="record.skuName" />
+              <a-input v-model:value.trim="record.skuName" />
             </template>
             <template #size="{ record }">
               <div class="size">
@@ -155,16 +156,19 @@
                   placeholder="长"
                   v-model:value.trim="record.mixLength"
                   :max="1000000"
+                  :min="1"
                 />*
                 <a-input-number
                   placeholder="宽"
                   v-model:value.trim="record.mixWidth"
                   :max="1000000"
+                  :min="1"
                 />*
                 <a-input-number
                   placeholder="高"
                   v-model:value.trim="record.mixHeight"
                   :max="1000000"
+                  :min="1"
                 />
               </div>
             </template>
@@ -199,6 +203,7 @@
 
 <script>
 import { reactive, ref, toRefs, watch, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 import { watchMix } from "./mixDataWatch"; //处理数据变化方法
 const rules = {
@@ -305,6 +310,8 @@ import {
   imgBatchUpload,
   getBrandList,
   getClassList,
+  addGoods,
+  getEditGoodsInfo,
 } from "@/api/commodityCenter";
 export default {
   setup() {
@@ -312,7 +319,7 @@ export default {
       goodsName: null,
       categoryId: null,
       brandId: null,
-      _id: null,
+      goodsId: null,
       goodsNo: null,
     });
     const parametr = reactive({
@@ -326,6 +333,8 @@ export default {
     const data = ref([]);
     const formRef = ref();
     const columns = ref(column);
+    const route = useRoute();
+
     const mixMaxItem = ref([
       {
         spaceName: "",
@@ -335,7 +344,17 @@ export default {
     ]);
     //页面加载获取数据
     onMounted(() => {
+      form.goodsId = route.query.goodsId;
       getBrandAndClassList();
+      if (form.goodsId) {
+        getEditGoodsInfo(form.goodsId).then(res=>{
+             if(res.code==1){
+                 
+                 data.value=res.data.mixList
+     
+             }
+        })
+      }
     });
 
     //监听规格项数据变化
@@ -443,48 +462,55 @@ export default {
     };
     //保存提交
     const onSaveSubmit = () => {
-      formRef.value.validate().then(() => {});
-      if (mixMaxItem.value.length == 0) {
-        return message.warning("请添加规格项");
-      }
-      const specValueRule = mixMaxItem.value.every((v) => v.spaceName != "");
-      if (!specValueRule) {
-        return message.warning("请填写规格项名称");
-      }
+      formRef.value.validate().then(() => {
+        if (mixMaxItem.value.length == 0) {
+          return message.warning("请添加规格项");
+        }
+        const specValueRule = mixMaxItem.value.every((v) => v.spaceName != "");
+        if (!specValueRule) {
+          return message.warning("请填写规格项名称");
+        }
 
-      //价格是否输入验证
-      const priceRule = data.value.every(
-        (v) => v.price != "" && v.price != null
-      );
-      if (!priceRule) {
-        return message.warning("请填写商品价格");
-      }
-      //尺寸长宽高验证
-      const mixLengthRule = data.value.every(
-        (v) => v.mixLength != "" && v.mixLength != null
-      );
-      const mixWidthRule = data.value.every(
-        (v) => v.mixWidth != "" && v.mixWidth != null
-      );
-      const mixHeightRule = data.value.every(
-        (v) => v.mixHeight != "" && v.mixHeight != null
-      );
-      if (!mixLengthRule || !mixWidthRule || !mixHeightRule) {
-        return message.warning("请填写商品尺寸");
-      }
-      //效果图验证
-      const designSketchRule = data.value.every(
-        (v) => v.designSketch.length != 0
-      );
-      if (!designSketchRule) {
-        return message.warning("请上传商品效果图");
-      }
+        //价格是否输入验证
+        const priceRule = data.value.every(
+          (v) => v.price != "" && v.price != null
+        );
+        if (!priceRule) {
+          return message.warning("请填写商品价格");
+        }
+        //尺寸长宽高验证
+        const mixLengthRule = data.value.every(
+          (v) => v.mixLength != "" && v.mixLength != null
+        );
+        const mixWidthRule = data.value.every(
+          (v) => v.mixWidth != "" && v.mixWidth != null
+        );
+        const mixHeightRule = data.value.every(
+          (v) => v.mixHeight != "" && v.mixHeight != null
+        );
+        if (!mixLengthRule || !mixWidthRule || !mixHeightRule) {
+          return message.warning("请填写商品尺寸");
+        }
+        //效果图验证
+        const designSketchRule = data.value.every(
+          (v) => v.designSketch.length != 0
+        );
+        if (!designSketchRule) {
+          return message.warning("请上传商品效果图");
+        }
 
-      const submitData = {
-        mixInfo: form,
-        mixList: data.value,
-      };
-      console.log(JSON.stringify(submitData));
+        const submitData = {
+          mixInfo: form,
+          mixList: data.value,
+          spaceValueList: mixMaxItem.value,
+        };
+
+        addGoods(submitData).then((res) => {
+          if (res.code == 1) {
+            message.success("操作成功");
+          }
+        });
+      });
     };
     //获取品牌  分类
     const getBrandAndClassList = () => {
@@ -603,7 +629,6 @@ export default {
             position: relative;
             padding: 0px 20px;
             display: inline-block;
-
             line-height: 30px;
             -webkit-box-shadow: none;
             box-shadow: none;
@@ -645,7 +670,13 @@ export default {
   }
 }
 .save-submit {
-  margin: 20px 0px;
+  height: 71px;
+  background-color: #ffff;
+  line-height: 71px;
   text-align: center;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
 }
 </style>
