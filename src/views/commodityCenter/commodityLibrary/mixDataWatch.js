@@ -3,10 +3,13 @@
 import { toRaw } from 'vue'
 export const watchMix = (newValue, oldValue, columns, oldData) => {
     const attrInfo = {}
+
     //过滤出有属性的值
     newValue = newValue.filter(v => {
         return v.mixList.length > 0
     })
+
+
 
     /*动态处理表头*/
     let column = []
@@ -106,15 +109,18 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
 
     let data = renderData() || []
     //对比上一次的数据 赋值已填写的内容
+
     data.forEach(v => {
         v.price = ''
         v.mixLength = ''
         v.mixWidth = ''
         v.mixHeight = ''
-        v.skuName=''
+        v.skuName = ''
         v.designSketch = []
         toRaw(oldData).forEach(o => {
-            if (v.mixKey1 == o.mixKey1 && v.mixKey2 == o.mixKey2 && v.mixKey3 == o.mixKey3 && v.mixKey4 == o.mixKey4) {
+            const minKeyRule1 = v.mixKey1 == o.mixKey1 && v.mixKey2 == o.mixKey2 && v.mixKey3 == o.mixKey3 && v.mixKey4 == o.mixKey4
+            const minKeyRule2 = o.mixKey1 == null && o.mixKey2 == null && o.mixKey3 == null && o.mixKey4 == null
+            if (minKeyRule1 || minKeyRule2) {
                 v.price = o.price
                 v.mixLength = o.mixLength
                 v.mixWidth = o.mixWidth
@@ -219,7 +225,7 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
             return obj
         }
     }
- 
+
 
     /*
         rowSpanNum 合并数量

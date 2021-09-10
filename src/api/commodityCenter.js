@@ -12,6 +12,7 @@ const api = {
     delBrand: '/brand/delBrand',
     getBrandList: '/brand/getBrandList',
     addGoods: '/goods/addGoods',
+    editGoods: '/goods/editGoods',
     getGoodsList: '/goods/getGoodsList',
     getEditGoodsInfo: '/goods/getEditGoodsInfo',
 }
@@ -118,6 +119,14 @@ export function getBrandList(data) {
 export function addGoods(data) {
     return request({
         url: api.addGoods,
+        method: 'post',
+        data
+    })
+}
+//编辑商品
+export function editGoods(data) {
+    return request({
+        url: api.editGoods,
         method: 'post',
         data
     })

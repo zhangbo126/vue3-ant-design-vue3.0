@@ -203,7 +203,7 @@
 
 <script>
 import { reactive, ref, toRefs, watch, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 import { watchMix } from "./mixDataWatch"; //处理数据变化方法
 const rules = {
@@ -272,7 +272,7 @@ const column = [
   {
     title: "SKU名称",
     dataIndex: "skuName",
-    width: 100,
+    width: 180,
     align: "center",
     slots: {
       customRender: "skuName",
@@ -311,6 +311,7 @@ import {
   getBrandList,
   getClassList,
   addGoods,
+  editGoods,
   getEditGoodsInfo,
 } from "@/api/commodityCenter";
 export default {
@@ -349,19 +350,44 @@ export default {
       if (form.goodsId) {
         getEditGoodsInfo(form.goodsId).then((res) => {
           if (res.code == 1) {
-            data.value = res.data.mixList;
+            const spaceInfo = res.data.spaceInfo;
+            data.value = res.data.mixList.map((v) => {
+              v.designSketch = v.designSketch.map((d) => {
+                return {
+                  uid: d,
+                  name: d,
+                  status: "done",
+                  url: d,
+                };
+              });
+              return v;
+            });
+            Object.assign(mixMaxItem.value, spaceInfo.spaceValueList);
+            Object.assign(form, {
+              goodsName: spaceInfo.goodsName,
+              categoryId: spaceInfo.categoryId,
+              brandId: spaceInfo.brandId,
+              goodsId: spaceInfo.goodsId,
+              goodsNo: spaceInfo.goodsNo,
+            });
           }
         });
       }
     });
 
     //监听规格项数据变化
-    watch(mixMaxItem.value, (newValue, oldValue) => {
-      const attrColumns = columns.value[0].children;
-      const result = watchMix(newValue, oldValue, attrColumns, data.value);
-      columns.value[0].children = result.column;
-      data.value = result.data;
-    });
+    watch(
+      mixMaxItem.value,
+      (newValue, oldValue) => {
+        const attrColumns = columns.value[0].children;
+        const result = watchMix(newValue, oldValue, attrColumns, data.value);
+        columns.value[0].children = result.column;
+        data.value = result.data;
+      },
+      {
+        immediate: false,
+      }
+    );
     // 添加大项
     const onAddMixItem = () => {
       const minMax = {
@@ -502,7 +528,15 @@ export default {
           mixList: data.value,
           spaceValueList: mixMaxItem.value,
         };
-
+        //编辑保存
+        if (form.goodsId) {
+          editGoods(submitData).then((res) => {
+            if (res.code == 1) {
+              message.success("操作成功");
+            }
+          });
+        }
+        //新增保存保存
         addGoods(submitData).then((res) => {
           if (res.code == 1) {
             message.success("操作成功");
