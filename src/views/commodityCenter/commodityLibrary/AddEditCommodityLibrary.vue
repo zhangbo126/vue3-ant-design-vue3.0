@@ -347,13 +347,11 @@ export default {
       form.goodsId = route.query.goodsId;
       getBrandAndClassList();
       if (form.goodsId) {
-        getEditGoodsInfo(form.goodsId).then(res=>{
-             if(res.code==1){
-                 
-                 data.value=res.data.mixList
-     
-             }
-        })
+        getEditGoodsInfo(form.goodsId).then((res) => {
+          if (res.code == 1) {
+            data.value = res.data.mixList;
+          }
+        });
       }
     });
 
