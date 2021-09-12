@@ -77,6 +77,47 @@
           :columns="columns"
           :pagination="false"
         >
+          <template #status="{ text }">
+            <div v-if="text == 1">使用中</div>
+          </template>
+          <template #goodsName="{ text, record }">
+            <div class="goods-info">
+              <div class="sku-img">
+                <a :href="record.designSketch" target="_brank">
+                  <img
+                    :src="record.designSketch"
+                    width="100"
+                    height="100"
+                    alt=""
+                /></a>
+              </div>
+              <ul class="info">
+                <li>
+                  <span class="lable">商品名称:</span>
+                  <span>{{ record.goodsName }}</span>
+                </li>
+                <li>
+                  <span class="lable">SKU名称:</span>
+                  <span>{{ record.skuName }}</span>
+                </li>
+                <li>
+                  <span class="lable">SKU规格:</span>
+                  <span
+                    >{{ record.specValue1 }}{{ record.specValue2
+                    }}{{ record.specValue3 }}{{ record.specValue4 }}</span
+                  >
+                </li>
+                <li>
+                  <span class="lable">商品尺寸:</span>
+                  <span
+                    >{{ record.mixLength }}*{{ record.mixWidth }}*{{
+                      record.mixHeight
+                    }}</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </template>
           <template #logoFilePath="{ text }">
             <div>
               <img :src="text" width="120" alt="" />
@@ -145,6 +186,9 @@ const columns = [
     title: "规格名称",
     dataIndex: "skuName",
     align: "center",
+    slots: {
+      customRender: "skuName",
+    },
   },
   {
     title: "操作",
@@ -183,7 +227,11 @@ export default {
         if (res.code != 1) {
           return;
         }
-        data.value = res.data;
+        data.value = res.data.map((v) => {
+          v.designSketch = v.designSketch[0] || null;
+          return v;
+        });
+
         pageData.total = res.count;
       });
     };
@@ -251,4 +299,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped lang="less">
+.goods-info {
+  display: flex;
+  .info {
+    text-align: left;
+    margin-left: 8px;
+    li {
+      // .lable {
+      //   font-weight: bold;
+      // }
+    }
+  }
+}
+</style>

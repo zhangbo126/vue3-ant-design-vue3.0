@@ -535,6 +535,7 @@ export default {
               message.success("操作成功");
             }
           });
+          return;
         }
         //新增保存保存
         addGoods(submitData).then((res) => {
