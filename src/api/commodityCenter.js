@@ -15,6 +15,8 @@ const api = {
     editGoods: '/goods/editGoods',
     getGoodsList: '/goods/getGoodsList',
     getEditGoodsInfo: '/goods/getEditGoodsInfo',
+    setGoodsDetails: '/goods/setGoodsDetails',
+    getGoodsDetails: '/goods/getGoodsDetails',
 }
 
 
@@ -142,12 +144,27 @@ export function getGoodsList(data) {
 
 
 //编辑获取商品信息
-
-
-
 export function getEditGoodsInfo(goodsId) {
     return request({
         url: api.getEditGoodsInfo,
+        method: 'post',
+        data: {
+            goodsId
+        }
+    })
+}
+// 设置商品详情
+export function setGoodsDetails(data) {
+    return request({
+        url: api.setGoodsDetails,
+        method: 'post',
+        data
+    })
+}
+// 设置商品详情
+export function getGoodsDetails(goodsId) {
+    return request({
+        url: api.getGoodsDetails,
         method: 'post',
         data: {
             goodsId

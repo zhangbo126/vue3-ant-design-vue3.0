@@ -8,14 +8,12 @@ const request = axios.create({
     timeout: 6000,
 })
 
-request.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-request.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'
-request.defaults.headers['Access-Control-Allow-Origin'] = '*'
+
 
 
 //请求错误处理
 const errorHandler = (error) => {
-    console.log(error.response)
+
     const status = error.response.status
     store.dispatch('Logout').then(() => {
         setTimeout(() => {

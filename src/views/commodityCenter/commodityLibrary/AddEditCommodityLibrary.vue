@@ -4,6 +4,9 @@
       <a-card>
         <!-- 商品基本信息 -->
         <div class="goods-info">
+          <div class="back">
+            <a-button type="primary" @click="router.back()">返回</a-button>
+          </div>
           <div class="info-title">商品基本信息</div>
           <a-form
             ref="formRef"
@@ -203,7 +206,7 @@
 
 <script>
 import { reactive, ref, toRefs, watch, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
 import { watchMix } from "./mixDataWatch"; //处理数据变化方法
 const rules = {
@@ -335,7 +338,7 @@ export default {
     const formRef = ref();
     const columns = ref(column);
     const route = useRoute();
-
+    const router = useRouter();
     const mixMaxItem = ref([
       {
         spaceName: "",
@@ -568,6 +571,7 @@ export default {
       form,
       mixMaxItem,
       formRef,
+      router,
       onAddMixItem,
       onRemoveMixItem,
       onAddMaxValue,

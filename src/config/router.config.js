@@ -63,7 +63,13 @@ export const hideRouter = [
                 component: () => import('@/views/commodityCenter/commodityLibrary/AddEditCommodityLibrary'),
                 name: 'commodityLibraryDetail',
                 meta: { title: '商品库新增/编辑' }
-            }
+            },
+            {
+                path: '/commoditycenter/commoditylibrary/setgoodsdetail',
+                component: () => import('@/views/commodityCenter/commodityLibrary/setGoodsDetail'),
+                name: 'setGoodsDetail',
+                meta: { title: '设置商品详情' }
+            },
         ]
     },
 ]

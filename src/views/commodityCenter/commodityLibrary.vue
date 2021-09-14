@@ -51,17 +51,7 @@
               @keyup.enter="onChangeSearch"
             />
           </li>
-          <li>
-            <a-select
-              style="width: 140px"
-              v-model:value="queryInfo.status"
-              placeholder="状态"
-              @change="onChangeSearch"
-            >
-              <a-select-option key="1" :value="1">使用中 </a-select-option>
-              <a-select-option key="2" :value="0">已停用 </a-select-option>
-            </a-select>
-          </li>
+
           <li>
             <a-space>
               <a-button @click="onSearch" type="primary">搜索</a-button>
@@ -102,18 +92,24 @@
                 </li>
                 <li>
                   <span class="lable">SKU规格:</span>
-                  <span
-                    >{{ record.specValue1 }}{{ record.specValue2
-                    }}{{ record.specValue3 }}{{ record.specValue4 }}</span
-                  >
+                  <span>
+                    {{
+                      goodsSkuSet(
+                        record.specValue1,
+                        record.specValue2,
+                        record.specValue3,
+                        record.specValue4
+                      )
+                    }}
+                  </span>
                 </li>
                 <li>
                   <span class="lable">商品尺寸:</span>
-                  <span
-                    >{{ record.mixLength }}*{{ record.mixWidth }}*{{
+                  <span>
+                    {{ record.mixLength }}*{{ record.mixWidth }}*{{
                       record.mixHeight
-                    }}</span
-                  >
+                    }}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -128,10 +124,12 @@
               <li>
                 <a @click="onEditGoods(record)">编辑</a>
               </li>
+              <li>
+                <a @click="setGoodsDetail(record)">设置商品详情</a>
+              </li>
             </ul>
           </template>
         </a-table>
-
         <a-pagination
           size="small"
           :total="total"
@@ -165,6 +163,14 @@ const columns = [
     },
   },
   {
+    title: "规格名称",
+    dataIndex: "skuName",
+    align: "center",
+    slots: {
+      customRender: "skuName",
+    },
+  },
+  {
     title: "商品信息",
     dataIndex: "goodsName",
     align: "center",
@@ -182,14 +188,7 @@ const columns = [
     dataIndex: "categoryName",
     align: "center",
   },
-  {
-    title: "规格名称",
-    dataIndex: "skuName",
-    align: "center",
-    slots: {
-      customRender: "skuName",
-    },
-  },
+
   {
     title: "操作",
     dataIndex: "action",
@@ -200,10 +199,12 @@ const columns = [
     },
   },
 ];
+import textConfig from "@/config/ueditorConfig";
 import { getGoodsList } from "@/api/commodityCenter";
-import { reactive, toRefs, ref, onMounted } from "vue";
+import { reactive, toRefs, ref, onMounted, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
 import $urls from "@/utils/routerPath";
+
 export default {
   setup(props, context) {
     const data = ref([]);
@@ -212,7 +213,6 @@ export default {
         pageSize: 10,
         pageNumber: 1,
         goodsName: null,
-        status: null,
         categoryName: null,
         brandName: null,
         goodsNo: null,
@@ -221,7 +221,8 @@ export default {
       total: 0,
     });
     const router = useRouter();
-
+    const { $session } =
+      getCurrentInstance().appContext.config.globalProperties;
     const getList = () => {
       getGoodsList(pageData.queryInfo).then((res) => {
         if (res.code != 1) {
@@ -241,10 +242,36 @@ export default {
     };
     //编辑
     const onEditGoods = (record) => {
+      $session.set("commodity_libray_info", pageData.queryInfo);
       router.push({
         path: $urls.Add_Edit_Commodity_Library,
         query: { goodsId: record.goodsId },
       });
+    };
+
+    //设置商品详情
+    const setGoodsDetail = (record) => {
+      $session.set("commodity_libray_info", pageData.queryInfo);
+      router.push({
+        path: $urls.Set_Goods_Detail,
+        query: { goodsId: record.goodsId },
+      });
+    };
+
+    //sku规格处理
+    const goodsSkuSet = (specValue1, specValue2, specValue3, specValue4) => {
+      if (specValue1 && specValue2 && specValue3 && specValue4) {
+        return `${specValue1}+${specValue2}+${specValue3}+${specValue4}`;
+      }
+      if (specValue1 && specValue2 && specValue3) {
+        return `${specValue1}+${specValue2}+${specValue3}`;
+      }
+      if (specValue1 && specValue2) {
+        return `${specValue1}+${specValue2}`;
+      }
+      if (specValue1) {
+        return specValue1;
+      }
     };
 
     const handlePageSizeChange = (current, size) => {
@@ -268,7 +295,6 @@ export default {
         pageSize: 10,
         pageNumber: 1,
         goodsName: null,
-        status: null,
         categoryName: null,
         brandName: null,
         goodsNo: null,
@@ -280,6 +306,11 @@ export default {
       getList();
     };
     onMounted(() => {
+      const queryInfo = $session.get("commodity_libray_info");
+      if (queryInfo) {
+        pageData.queryInfo = queryInfo;
+      }
+      $session.remove("commodity_libray_info");
       getList();
     });
     return {
@@ -294,6 +325,8 @@ export default {
       onSearch,
       onResult,
       refresh,
+      goodsSkuSet,
+      setGoodsDetail,
     };
   },
 };
@@ -305,11 +338,6 @@ export default {
   .info {
     text-align: left;
     margin-left: 8px;
-    li {
-      // .lable {
-      //   font-weight: bold;
-      // }
-    }
   }
 }
 </style>

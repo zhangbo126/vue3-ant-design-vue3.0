@@ -47,16 +47,16 @@ const vueConfig = {
         open: true,
         port: 9999,
 
-        proxy: {
-            '/api': {
-                target: 'http://192.168.101.112:99/',
-                // ws: false,
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/api': 'http://192.168.101.112:9999/'
-                }
-            }
-        }
+        // proxy: {
+        //     '/api': {
+        //         target: 'http://192.168.101.112:99/',
+        //         // ws: false,
+        //         changeOrigin: true,
+        //         pathRewrite: {
+        //             '^/api': 'http://192.168.101.112:9999/'
+        //         }
+        //     }
+        // }
     },
     productionSourceMap: false,
     lintOnSave: false,
