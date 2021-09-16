@@ -199,7 +199,7 @@ const columns = [
     },
   },
 ];
-import textConfig from "@/config/ueditorConfig";
+
 import { getGoodsList } from "@/api/commodityCenter";
 import { reactive, toRefs, ref, onMounted, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
