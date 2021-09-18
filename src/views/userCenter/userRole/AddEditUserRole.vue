@@ -82,7 +82,7 @@ export default {
       name: null,
       describe: null,
       id: null,
-      roleMenuList: [],
+      roleMenu_List: [],
     });
     const parametr = reactive({
       type: 1,
@@ -93,7 +93,7 @@ export default {
 
     const submitHandle = () => {
       parametr.formRef.validate().then(() => {
-        setCheckId(parametr.menuList, form.roleMenuList);
+        setCheckId(parametr.menuList, form.roleMenu_List);
         //新增提交
         if (parametr.type == 1) {
           addRole(form).then((res) => {
@@ -159,8 +159,8 @@ export default {
     };
 
     //递归处理已勾选的菜单ID
-    const setCheckId = (roleMenuList, menuIdList) => {
-      roleMenuList.forEach((v) => {
+    const setCheckId = (roleMenu_List, menuIdList) => {
+      roleMenu_List.forEach((v) => {
         if (v.isChecked || v.indeterminate) {
           menuIdList.push(v._id);
         }
@@ -215,7 +215,7 @@ export default {
         name: null,
         describe: null,
         id: null,
-        roleMenuList: [],
+        roleMenu_List: [],
       });
     };
     const cancel = () => {

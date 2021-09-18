@@ -99,7 +99,7 @@ const columns = [
   },
   {
     title: "角色权限",
-    dataIndex: "roleMenuNameList",
+    dataIndex: "roleMenuName_List",
     align: "center",
   },
   {
@@ -130,7 +130,7 @@ export default {
       getRoleList(pageData.queryInfo).then((res) => {
         data.value = res.data;
         data.value.forEach((v) => {
-          v.roleMenuNameList = v.roleMenuNameList.join(",");
+          v.roleMenuName_List = v.roleMenuName_List.join(",");
         });
         pageData.total = res.count;
       });

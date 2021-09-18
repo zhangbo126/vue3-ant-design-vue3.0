@@ -16,7 +16,10 @@
       <s-menu></s-menu>
     </a-layout-sider>
     <a-layout class="layout-content">
-      <a-layout-header style="background: #fff; padding: 0" class="layout-header">
+      <a-layout-header
+        :style="{ width:` calc(100% - ${collapsed ? '80px' : '200px'})` }"
+        class="layout-header"
+      >
         <div class="trigger">
           <MenuFoldOutlined
             v-if="collapsed"
@@ -33,14 +36,16 @@
           <user-menus></user-menus>
         </div>
       </a-layout-header>
-      <div :style="{height:'64px'}"></div>
-      <a-layout-content :style="{ backgroundColor: '#fff' ,paddingLeft:'200px'}">
+      <div :style="{ height: '64px' }"></div>
+      <a-layout-content
+        :style="{ backgroundColor: '#fff', paddingLeft: collapsed ? '80px' : '200px' }"
+      >
         <s-tab></s-tab>
         <div :style="{ background: '#fff', minHeight: '360px' }">
           <router-view></router-view>
         </div>
       </a-layout-content>
-      <a-layout-footer style="text-align: center;padding-left:210px">
+      <a-layout-footer style="text-align: center; padding-left: 210px">
         VUE3.0 + Ant-Design-Vue 2.0
       </a-layout-footer>
     </a-layout>
@@ -66,7 +71,7 @@ export default {
 };
 </script>
 <style scoped lang="less">
-#components-layout-demo-side{
+#components-layout-demo-side {
   position: fixed;
   z-index: 1000;
   min-height: 100vh;
@@ -86,9 +91,9 @@ export default {
     color: #fff;
   }
 }
-.layout-content{
+.layout-content {
   display: flex;
- flex-direction: column;
+  flex-direction: column;
 }
 
 .layout-header {
@@ -96,9 +101,9 @@ export default {
   display: flex;
   justify-content: space-between;
   position: fixed;
-  top:0;
+  top: 0;
   z-index: 1000;
-  width: calc(100% - 200px);
+  background: #fff; padding: 0;
   right: 0;
   .trigger {
     display: flex;
@@ -112,7 +117,6 @@ export default {
 
 .site-layout .site-layout-background {
   background: #fff;
-
 }
 [data-theme="dark"] .site-layout .site-layout-background {
   background: #141414;

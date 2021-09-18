@@ -8,7 +8,7 @@ const constantRouterComponents = {
     // 基础页面 layout 必须引入
     BasicLayouts: BasicLayouts,
     RouteView: RouteView,
-    '404': () => import(/* webpackChunkName: "error" */ '@/views/Exception/404'),
+  
     // 你需要动态引入的页面组件
     'userRole': () => import('@/views/userCenter/userRole'),
     'userAccount': () => import('@/views/userCenter/userAccount'),
