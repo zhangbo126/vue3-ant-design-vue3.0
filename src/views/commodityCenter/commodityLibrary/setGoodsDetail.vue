@@ -31,10 +31,10 @@ export default {
     const route = useRoute();
     const form = reactive({
       mixDetail: null,
-      goodsId: route.query.goodsId,
+      id: route.query.id,
     });
     onMounted(() => {
-      getGoodsDetails(route.query.goodsId).then((res) => {
+      getGoodsDetails(route.query.id).then((res) => {
         form.mixDetail = res.data.mixDetail;
       });
     });

@@ -2,11 +2,7 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button
-          type="primary"
-          :style="{ margin: '10px 0px' }"
-          @click="onAddgoods"
-        >
+        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddgoods">
           新增商品+
         </a-button>
         <!-- 查询区域 -->
@@ -74,11 +70,7 @@
             <div class="goods-info">
               <div class="sku-img">
                 <a :href="record.designSketch" target="_brank">
-                  <img
-                    :src="record.designSketch"
-                    width="100"
-                    height="100"
-                    alt=""
+                  <img :src="record.designSketch" width="100" height="100" alt=""
                 /></a>
               </div>
               <ul class="info">
@@ -106,9 +98,7 @@
                 <li>
                   <span class="lable">商品尺寸:</span>
                   <span>
-                    {{ record.mixLength }}*{{ record.mixWidth }}*{{
-                      record.mixHeight
-                    }}
+                    {{ record.mixLength }}*{{ record.mixWidth }}*{{ record.mixHeight }}
                   </span>
                 </li>
               </ul>
@@ -221,8 +211,7 @@ export default {
       total: 0,
     });
     const router = useRouter();
-    const { $session } =
-      getCurrentInstance().appContext.config.globalProperties;
+    const { $session } = getCurrentInstance().appContext.config.globalProperties;
     const getList = () => {
       getGoodsList(pageData.queryInfo).then((res) => {
         if (res.code != 1) {
@@ -254,7 +243,7 @@ export default {
       $session.set("commodity_libray_info", pageData.queryInfo);
       router.push({
         path: $urls.Set_Goods_Detail,
-        query: { goodsId: record.goodsId },
+        query: { id: record._id },
       });
     };
 

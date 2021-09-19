@@ -32,11 +32,7 @@
                 show-search
                 :filter-option="filterOptionPartent"
               >
-                <a-select-option
-                  v-for="c in classList"
-                  :key="c._id"
-                  :value="c._id"
-                >
+                <a-select-option v-for="c in classList" :key="c._id" :value="c._id">
                   {{ c.name }}
                 </a-select-option>
               </a-select>
@@ -50,11 +46,7 @@
                 show-search
                 :filter-option="filterOptionPartent"
               >
-                <a-select-option
-                  v-for="c in brandList"
-                  :key="c._id"
-                  :value="c._id"
-                >
+                <a-select-option v-for="c in brandList" :key="c._id" :value="c._id">
                   {{ c.name }}
                 </a-select-option>
               </a-select>
@@ -72,11 +64,7 @@
         <div class="mix-containter">
           <div class="mix-title">商品规格</div>
           <div class="mix-item">
-            <div
-              class="item-bar"
-              v-for="(mixMax, index) in mixMaxItem"
-              :key="mixMax.key"
-            >
+            <div class="item-bar" v-for="(mixMax, index) in mixMaxItem" :key="mixMax.key">
               <div class="bar-nav">
                 <div class="nav-lf">
                   <p>规格项:</p>
@@ -103,19 +91,13 @@
                         v-model:value.trim="mixMin.specValue"
                         :style="{ width: '120px', marginRight: '10px' }"
                       />
-                      <span
-                        class="ico"
-                        @click="onRemoveMinValue(mixMax.mixList, i)"
-                      >
+                      <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
                         <CloseCircleOutlined />
                       </span>
                     </div>
                     <span class="txt" v-else @click="onCheckoutValue(mixMin)"
                       >{{ mixMin.specValue }}
-                      <span
-                        class="ico"
-                        @click="onRemoveMinValue(mixMax.mixList, i)"
-                      >
+                      <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
                         <CloseCircleOutlined />
                       </span>
                     </span>
@@ -127,9 +109,7 @@
               </div>
             </div>
             <div class="add-btn">
-              <a-button type="primary" @click="onAddMixItem">
-                添加规格项+
-              </a-button>
+              <a-button type="primary" @click="onAddMixItem"> 添加规格项+ </a-button>
             </div>
           </div>
         </div>
@@ -144,11 +124,7 @@
             :data-source="data"
           >
             <template #price="{ record }">
-              <a-input-number
-                :max="1000000"
-                :min="1"
-                v-model:value.trim="record.price"
-              />
+              <a-input-number :max="1000000" :min="1" v-model:value.trim="record.price" />
             </template>
             <template #skuName="{ record }">
               <a-input v-model:value.trim="record.skuName" />
@@ -182,9 +158,7 @@
                   list-type="picture-card"
                   name="file"
                   v-model:file-list="record.designSketch"
-                  :before-upload="
-                    (e, fileList) => onBeforeUpload(e, fileList, record)
-                  "
+                  :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)"
                   :customRequest="(e) => onCustomRequest(e, record)"
                 >
                   <div v-if="record.designSketch.length < 8">
@@ -347,11 +321,11 @@ export default {
       },
     ]);
     //页面加载获取数据
-    onMounted(() => {
+    onMounted(async () => {
       form.goodsId = route.query.goodsId;
-      getBrandAndClassList();
+      await getBrandAndClassList();
       if (form.goodsId) {
-        getEditGoodsInfo(form.goodsId).then((res) => {
+        await getEditGoodsInfo(form.goodsId).then((res) => {
           if (res.code == 1) {
             const spaceInfo = res.data.spaceInfo;
             data.value = res.data.mixList.map((v) => {
@@ -432,8 +406,7 @@ export default {
     //上传图片前检测
     const onBeforeUpload = (file, fileList, record) => {
       return new Promise(async (reslove, reject) => {
-        const isJpgOrPng =
-          file.type === "image/jpeg" || file.type === "image/png";
+        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
         const isLt2M = file.size / 1024 / 1024 < 2;
         parametr.beforeImgFile.push(file);
         if (!isJpgOrPng || !isLt2M) {
@@ -499,9 +472,7 @@ export default {
         }
 
         //价格是否输入验证
-        const priceRule = data.value.every(
-          (v) => v.price != "" && v.price != null
-        );
+        const priceRule = data.value.every((v) => v.price != "" && v.price != null);
         if (!priceRule) {
           return message.warning("请填写商品价格");
         }
@@ -519,9 +490,7 @@ export default {
           return message.warning("请填写商品尺寸");
         }
         //效果图验证
-        const designSketchRule = data.value.every(
-          (v) => v.designSketch.length != 0
-        );
+        const designSketchRule = data.value.every((v) => v.designSketch.length != 0);
         if (!designSketchRule) {
           return message.warning("请上传商品效果图");
         }
@@ -544,6 +513,7 @@ export default {
         addGoods(submitData).then((res) => {
           if (res.code == 1) {
             message.success("操作成功");
+            router.back()
           }
         });
       });
@@ -558,11 +528,7 @@ export default {
       });
     };
     const filterOptionPartent = (input, option) => {
-      return (
-        option.children[0].children
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
+      return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
     return {
       data,

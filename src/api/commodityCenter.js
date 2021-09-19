@@ -162,12 +162,12 @@ export function setGoodsDetails(data) {
     })
 }
 // 设置商品详情
-export function getGoodsDetails(goodsId) {
+export function getGoodsDetails(id) {
     return request({
         url: api.getGoodsDetails,
         method: 'post',
         data: {
-            goodsId
+            id
         }
     })
 }
