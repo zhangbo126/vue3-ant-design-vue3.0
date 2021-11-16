@@ -1,6 +1,6 @@
 
-
-## Project setup
+## 纯前端  develop分支
+## 前后端交互 master分支
 
 1. yarn install
 2. yarn serve
