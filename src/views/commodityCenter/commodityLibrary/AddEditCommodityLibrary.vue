@@ -55,7 +55,14 @@
               <a-input
                 placeholder="商品货号"
                 style="width: 220px"
-                v-model:value="form.goodsNo"
+                v-model:value.trim="form.goodsNo"
+              />
+            </a-form-item>
+            <a-form-item label="产地" ref="placeOrigin" name="placeOrigin">
+              <a-input
+                placeholder="产地"
+                style="width: 220px"
+                v-model:value.trim="form.placeOrigin"
               />
             </a-form-item>
           </a-form>
@@ -122,6 +129,7 @@
             size="small"
             :pagination="false"
             :data-source="data"
+            :scroll="{x:1200}"
           >
             <template #price="{ record }">
               <a-input-number :max="1000000" :min="1" v-model:value.trim="record.price" />
@@ -129,27 +137,21 @@
             <template #skuName="{ record }">
               <a-input v-model:value.trim="record.skuName" />
             </template>
-            <template #size="{ record }">
-              <div class="size">
+            <template #weight="{ record }">
+              <div class="weight">
                 <a-input-number
-                  placeholder="长"
-                  v-model:value.trim="record.mixLength"
-                  :max="1000000"
-                  :min="1"
-                />*
-                <a-input-number
-                  placeholder="宽"
-                  v-model:value.trim="record.mixWidth"
-                  :max="1000000"
-                  :min="1"
-                />*
-                <a-input-number
-                  placeholder="高"
-                  v-model:value.trim="record.mixHeight"
+                  v-model:value.trim="record.weight"
                   :max="1000000"
                   :min="1"
                 />
               </div>
+            </template>
+            <template #goodsType="{ record }">
+              <a-radio-group v-model:value="record.goodsType" name="radioGroup">
+                <a-radio :value="1">普通商品</a-radio>
+                <a-radio :value="2">秒杀商品</a-radio>
+                <a-radio :value="3">团购商品</a-radio>
+              </a-radio-group>
             </template>
             <template #designSketch="{ record }">
               <div class="design-img">
@@ -179,7 +181,7 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs, watch, onMounted } from "vue";
+import { reactive, ref, toRefs, watch, onMounted, toRef } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
 import { watchMix } from "./mixDataWatch"; //处理数据变化方法
@@ -230,6 +232,21 @@ const rules = {
       type: "string",
     },
   ],
+  placeOrigin: [
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string",
+    },
+    {
+      message: "字符长度限制20",
+      min: 0,
+      max: 20,
+      trigger: ["change", "blur"],
+      type: "string",
+    },
+  ],
 };
 const column = [
   {
@@ -266,11 +283,20 @@ const column = [
   },
 
   {
-    title: "尺寸(长*宽*高)(mm)",
-    dataIndex: "size",
+    title: "重量(g)",
+    dataIndex: "weight",
     width: 160,
     slots: {
-      customRender: "size",
+      customRender: "weight",
+    },
+    align: "center",
+  },
+  {
+    title: "类型",
+    dataIndex: "goodsType",
+    width: 160,
+    slots: {
+      customRender: "goodsType",
     },
     align: "center",
   },
@@ -299,6 +325,7 @@ export default {
       brandId: null,
       goodsId: null,
       goodsNo: null,
+      placeOrigin: null,
     });
     const parametr = reactive({
       classList: [],
@@ -308,11 +335,13 @@ export default {
       brandList: [],
       classList: [],
     });
+
     const data = ref([]);
     const formRef = ref();
     const columns = ref(column);
     const route = useRoute();
     const router = useRouter();
+
     const mixMaxItem = ref([
       {
         spaceName: "",
@@ -320,6 +349,7 @@ export default {
         mixList: [],
       },
     ]);
+
     //页面加载获取数据
     onMounted(async () => {
       form.goodsId = route.query.goodsId;
@@ -346,6 +376,7 @@ export default {
               brandId: spaceInfo.brandId,
               goodsId: spaceInfo.goodsId,
               goodsNo: spaceInfo.goodsNo,
+              placeOrigin: spaceInfo.placeOrigin,
             });
           }
         });
@@ -476,19 +507,13 @@ export default {
         if (!priceRule) {
           return message.warning("请填写商品价格");
         }
-        //尺寸长宽高验证
-        const mixLengthRule = data.value.every(
-          (v) => v.mixLength != "" && v.mixLength != null
-        );
-        const mixWidthRule = data.value.every(
-          (v) => v.mixWidth != "" && v.mixWidth != null
-        );
-        const mixHeightRule = data.value.every(
-          (v) => v.mixHeight != "" && v.mixHeight != null
-        );
-        if (!mixLengthRule || !mixWidthRule || !mixHeightRule) {
-          return message.warning("请填写商品尺寸");
+        //重量验证
+        const weightRule = data.value.every((v) => v.weight != "" && v.weight != null);
+        if (!weightRule) {
+          return message.warning("请填写商品重量");
         }
+      
+
         //效果图验证
         const designSketchRule = data.value.every((v) => v.designSketch.length != 0);
         if (!designSketchRule) {
@@ -513,7 +538,7 @@ export default {
         addGoods(submitData).then((res) => {
           if (res.code == 1) {
             message.success("操作成功");
-            router.back()
+            router.back();
           }
         });
       });
@@ -524,7 +549,7 @@ export default {
         parametr.brandList = res.data;
       });
       getClassList().then((res) => {
-        parametr.classList = res.data;
+        parametr.classList = res.data.filter(v=>v.partentId!=null);
       });
     };
     const filterOptionPartent = (input, option) => {

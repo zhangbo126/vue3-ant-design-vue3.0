@@ -47,6 +47,27 @@
               @keyup.enter="onChangeSearch"
             />
           </li>
+          <li>
+            <a-input
+              style="width: 140px"
+              v-model:value.trim="queryInfo.placeOrigin"
+              placeholder="产地"
+              @keyup.enter="onChangeSearch"
+            />
+          </li>
+          <li>
+            <a-select
+              v-model:value="queryInfo.goodsType"
+              placeholder="商品类型"
+              style="width: 160px"
+              @change="onChangeSearch"
+              show-search
+            >
+              <a-select-option :value="1"> 普通商品 </a-select-option>
+              <a-select-option :value="2"> 秒杀商品 </a-select-option>
+              <a-select-option :value="3"> 团购商品 </a-select-option>
+            </a-select>
+          </li>
 
           <li>
             <a-space>
@@ -62,9 +83,10 @@
           rowKey="_id"
           :columns="columns"
           :pagination="false"
+          :scroll="{x:1400}"
         >
           <template #status="{ text }">
-            <div v-if="text == 1">使用中</div>
+            <div v-if="text == 1">在售</div>
           </template>
           <template #goodsName="{ text, record }">
             <div class="goods-info">
@@ -96,10 +118,20 @@
                   </span>
                 </li>
                 <li>
-                  <span class="lable">商品尺寸:</span>
+                  <span class="lable">商品重量:</span>
+                  <span> {{ record.weight }}(g) </span>
+                </li>
+                <li>
+                  <span class="lable">商品产地:</span>
                   <span>
-                    {{ record.mixLength }}*{{ record.mixWidth }}*{{ record.mixHeight }}
+                    {{ record.placeOrigin }}
                   </span>
+                </li>
+                <li>
+                  <span class="lable">商品类型:</span>
+                  <span v-if="record.goodsType == 1"> 普通商品 </span>
+                  <span v-if="record.goodsType == 2"> 秒杀商品 </span>
+                  <span v-if="record.goodsType == 3"> 团购商品 </span>
                 </li>
               </ul>
             </div>
@@ -142,12 +174,14 @@ const columns = [
     title: "商品货号",
     dataIndex: "goodsNo",
     align: "center",
+    width:110,
   },
 
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
+    width:80,
     slots: {
       customRender: "status",
     },
@@ -164,6 +198,7 @@ const columns = [
     title: "商品信息",
     dataIndex: "goodsName",
     align: "center",
+    width:440,
     slots: {
       customRender: "goodsName",
     },
@@ -177,12 +212,14 @@ const columns = [
     title: "分类名称",
     dataIndex: "categoryName",
     align: "center",
+    
   },
 
   {
     title: "操作",
     dataIndex: "action",
     align: "center",
+    fixed:"right",
     width: 130,
     slots: {
       customRender: "action",
@@ -207,6 +244,8 @@ export default {
         brandName: null,
         goodsNo: null,
         skuName: null,
+        placeOrigin: null,
+        goodsType: null,
       },
       total: 0,
     });
@@ -273,6 +312,7 @@ export default {
       getList();
     };
     const onChangeSearch = () => {
+      pageData.queryInfo.pageNumber = 1;
       getList();
     };
     const onSearch = () => {
@@ -288,6 +328,8 @@ export default {
         brandName: null,
         goodsNo: null,
         skuName: null,
+        placeOrigin: null,
+        goodsType: null,
       });
       getList();
     };

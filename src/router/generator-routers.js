@@ -16,6 +16,7 @@ const constantRouterComponents = {
     'commodityBrand': () => import('@/views/commodityCenter/commodityBrand'),
     'commodityClass': () => import('@/views/commodityCenter/commodityClass'),
     'commodityLibrary': () => import('@/views/commodityCenter/commodityLibrary'),
+    'informationList': () => import('@/views/informationCenter/informationList'),
 }
 
 
@@ -68,8 +69,6 @@ export const generator = (routerMap, parent) => {
             // 该路由对应页面的 组件 :方案1
             component: constantRouterComponents[item.component],
             // 该路由对应页面的 组件 :方案2 (动态加载)
-
-            // component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
             // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
             meta: {
                 title: item.title,

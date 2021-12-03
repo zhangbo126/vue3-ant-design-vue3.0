@@ -1,7 +1,7 @@
 <template>
-  <a-result title="作者:ZHANG_666">
+  <a-result>
     <template #icon>
-     <a-image  :width="70" :src="require('@/assets/image/ZHANG.jpg')" />
+     <a-image  :width="70" :src="require('@/assets/image/avatar.jpg')" />
     </template>
     <template #extra>
       <div :style="{ textAlign: 'left', width: '500px', margin: '0 auto' }">

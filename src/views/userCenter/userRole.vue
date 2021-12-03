@@ -39,6 +39,7 @@
           bordered
           rowKey="_id"
           :columns="columns"
+          :scroll="{x:1000}"
         >
           <template #status="{ text }">
             <div>
@@ -88,6 +89,7 @@ const columns = [
     title: "状态",
     dataIndex: "status",
     align: "center",
+    width:120,
     slots: {
       customRender: "status",
     },
@@ -106,6 +108,8 @@ const columns = [
     title: "操作",
     dataIndex: "action",
     align: "center",
+    width:100,
+    fixed:'right',
     slots: {
       customRender: "action",
     },

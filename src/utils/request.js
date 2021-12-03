@@ -11,9 +11,9 @@ const request = axios.create({
 
 
 
+
 //请求错误处理
 const errorHandler = (error) => {
-
     const status = error.response.status
     store.dispatch('Logout').then(() => {
         setTimeout(() => {

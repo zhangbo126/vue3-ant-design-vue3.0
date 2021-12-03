@@ -112,23 +112,21 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
 
     data.forEach(v => {
         v.price = ''
-        v.mixLength = ''
-        v.mixWidth = ''
-        v.mixHeight = ''
+        v.weight = ''
         v.skuName = ''
         v.designSketch = []
         v.goodsId = ''
+        v.goodsType = 1
         toRaw(oldData).forEach(o => {
             const minKeyRule1 = v.mixKey1 == o.mixKey1 && v.mixKey2 == o.mixKey2 && v.mixKey3 == o.mixKey3 && v.mixKey4 == o.mixKey4
             const minKeyRule2 = v.specValue1 == o.specValue1 && v.specValue2 == o.specValue2 && v.specValue3 == o.specValue3 && v.specValue4 == o.specValue4
             if (minKeyRule1 || minKeyRule2) {
                 v.price = o.price
-                v.mixLength = o.mixLength
-                v.mixWidth = o.mixWidth
-                v.mixHeight = o.mixHeight
+                v.weight = o.weight
                 v.designSketch = o.designSketch
                 v.skuName = o.skuName
                 v.goodsId = o.goodsId
+                v.goodsType = o.goodsType
             }
 
         })

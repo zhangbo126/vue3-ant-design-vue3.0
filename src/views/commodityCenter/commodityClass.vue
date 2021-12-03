@@ -2,9 +2,9 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass"
-          >新增分类+</a-button
-        >
+        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass">
+          新增分类+
+        </a-button>
         <!-- 查询区域 -->
         <ul class="query-handle">
           <li>
@@ -109,6 +109,11 @@ const columns = [
     align: "center",
   },
   {
+    title: "分类级别",
+    dataIndex: "level",
+    align: "center",
+  },
+  {
     title: "排序",
     dataIndex: "sort",
     align: "center",
@@ -168,7 +173,14 @@ export default {
         if (res.code != 1) {
           return;
         }
-        data.value = res.data;
+        data.value = res.data.map((v) => {
+          v.level = 1;
+          if (v.partentId) {
+            v.level = 2;
+          }
+          return v;
+        });
+
         pageData.total = res.count;
       });
     };

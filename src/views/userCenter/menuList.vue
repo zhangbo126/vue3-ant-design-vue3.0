@@ -116,6 +116,8 @@ export default {
         pageNumber: 1,
       },
     });
+
+    
     const getList = () => {
       getMenuTree(pageData.queryInfo).then((res) => {
         data.value = res.data;

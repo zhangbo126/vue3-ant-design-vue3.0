@@ -130,6 +130,11 @@ const componentList = [
         component: 'commodityLibrary',
         describe: '二级菜单'
     },
+    {
+        name: '活动通知',
+        component: 'informationList',
+        describe: '二级菜单'
+    }
 ]
 
 

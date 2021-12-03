@@ -11,7 +11,7 @@
       </template>
       <div class="logo">
         <img src="https://store.antdv.com/pro/preview/img/logo.59818776.png" />
-        <span>AntDesignVue2.0</span>
+        <span>一韵茶叶管理系统</span>
       </div>
       <s-menu></s-menu>
     </a-layout-sider>

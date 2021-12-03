@@ -95,7 +95,7 @@ export default {
     ],
     initialFrameHeight: 500, // 初始容器高度
     initialFrameWidth: "100%", // 初始容器宽度
-    serverUrl: process.env.VUE_APP_API_BASE_URL + 'upload/imageEuditor',
+    serverUrl: 'http://localhost:99/'+ 'upload/imageEuditor',
     UEDITOR_HOME_URL: "/UEditor/",
     // 上传图片配置
     imageActionName: "uploadimage", //执行上传图片的action名称
@@ -103,5 +103,5 @@ export default {
     imageMaxSize: 1048576 /* 上传大小限制，单位B */,
     imageAllowFiles: [".png", ".jpg", ".jpeg", ".gif", ".bmp"], //上传图片格式显示
     // imagePathFormat: '/uploads/file/{yyyy}{mm}{dd}/{filename}',
-    imageUrlPrefix: `${process.env.VUE_APP_API_BASE_URL}upload/`,/* 图片访问路径前缀 */
+    imageUrlPrefix: `http://localhost:99/upload/`,/* 图片访问路径前缀 */
 }

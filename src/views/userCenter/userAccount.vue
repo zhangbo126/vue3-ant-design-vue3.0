@@ -139,7 +139,7 @@ const columns = [
     title: "联系方式",
     dataIndex: "phone",
     align: "center",
-    width: 120,
+    width: 140,
   },
   {
     title: "邮箱",
@@ -160,7 +160,8 @@ const columns = [
 ];
 export default {
   components: { AddEditAccount, DefinitionRole },
-  setup() {
+  setup(props,content) {
+    console.log(props,content)
     const data = ref([]);
     const account = ref(null);
     const role = ref(null);

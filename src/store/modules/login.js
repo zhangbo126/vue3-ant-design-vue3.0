@@ -19,6 +19,7 @@ const logins = {
             return new Promise((reslove, reject) => {
                 login(userInfo).then(res => {
                     const result = res.data
+                  
                     if (res.code == 1) {
                         VueCookies.set(ACCESS_TOKEN, result.token, 10 * 24 * 60 * 60 * 1000)
                         reslove(res)
