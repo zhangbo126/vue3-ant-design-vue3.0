@@ -70,8 +70,8 @@ const rules = {
 export default defineComponent({
   setup() {
     const form = reactive({
-      userAccount: "",
-      passWord: "",
+      userAccount: "admin",
+      passWord: "zb123456",
     });
     const loading = ref();
     const formRef = ref();
