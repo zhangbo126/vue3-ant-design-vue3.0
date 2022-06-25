@@ -2,28 +2,16 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddbrand"
-          >新增品牌+</a-button
-        >
+        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddbrand">新增品牌+</a-button>
         <!-- 查询区域 -->
         <ul class="query-handle">
           <li>
-            <a-input
-              style="width: 140px"
-              v-model:value.trim="queryInfo.name"
-              placeholder="品牌名称"
-              @keyup.enter="onChangeSearch"
-            />
+            <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="品牌名称" @keyup.enter="onChangeSearch" />
           </li>
           <li>
-            <a-select
-              style="width: 140px"
-              v-model:value="queryInfo.status"
-              placeholder="状态"
-              @change="onChangeSearch"
-            >
-              <a-select-option key="1" :value="1">使用中 </a-select-option>
-              <a-select-option key="2" :value="0">已停用 </a-select-option>
+            <a-select style="width: 140px" v-model:value="queryInfo.status" placeholder="状态" @change="onChangeSearch">
+              <a-select-option key="1" :value="1">使用中</a-select-option>
+              <a-select-option key="2" :value="0">已停用</a-select-option>
             </a-select>
           </li>
           <li>
@@ -39,38 +27,39 @@
           bordered
           rowKey="_id"
           :columns="columns"
-          :pagination="false"
+          :pagination="{
+          size:'small',
+          total, 
+          onChange:onChangePage,
+          onShowSizeChange:handlePageSizeChange,
+          showTotal:(total) => `总计${total}`,
+          pageSize:queryInfo.pageSize,
+          current:queryInfo.pageNumber, 
+          showSizeChanger:true,
+          showQuickJumper:true,
+          position:['bottomCenter']}"
         >
-          <template #status="{ text }">
-            <div>
-              {{ statusMapFilter(text) }}
-            </div>
-          </template>
-          <template #logoFilePath="{ text }">
-            <div>
-              <img :src="text" width="120" alt="" />
-            </div>
-          </template>
-          <template #action="{ text, record }">
-            <ul class="table-action">
-              <li><a @click="onDelbrand(record._id)"> 删除 </a></li>
-              <li>
-                <a @click="onEditbrand(record)"> 编辑 </a>
-              </li>
-            </ul>
+          <template #bodyCell="{ column, text,record }">
+            <template v-if="column.dataIndex === 'status'">
+              <div>{{ statusMapFilter(text) }}</div>
+            </template>
+            <template v-if="column.dataIndex === 'logoFilePath'">
+              <div>
+                <img :src="text" width="120" alt />
+              </div>
+            </template>
+            <template v-if="column.dataIndex === 'action'">
+              <ul class="table-action">
+                <li>
+                  <a @click="onDelbrand(record._id)">删除</a>
+                </li>
+                <li>
+                  <a @click="onEditbrand(record)">编辑</a>
+                </li>
+              </ul>
+            </template>
           </template>
         </a-table>
-        <a-pagination
-          size="small"
-          :total="total"
-          @change="onChangePage"
-          @showSizeChange="handlePageSizeChange"
-          :show-total="(total) => `总计${total}`"
-          :pageSize="queryInfo.pageSize"
-          :current="queryInfo.pageNumber"
-          show-size-changer
-          show-quick-jumper
-        />
       </a-card>
     </a-col>
     <!-- 新增编辑商品品牌-->
@@ -84,49 +73,40 @@ const columns = [
     title: "品牌名称",
     dataIndex: "name",
     align: "center",
-    width: 140,
+    width: 140
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
-    width: 110,
-    slots: {
-      customRender: "status",
-    },
+    width: 110
   },
   {
     title: "品牌图标",
     dataIndex: "logoFilePath",
-    align: "center",
-    slots: {
-      customRender: "logoFilePath",
-    },
+    align: "center"
   },
   {
     title: "排序",
     dataIndex: "sort",
     align: "center",
-    width: 120,
+    width: 120
   },
   {
     title: "描述",
     dataIndex: "introduce",
-    align: "center",
+    align: "center"
   },
   {
     title: "操作",
     dataIndex: "action",
     align: "center",
-    width: 130,
-    slots: {
-      customRender: "action",
-    },
-  },
+    width: 130
+  }
 ];
 const statusMap = {
   0: "已停用",
-  1: "使用中",
+  1: "使用中"
 };
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { getBrandList, delBrand } from "@/api/commodityCenter";
@@ -134,7 +114,7 @@ import AddEditBrand from "./commodityBrand/AddEditBrand.vue";
 import { Modal, message } from "ant-design-vue";
 export default {
   components: {
-    AddEditBrand,
+    AddEditBrand
   },
   setup() {
     const data = ref([]);
@@ -144,28 +124,28 @@ export default {
         pageSize: 10,
         pageNumber: 1,
         name: null,
-        status: null,
+        status: null
       },
-      total: 0,
+      total: 0
     });
 
-    const onDelbrand = (id) => {
+    const onDelbrand = id => {
       Modal.confirm({
         title: "确认要执行操作吗?",
         okText: "确认",
         cancelText: "取消",
         onOk() {
-          delBrand(id).then((res) => {
+          delBrand(id).then(res => {
             if (res.code == 1) {
               message.success("操作成功");
               getList();
             }
           });
-        },
+        }
       });
     };
     const getList = () => {
-      getBrandList(pageData.queryInfo).then((res) => {
+      getBrandList(pageData.queryInfo).then(res => {
         if (res.code != 1) {
           return;
         }
@@ -173,7 +153,7 @@ export default {
         pageData.total = res.count;
       });
     };
-    const onEditbrand = (obj) => {
+    const onEditbrand = obj => {
       brand.value.showEditModal(obj);
     };
     const onAddbrand = () => {
@@ -184,7 +164,7 @@ export default {
       pageData.queryInfo.pageSize = size;
       getList();
     };
-    const onChangePage = (current) => {
+    const onChangePage = current => {
       pageData.queryInfo.pageNumber = current;
       getList();
     };
@@ -200,7 +180,7 @@ export default {
         pageNumber: 1,
         pageSize: 10,
         name: null,
-        status: null,
+        status: null
       });
       getList();
     };
@@ -211,7 +191,7 @@ export default {
       getList();
     });
 
-    const statusMapFilter = (type) => {
+    const statusMapFilter = type => {
       return statusMap[type];
     };
 
@@ -230,9 +210,9 @@ export default {
       onAddbrand,
       onDelbrand,
       onEditbrand,
-      refresh,
+      refresh
     };
-  },
+  }
 };
 </script>
 

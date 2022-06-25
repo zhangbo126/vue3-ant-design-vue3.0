@@ -1,50 +1,20 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    :width="700"
-    ok-text="确认"
-    cancel-text="取消"
-    :title="type == 1 ? '新增角色' : '编辑角色'"
-    @ok="submitHandle"
-    @cancel="cancel"
-  >
-    <a-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      :label-col="{ span: 4 }"
-      :wrapper-col="{ span: 14 }"
-    >
+  <a-modal v-model:visible="visible" :width="700" ok-text="确认" cancel-text="取消" :title="type == 1 ? '新增角色' : '编辑角色'" @ok="submitHandle" @cancel="cancel">
+    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="name" label="角色名称" name="name">
         <a-input v-model:value.trim="form.name" />
       </a-form-item>
-
       <a-form-item label="角色描述" name="describe">
         <a-textarea v-model:value.trim="form.describe" />
       </a-form-item>
-
-      <a-form-item label="角色权限" name="menuList">
+      <a-form-item label="角色权限">
         <ul class="role-menu">
           <li v-for="t1Menu in menuList" :key="t1Menu._id">
-            <a-checkbox
-              v-model:checked="t1Menu.isChecked"
-              :indeterminate="t1Menu.indeterminate"
-              @change="(e) => onChangeT1(e, t1Menu)"
-              >{{ t1Menu.name }}</a-checkbox
-            >
+            <a-checkbox v-model:checked="t1Menu.isChecked" :indeterminate="t1Menu.indeterminate" @change="(e) => onChangeT1(e, t1Menu)">{{ t1Menu.name }}</a-checkbox>
             <div class="menu-t2" v-for="t2Menu in t1Menu.children" :key="t2Menu._id">
-              <a-checkbox
-                v-model:checked="t2Menu.isChecked"
-                @change="(e) => onChangeT2(e, t2Menu, t1Menu)"
-                :indeterminate="t2Menu.indeterminate"
-                >{{ t2Menu.name }}</a-checkbox
-              >
+              <a-checkbox v-model:checked="t2Menu.isChecked" @change="(e) => onChangeT2(e, t2Menu, t1Menu)" :indeterminate="t2Menu.indeterminate">{{ t2Menu.name }}</a-checkbox>
               <div class="menu-t3" v-for="t3Menu in t2Menu.children" :key="t3Menu._id">
-                <a-checkbox
-                  v-model:checked="t3Menu.isChecked"
-                  @change="() => onChangeT3(t1Menu, t2Menu)"
-                  >{{ t3Menu.name }}</a-checkbox
-                >
+                <a-checkbox v-model:checked="t3Menu.isChecked" @change="() => onChangeT3(t1Menu, t2Menu)">{{ t3Menu.name }}</a-checkbox>
               </div>
             </div>
           </li>
@@ -61,20 +31,25 @@ const rules = {
       required: true,
       message: "请输入",
       trigger: "blur",
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   describe: [
     {
       required: true,
       message: "请输入",
       trigger: "blur",
-      type: "string",
-    },
-  ],
+      type: "string"
+    }
+  ]
 };
 import { reactive, ref, toRefs } from "vue";
-import { getAddMenuList, addRole, getEditMenuList, eidtRole } from "@/api/UserCenter";
+import {
+  getAddMenuList,
+  addRole,
+  getEditMenuList,
+  eidtRole
+} from "@/api/UserCenter";
 import { message } from "ant-design-vue";
 export default {
   setup(props, context) {
@@ -82,13 +57,13 @@ export default {
       name: null,
       describe: null,
       id: null,
-      roleMenu_List: [],
+      roleMenu_List: []
     });
     const parametr = reactive({
       type: 1,
       visible: false,
       formRef: ref(),
-      menuList: [],
+      menuList: []
     });
 
     const submitHandle = () => {
@@ -96,49 +71,49 @@ export default {
         setCheckId(parametr.menuList, form.roleMenu_List);
         //新增提交
         if (parametr.type == 1) {
-          addRole(form).then((res) => {
+          addRole(form).then(res => {
             handleSuccessTip(res);
           });
           return;
         }
         //编辑提交
-        eidtRole(form).then((res) => {
+        eidtRole(form).then(res => {
           handleSuccessTip(res);
         });
       });
     };
-    const showAddModal = async (e) => {
+    const showAddModal = async e => {
       parametr.type = 1;
       resultForm();
       getMenuList();
     };
-    const showEditModal = (obj) => {
+    const showEditModal = obj => {
       parametr.type = 2;
       resultForm();
       const { name, describe, _id } = obj;
       Object.assign(form, {
         name,
         describe,
-        id: _id,
+        id: _id
       });
       getMenuListEdit();
     };
     //新增获取菜单
     const getMenuList = () => {
-      getAddMenuList().then((res) => {
+      getAddMenuList().then(res => {
         parametr.menuList = res.data;
         setMenuChange(parametr.menuList);
       });
     };
     //编辑获取菜单
     const getMenuListEdit = () => {
-      getEditMenuList(form.id).then((res) => {
+      getEditMenuList(form.id).then(res => {
         parametr.menuList = res.data;
         setMenuChange(parametr.menuList);
       });
     };
-    const setMenuChange = (menuList) => {
-      menuList.forEach((v) => {
+    const setMenuChange = menuList => {
+      menuList.forEach(v => {
         v.isChecked = false;
         v.indeterminate = false;
         if (v.isChange == 1) {
@@ -150,7 +125,7 @@ export default {
       });
     };
 
-    const handleSuccessTip = (res) => {
+    const handleSuccessTip = res => {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
@@ -160,7 +135,7 @@ export default {
 
     //递归处理已勾选的菜单ID
     const setCheckId = (roleMenu_List, menuIdList) => {
-      roleMenu_List.forEach((v) => {
+      roleMenu_List.forEach(v => {
         if (v.isChecked || v.indeterminate) {
           menuIdList.push(v._id);
         }
@@ -172,7 +147,7 @@ export default {
 
     //递归调用选中
     const checkHandle = (list, checked) => {
-      list.forEach((v) => {
+      list.forEach(v => {
         v.isChecked = checked;
         if (v.children.length > 0) {
           checkHandle(v.children, checked);
@@ -182,28 +157,28 @@ export default {
     //一级菜单选择
     const onChangeT1 = (e, t1Menu) => {
       checkHandle(t1Menu.children, e.target.checked);
-      t1Menu.indeterminate=false
+      t1Menu.indeterminate = false;
     };
     //二级菜单选择
     const onChangeT2 = (e, t2Menu, t1Menu) => {
       checkHandle(t2Menu.children, e.target.checked);
       t2Menu.indeterminate = false;
-      t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
+      t1Menu.isChecked = t1Menu.children.every(v => v.isChecked);
       /*一级菜单选中*/
-      const t1Len = t1Menu.children.filter((v) => v.isChecked).length;
+      const t1Len = t1Menu.children.filter(v => v.isChecked).length;
       t1Menu.indeterminate = t1Len != t1Menu.children.length && t1Len != 0;
     };
     //三级菜单选择
     const onChangeT3 = (t1Menu, t2Menu) => {
       /*二级菜单选中判断*/
-      const t2Len = t2Menu.children.filter((v) => v.isChecked).length;
+      const t2Len = t2Menu.children.filter(v => v.isChecked).length;
       t2Menu.indeterminate = t2Len != 0 && t2Len != t2Menu.children.length;
       t2Menu.isChecked = t2Len == t2Menu.children.length;
 
       /*一级级菜单选中判断*/
-      t1Menu.isChecked = t1Menu.children.every((v) => v.isChecked);
-      const t1Lenminate = t1Menu.children.some((v) => v.indeterminate);
-      const t1Lenchecked = t1Menu.children.every((v) => v.isChecked);
+      t1Menu.isChecked = t1Menu.children.every(v => v.isChecked);
+      const t1Lenminate = t1Menu.children.some(v => v.indeterminate);
+      const t1Lenchecked = t1Menu.children.every(v => v.isChecked);
       t1Menu.indeterminate = t1Lenminate || !t1Lenchecked;
     };
 
@@ -215,7 +190,7 @@ export default {
         name: null,
         describe: null,
         id: null,
-        roleMenu_List: [],
+        roleMenu_List: []
       });
     };
     const cancel = () => {
@@ -232,9 +207,9 @@ export default {
       onChangeT1,
       onChangeT2,
       onChangeT3,
-      cancel,
+      cancel
     };
-  },
+  }
 };
 </script>
 

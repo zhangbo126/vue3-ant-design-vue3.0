@@ -1,59 +1,26 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    :width="600"
-    ok-text="确认"
-    cancel-text="取消"
-    :title="type == 1 ? '新增分类' : '编辑分类'"
-    @ok="submitHandle"
-  >
-    <a-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      :label-col="{ span: 7 }"
-      :wrapper-col="{ span: 14 }"
-    >
+  <a-modal v-model:visible="visible" :width="600" ok-text="确认" cancel-text="取消" :title="type == 1 ? '新增分类' : '编辑分类'" @ok="submitHandle">
+    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="name" label="分类名称" name="name">
         <a-input placeholder="分类名称" style="width: 220px" v-model:value="form.name" />
       </a-form-item>
 
       <a-form-item label="父级分类" name="partentId">
-        <a-select
-          v-model:value="form.partentId"
-          placeholder="父级分类"
-          style="width: 220px"
-          :allowClear="true"
-           show-search
-          :filter-option="filterOptionPartent"
-        >
-          <a-select-option v-for="c in classList" :key="c._id" :value="c._id">
-            {{ c.name }}
-          </a-select-option>
+        <a-select v-model:value="form.partentId" placeholder="父级分类" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
+          <a-select-option v-for="c in classList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="排序" name="sort">
-        <a-input-number
-          placeholder="排序"
-          style="width: 220px"
-          v-model:value.trim="form.sort"
-        />
+        <a-input-number placeholder="排序" style="width: 220px" v-model:value.trim="form.sort" />
       </a-form-item>
-      <a-form-item label="状态" name="status"  ref="status">
-         <a-radio-group v-model:value="form.status">
-           <a-radio :value="1">使用中</a-radio>
-           <a-radio :value="0">已停用</a-radio>
-         </a-radio-group>
+      <a-form-item label="状态" name="status" ref="status">
+        <a-radio-group v-model:value="form.status">
+          <a-radio :value="1">使用中</a-radio>
+          <a-radio :value="0">已停用</a-radio>
+        </a-radio-group>
       </a-form-item>
       <a-form-item label="分类图标" name="logoFilePath">
-        <a-upload
-          v-model:file-list="fileList"
-          list-type="picture-card"
-          name="file"
-          :before-upload="onBeforeUpload"
-          :customRequest="onCustomRequest"
-          :remove="onRemove"
-        >
+        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" :remove="onRemove">
           <div v-if="fileList.length == 0" class="ant-upload-text">
             <plus-outlined></plus-outlined>
             <div>上传</div>
@@ -67,24 +34,38 @@
 <script>
 const rules = {
   name: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string"
+    },
     {
       message: "分类名称长度由0-18位组成",
       min: 0,
       max: 18,
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   status: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "number" },
-
-  ],
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "number"
+    }
+  ]
 };
 import { reactive, ref, toRefs } from "vue";
 
 import { message } from "ant-design-vue";
-import { imgUpload, getPartentClass, addClass, editClass } from "@/api/commodityCenter";
+import {
+  imgUpload,
+  getPartentClass,
+  addClass,
+  editClass
+} from "@/api/commodityCenter";
 export default {
   setup(props, context) {
     const form = reactive({
@@ -93,19 +74,20 @@ export default {
       sort: null,
       partentId: null,
       _id: null,
-      status:1
+      status: 1
     });
     const formRef = ref();
     const parametr = reactive({
       type: 1,
       visible: false,
       fileList: [],
-      classList: [],
+      classList: []
     });
 
     //上传图片前检测
-    const onBeforeUpload = (file) => {
-      const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const onBeforeUpload = file => {
+      const isJpgOrPng =
+        file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
         return message.error("图片格式jpg/png!");
       }
@@ -115,24 +97,24 @@ export default {
       }
     };
     //图片上传
-    const onCustomRequest = (file) => {
+    const onCustomRequest = file => {
       const formData = new FormData();
       formData.append("file", file.file);
-      imgUpload(formData).then((res) => {
+      imgUpload(formData).then(res => {
         const file = [
           {
             uid: "-1",
             name: "image.png",
             status: "done",
-            url: res.data.path,
-          },
+            url: res.data.path
+          }
         ];
         parametr.fileList = file;
         form.logoFilePath = res.data.path;
       });
     };
     //图片删除
-    const onRemove = (e) => {
+    const onRemove = e => {
       parametr.fileList = [];
       form.logoFilePath = null;
     };
@@ -141,12 +123,12 @@ export default {
     const submitHandle = () => {
       formRef.value.validate().then(() => {
         if (parametr.type == 1) {
-          addClass(form).then((res) => {
+          addClass(form).then(res => {
             handleSuccessTip(res);
           });
           return;
         }
-        editClass(form).then((res) => {
+        editClass(form).then(res => {
           handleSuccessTip(res);
         });
       });
@@ -159,9 +141,9 @@ export default {
       getPartentClassList();
     };
     //编辑打开弹框
-    const showEditModal = (obj) => {
+    const showEditModal = obj => {
       parametr.type = 2;
-  
+
       parametr.visible = true;
       parametr.fileList = [];
       getPartentClassList().then(() => {
@@ -171,7 +153,7 @@ export default {
           logoFilePath,
           sort,
           partentId,
-          _id,
+          _id
         });
         if (logoFilePath) {
           parametr.fileList = [
@@ -179,21 +161,21 @@ export default {
               uid: "-1",
               name: "image.png",
               status: "done",
-              url: logoFilePath,
-            },
+              url: logoFilePath
+            }
           ];
         }
       });
     };
     const getPartentClassList = () => {
       return new Promise((reslove, reject) => {
-        getPartentClass().then((res) => {
+        getPartentClass().then(res => {
           parametr.classList = res.data;
           reslove();
         });
       });
     };
-    const handleSuccessTip = (res) => {
+    const handleSuccessTip = res => {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
@@ -205,14 +187,18 @@ export default {
       return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
     const filterOptionPartent = (input, option) => {
-      return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return (
+        option.children[0].children
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     };
-   //手动重置表单内容
+    //手动重置表单内容
     const resultForm = () => {
       Object.assign(parametr, {
         visible: true,
         fileList: [],
-        classList: [],
+        classList: []
       });
       Object.assign(form, {
         name: null,
@@ -220,7 +206,7 @@ export default {
         sort: null,
         partentId: null,
         _id: null,
-        status:1
+        status: 1
       });
     };
     return {
@@ -235,9 +221,9 @@ export default {
       filterOptionPartent,
       onBeforeUpload,
       onCustomRequest,
-      onRemove,
+      onRemove
     };
-  },
+  }
 };
 </script>
 

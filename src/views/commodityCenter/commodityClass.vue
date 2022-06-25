@@ -2,28 +2,16 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass">
-          新增分类+
-        </a-button>
+        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass">新增分类+</a-button>
         <!-- 查询区域 -->
         <ul class="query-handle">
           <li>
-            <a-input
-              style="width: 140px"
-              v-model:value.trim="queryInfo.name"
-              placeholder="分类名称"
-              @keyup.enter="onChangeSearch"
-            />
+            <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="分类名称" @keyup.enter="onChangeSearch" />
           </li>
           <li>
-            <a-select
-              style="width: 140px"
-              v-model:value="queryInfo.status"
-              placeholder="状态"
-              @change="onChangeSearch"
-            >
-              <a-select-option key="1" :value="1">使用中 </a-select-option>
-              <a-select-option key="2" :value="0">已停用 </a-select-option>
+            <a-select style="width: 140px" v-model:value="queryInfo.status" placeholder="状态" @change="onChangeSearch">
+              <a-select-option key="1" :value="1">使用中</a-select-option>
+              <a-select-option key="2" :value="0">已停用</a-select-option>
             </a-select>
           </li>
           <li>
@@ -39,39 +27,39 @@
           bordered
           rowKey="_id"
           :columns="columns"
-          :pagination="false"
+          :pagination="{
+          size:'small',
+          total, 
+          onChange:onChangePage,
+          onShowSizeChange:handlePageSizeChange,
+          showTotal:(total) => `总计${total}`,
+          pageSize:queryInfo.pageSize,
+          current:queryInfo.pageNumber, 
+          showSizeChanger:true,
+          showQuickJumper:true,
+          position:['bottomCenter']}"
         >
-          <template #status="{ text }">
-            <div>
-              {{ statusMapFilter(text) }}
-            </div>
-          </template>
-          <template #logoFilePath="{ text }">
-            <div>
-              <img :src="text" width="120" alt="" />
-            </div>
-          </template>
-          <template #action="{ text, record }">
-            <ul class="table-action">
-              <li><a @click="onDelclass(record._id)"> 删除 </a></li>
-              <li>
-                <a @click="onEditclass(record)"> 编辑 </a>
-              </li>
-            </ul>
+          <template #bodyCell="{ column, text,record }">
+            <template v-if="column.dataIndex === 'status'">
+              <div>{{ statusMapFilter(text) }}</div>
+            </template>
+            <template v-if="column.dataIndex === 'logoFilePath'">
+              <div>
+                <img :src="text" width="120" alt />
+              </div>
+            </template>
+            <template v-if="column.dataIndex === 'action'">
+              <ul class="table-action">
+                <li>
+                  <a @click="onDelclass(record._id)">删除</a>
+                </li>
+                <li>
+                  <a @click="onEditclass(record)">编辑</a>
+                </li>
+              </ul>
+            </template>
           </template>
         </a-table>
-
-        <a-pagination
-          size="small"
-          :total="total"
-          @change="onChangePage"
-          @showSizeChange="handlePageSizeChange"
-          :show-total="(total) => `总计${total}`"
-          :pageSize="queryInfo.pageSize"
-          :current="queryInfo.pageNumber"
-          show-size-changer
-          show-quick-jumper
-        />
       </a-card>
     </a-col>
     <!-- 新增编辑商品分类 -->
@@ -84,53 +72,43 @@ const columns = [
   {
     title: "分类名称",
     dataIndex: "name",
-    align: "center",
+    align: "center"
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
-
-    slots: {
-      customRender: "status",
-    },
   },
   {
     title: "分类图标",
     dataIndex: "logoFilePath",
     align: "center",
-    slots: {
-      customRender: "logoFilePath",
-    },
   },
   {
     title: "父级分类",
     dataIndex: "partentName",
-    align: "center",
+    align: "center"
   },
   {
     title: "分类级别",
     dataIndex: "level",
-    align: "center",
+    align: "center"
   },
   {
     title: "排序",
     dataIndex: "sort",
-    align: "center",
+    align: "center"
   },
   {
     title: "操作",
     dataIndex: "action",
     align: "center",
     width: 130,
-    slots: {
-      customRender: "action",
-    },
-  },
+  }
 ];
 const statusMap = {
   0: "已停用",
-  1: "使用中",
+  1: "使用中"
 };
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { getClassList, delClass } from "@/api/commodityCenter";
@@ -138,7 +116,7 @@ import AddEditClass from "./commodityClass/AddEditClass.vue";
 import { Modal, message } from "ant-design-vue";
 export default {
   components: {
-    AddEditClass,
+    AddEditClass
   },
   setup() {
     const data = ref([]);
@@ -148,32 +126,32 @@ export default {
         pageSize: 10,
         pageNumber: 1,
         name: null,
-        status: null,
+        status: null
       },
-      total: 0,
+      total: 0
     });
 
-    const onDelclass = (id) => {
+    const onDelclass = id => {
       Modal.confirm({
         title: "确认要执行操作吗?",
         okText: "确认",
         cancelText: "取消",
         onOk() {
-          delClass(id).then((res) => {
+          delClass(id).then(res => {
             if (res.code == 1) {
               message.success("操作成功");
               getList();
             }
           });
-        },
+        }
       });
     };
     const getList = () => {
-      getClassList(pageData.queryInfo).then((res) => {
+      getClassList(pageData.queryInfo).then(res => {
         if (res.code != 1) {
           return;
         }
-        data.value = res.data.map((v) => {
+        data.value = res.data.map(v => {
           v.level = 1;
           if (v.partentId) {
             v.level = 2;
@@ -184,7 +162,7 @@ export default {
         pageData.total = res.count;
       });
     };
-    const onEditclass = (obj) => {
+    const onEditclass = obj => {
       classify.value.showEditModal(obj);
     };
     const onAddclass = () => {
@@ -195,7 +173,7 @@ export default {
       pageData.queryInfo.pageSize = size;
       getList();
     };
-    const onChangePage = (current) => {
+    const onChangePage = current => {
       pageData.queryInfo.pageNumber = current;
       getList();
     };
@@ -211,7 +189,7 @@ export default {
         pageNumber: 1,
         pageSize: 10,
         name: null,
-        status: null,
+        status: null
       });
       getList();
     };
@@ -222,7 +200,7 @@ export default {
       getList();
     });
 
-    const statusMapFilter = (type) => {
+    const statusMapFilter = type => {
       return statusMap[type];
     };
 
@@ -241,9 +219,9 @@ export default {
       onAddclass,
       onDelclass,
       onEditclass,
-      refresh,
+      refresh
     };
-  },
+  }
 };
 </script>
 

@@ -8,62 +8,26 @@
             <a-button type="primary" @click="router.back()">返回</a-button>
           </div>
           <div class="info-title">商品基本信息</div>
-          <a-form
-            ref="formRef"
-            :model="form"
-            :rules="rules"
-            :label-col="{ span: 5 }"
-            :wrapper-col="{ span: 12 }"
-          >
+          <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
             <a-form-item ref="goodsName" label="商品名称" name="goodsName">
-              <a-input
-                placeholder="商品名称"
-                style="width: 220px"
-                v-model:value="form.goodsName"
-              />
+              <a-input placeholder="商品名称" style="width: 220px" v-model:value="form.goodsName" />
             </a-form-item>
 
             <a-form-item label="商品分类" ref="categoryId" name="categoryId">
-              <a-select
-                v-model:value="form.categoryId"
-                placeholder="商品分类"
-                style="width: 220px"
-                :allowClear="true"
-                show-search
-                :filter-option="filterOptionPartent"
-              >
-                <a-select-option v-for="c in classList" :key="c._id" :value="c._id">
-                  {{ c.name }}
-                </a-select-option>
+              <a-select v-model:value="form.categoryId" placeholder="商品分类" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
+                <a-select-option v-for="c in classList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="商品品牌" ref="brandId" name="brandId">
-              <a-select
-                v-model:value="form.brandId"
-                placeholder="商品品牌"
-                style="width: 220px"
-                :allowClear="true"
-                show-search
-                :filter-option="filterOptionPartent"
-              >
-                <a-select-option v-for="c in brandList" :key="c._id" :value="c._id">
-                  {{ c.name }}
-                </a-select-option>
+              <a-select v-model:value="form.brandId" placeholder="商品品牌" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
+                <a-select-option v-for="c in brandList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="商品货号" ref="goodsNo" name="goodsNo">
-              <a-input
-                placeholder="商品货号"
-                style="width: 220px"
-                v-model:value.trim="form.goodsNo"
-              />
+              <a-input placeholder="商品货号" style="width: 220px" v-model:value.trim="form.goodsNo" />
             </a-form-item>
             <a-form-item label="产地" ref="placeOrigin" name="placeOrigin">
-              <a-input
-                placeholder="产地"
-                style="width: 220px"
-                v-model:value.trim="form.placeOrigin"
-              />
+              <a-input placeholder="产地" style="width: 220px" v-model:value.trim="form.placeOrigin" />
             </a-form-item>
           </a-form>
         </div>
@@ -75,11 +39,7 @@
               <div class="bar-nav">
                 <div class="nav-lf">
                   <p>规格项:</p>
-                  <a-input
-                    v-model:value="mixMax.spaceName"
-                    :allowClear="true"
-                    size="small"
-                  />
+                  <a-input v-model:value="mixMax.spaceName" :allowClear="true" size="small" />
                 </div>
                 <div class="nav-lr">
                   <a @click="onRemoveMixItem(index)">删除</a>
@@ -87,23 +47,15 @@
               </div>
               <div class="bar-value">
                 <div class="value-box">
-                  <div
-                    class="value"
-                    v-for="(mixMin, i) in mixMax.mixList"
-                    :key="mixMin.key"
-                  >
+                  <div class="value" v-for="(mixMin, i) in mixMax.mixList" :key="mixMin.key">
                     <div class="inp-txt" v-if="mixMin.isShowInp">
-                      <a-input
-                        @blur="onBlurMixValue(mixMin)"
-                        v-model:value.trim="mixMin.specValue"
-                        :style="{ width: '120px', marginRight: '10px' }"
-                      />
+                      <a-input @blur="onBlurMixValue(mixMin)" v-model:value.trim="mixMin.specValue" :style="{ width: '120px', marginRight: '10px' }" />
                       <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
                         <CloseCircleOutlined />
                       </span>
                     </div>
-                    <span class="txt" v-else @click="onCheckoutValue(mixMin)"
-                      >{{ mixMin.specValue }}
+                    <span class="txt" v-else @click="onCheckoutValue(mixMin)">
+                      {{ mixMin.specValue }}
                       <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
                         <CloseCircleOutlined />
                       </span>
@@ -111,69 +63,52 @@
                   </div>
                 </div>
                 <div class="add-value">
-                  <a @click="onAddMaxValue(index)"> 添加规格值+</a>
+                  <a @click="onAddMaxValue(index)">添加规格值+</a>
                 </div>
               </div>
             </div>
             <div class="add-btn">
-              <a-button type="primary" @click="onAddMixItem"> 添加规格项+ </a-button>
+              <a-button type="primary" @click="onAddMixItem">添加规格项+</a-button>
             </div>
           </div>
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table
-            bordered
-            :columns="columns"
-            rowKey="key"
-            size="small"
-            :pagination="false"
-            :data-source="data"
-            :scroll="{x:1200}"
-          >
-            <template #price="{ record }">
-              <a-input-number :max="1000000" :min="1" v-model:value.trim="record.price" />
-            </template>
-            <template #skuName="{ record }">
-              <a-input v-model:value.trim="record.skuName" />
-            </template>
-            <template #weight="{ record }">
-              <div class="weight">
-                <a-input-number
-                  v-model:value.trim="record.weight"
-                  :max="1000000"
-                  :min="1"
-                />
-              </div>
-            </template>
-            <template #goodsType="{ record }">
-              <a-radio-group v-model:value="record.goodsType" name="radioGroup">
-                <a-radio :value="1">普通商品</a-radio>
-                <a-radio :value="2">秒杀商品</a-radio>
-                <a-radio :value="3">团购商品</a-radio>
-              </a-radio-group>
-            </template>
-            <template #designSketch="{ record }">
-              <div class="design-img">
-                <a-upload
-                  :multiple="true"
-                  list-type="picture-card"
-                  name="file"
-                  v-model:file-list="record.designSketch"
-                  :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)"
-                  :customRequest="(e) => onCustomRequest(e, record)"
-                >
-                  <div v-if="record.designSketch.length < 8">
-                    <plus-outlined />
-                    <div class="ant-upload-text">上传</div>
+          <a-table bordered :columns="columns"  size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
+            <template #bodyCell="{ column, text,record }">
+              <template v-if="column.dataIndex === 'price'">
+                <a-input-number :max="1000000" :min="1" v-model:value.trim="record.price" />
+              </template>
+              <template v-if="column.dataIndex === 'skuName'">
+                <a-input v-model:value.trim="record.skuName" />
+              </template>
+              <template v-if="column.dataIndex === 'weight'">
+                <div class="weight">
+                  <a-input-number v-model:value.trim="record.weight" :max="1000000" :min="1" />
+                </div>
+              </template>
+              <template v-if="column.dataIndex === 'goodsType'">
+                <a-radio-group v-model:value="record.goodsType" name="radioGroup">
+                  <a-radio :value="1">普通商品</a-radio>
+                  <a-radio :value="2">秒杀商品</a-radio>
+                  <a-radio :value="3">团购商品</a-radio>
+                </a-radio-group>
+              </template>
+              <template v-if="column.dataIndex === 'designSketch'">  
+                  <div class="design-img">
+                    <a-upload :multiple="true" list-type="picture-card" name="file" v-model:file-list="record.designSketch" :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)" :customRequest="(e) => onCustomRequest(e, record)">
+                      <div v-if="record.designSketch.length < 8">
+                        <plus-outlined />
+                        <div class="ant-upload-text">上传</div>
+                      </div>
+                    </a-upload>
                   </div>
-                </a-upload>
-              </div>
+              </template>
             </template>
           </a-table>
         </div>
         <div class="save-submit">
-          <a-button type="primary" @click="onSaveSubmit"> 保存 </a-button>
+          <a-button type="primary" @click="onSaveSubmit">保存</a-button>
         </div>
       </a-card>
     </a-col>
@@ -191,62 +126,62 @@ const rules = {
       required: true,
       message: "请输入",
       trigger: ["change", "blur"],
-      type: "string",
+      type: "string"
     },
     {
       message: "商品名称长度由0-18位组成",
       min: 0,
       max: 18,
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   categoryId: [
     {
       required: true,
       message: "请选择",
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   brandId: [
     {
       required: true,
       message: "请选择",
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   goodsNo: [
     {
       required: true,
       message: "请输入",
       trigger: ["change", "blur"],
-      type: "string",
+      type: "string"
     },
     {
       message: "字符长度限制20",
       min: 0,
       max: 20,
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   placeOrigin: [
     {
       required: true,
       message: "请输入",
       trigger: ["change", "blur"],
-      type: "string",
+      type: "string"
     },
     {
       message: "字符长度限制20",
       min: 0,
       max: 20,
       trigger: ["change", "blur"],
-      type: "string",
-    },
-  ],
+      type: "string"
+    }
+  ]
 };
 const column = [
   {
@@ -259,55 +194,40 @@ const column = [
         title: "",
         dataIndex: "specValue1",
         align: "center",
-        width: 200,
-      },
-    ],
+        width: 200
+      }
+    ]
   },
   {
     title: "SKU名称",
     dataIndex: "skuName",
     width: 180,
-    align: "center",
-    slots: {
-      customRender: "skuName",
-    },
+    align: "center"
   },
   {
     title: "商品价格",
     dataIndex: "price",
     width: 100,
-    align: "center",
-    slots: {
-      customRender: "price",
-    },
+    align: "center"
   },
 
   {
     title: "重量(g)",
     dataIndex: "weight",
     width: 160,
-    slots: {
-      customRender: "weight",
-    },
-    align: "center",
+    align: "center"
   },
   {
     title: "类型",
     dataIndex: "goodsType",
     width: 160,
-    slots: {
-      customRender: "goodsType",
-    },
-    align: "center",
+    align: "center"
   },
   {
     title: "商品效果图",
     dataIndex: "designSketch",
-    align: "center",
-    slots: {
-      customRender: "designSketch",
-    },
-  },
+    align: "center"
+  }
 ];
 import {
   imgBatchUpload,
@@ -315,7 +235,7 @@ import {
   getClassList,
   addGoods,
   editGoods,
-  getEditGoodsInfo,
+  getEditGoodsInfo
 } from "@/api/commodityCenter";
 export default {
   setup() {
@@ -325,7 +245,7 @@ export default {
       brandId: null,
       goodsId: null,
       goodsNo: null,
-      placeOrigin: null,
+      placeOrigin: null
     });
     const parametr = reactive({
       classList: [],
@@ -333,7 +253,7 @@ export default {
       beforeImgFile: [],
       afterImgFile: [],
       brandList: [],
-      classList: [],
+      classList: []
     });
 
     const data = ref([]);
@@ -346,8 +266,8 @@ export default {
       {
         spaceName: "",
         key: -1,
-        mixList: [],
-      },
+        mixList: []
+      }
     ]);
 
     //页面加载获取数据
@@ -355,16 +275,16 @@ export default {
       form.goodsId = route.query.goodsId;
       await getBrandAndClassList();
       if (form.goodsId) {
-        await getEditGoodsInfo(form.goodsId).then((res) => {
+        await getEditGoodsInfo(form.goodsId).then(res => {
           if (res.code == 1) {
             const spaceInfo = res.data.spaceInfo;
-            data.value = res.data.mixList.map((v) => {
-              v.designSketch = v.designSketch.map((d) => {
+            data.value = res.data.mixList.map(v => {
+              v.designSketch = v.designSketch.map(d => {
                 return {
                   uid: d,
                   name: d,
                   status: "done",
-                  url: d,
+                  url: d
                 };
               });
               return v;
@@ -376,7 +296,7 @@ export default {
               brandId: spaceInfo.brandId,
               goodsId: spaceInfo.goodsId,
               goodsNo: spaceInfo.goodsNo,
-              placeOrigin: spaceInfo.placeOrigin,
+              placeOrigin: spaceInfo.placeOrigin
             });
           }
         });
@@ -393,7 +313,7 @@ export default {
         data.value = result.data;
       },
       {
-        immediate: false,
+        immediate: false
       }
     );
     // 添加大项
@@ -401,7 +321,7 @@ export default {
       const minMax = {
         spaceName: "",
         key: Math.random() * 1000,
-        mixList: [],
+        mixList: []
       };
       if (mixMaxItem.value.length >= 3) {
         return message.warning("最多添加3项");
@@ -409,24 +329,24 @@ export default {
       mixMaxItem.value.push(minMax);
     };
     //删除大项
-    const onRemoveMixItem = (index) => {
+    const onRemoveMixItem = index => {
       mixMaxItem.value.splice(index, 1);
     };
     //添加小项
-    const onAddMaxValue = (index) => {
+    const onAddMaxValue = index => {
       const minMin = {
         specValue: "",
         key: Math.random() * 1000,
-        isShowInp: true,
+        isShowInp: true
       };
       mixMaxItem.value[index].mixList.push(minMin);
     };
     //点击切换input输入
-    const onCheckoutValue = (mixMin) => {
+    const onCheckoutValue = mixMin => {
       mixMin.isShowInp = true;
     };
     //失焦隐藏 input
-    const onBlurMixValue = (mixMin) => {
+    const onBlurMixValue = mixMin => {
       mixMin.isShowInp = false;
     };
     //删除规格值
@@ -437,7 +357,8 @@ export default {
     //上传图片前检测
     const onBeforeUpload = (file, fileList, record) => {
       return new Promise(async (reslove, reject) => {
-        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        const isJpgOrPng =
+          file.type === "image/jpeg" || file.type === "image/png";
         const isLt2M = file.size / 1024 / 1024 < 2;
         parametr.beforeImgFile.push(file);
         if (!isJpgOrPng || !isLt2M) {
@@ -468,25 +389,25 @@ export default {
     //图片上传
     const onCustomRequest = (file, record) => {
       const formData = new FormData();
-      parametr.afterImgFile.forEach((v) => {
+      parametr.afterImgFile.forEach(v => {
         formData.append("file", v);
       });
 
-      imgBatchUpload(formData).then((res) => {
+      imgBatchUpload(formData).then(res => {
         const imgArr = res.data;
-        const addImg = imgArr.map((v) => {
+        const addImg = imgArr.map(v => {
           let file = {
             uid: v.path,
             name: v.path,
             status: "done",
-            url: v.path,
+            url: v.path
           };
           return file;
         });
 
         record.designSketch = record.designSketch
           .concat(addImg)
-          .filter((v) => v.status == "done");
+          .filter(v => v.status == "done");
         parametr.beforeImgFile = [];
         parametr.afterImgFile = [];
       });
@@ -497,25 +418,30 @@ export default {
         if (mixMaxItem.value.length == 0) {
           return message.warning("请添加规格项");
         }
-        const specValueRule = mixMaxItem.value.every((v) => v.spaceName != "");
+        const specValueRule = mixMaxItem.value.every(v => v.spaceName != "");
         if (!specValueRule) {
           return message.warning("请填写规格项名称");
         }
 
         //价格是否输入验证
-        const priceRule = data.value.every((v) => v.price != "" && v.price != null);
+        const priceRule = data.value.every(
+          v => v.price != "" && v.price != null
+        );
         if (!priceRule) {
           return message.warning("请填写商品价格");
         }
         //重量验证
-        const weightRule = data.value.every((v) => v.weight != "" && v.weight != null);
+        const weightRule = data.value.every(
+          v => v.weight != "" && v.weight != null
+        );
         if (!weightRule) {
           return message.warning("请填写商品重量");
         }
-      
 
         //效果图验证
-        const designSketchRule = data.value.every((v) => v.designSketch.length != 0);
+        const designSketchRule = data.value.every(
+          v => v.designSketch.length != 0
+        );
         if (!designSketchRule) {
           return message.warning("请上传商品效果图");
         }
@@ -523,11 +449,11 @@ export default {
         const submitData = {
           mixInfo: form,
           mixList: data.value,
-          spaceValueList: mixMaxItem.value,
+          spaceValueList: mixMaxItem.value
         };
         //编辑保存
         if (form.goodsId) {
-          editGoods(submitData).then((res) => {
+          editGoods(submitData).then(res => {
             if (res.code == 1) {
               message.success("操作成功");
             }
@@ -535,7 +461,7 @@ export default {
           return;
         }
         //新增保存保存
-        addGoods(submitData).then((res) => {
+        addGoods(submitData).then(res => {
           if (res.code == 1) {
             message.success("操作成功");
             router.back();
@@ -545,15 +471,19 @@ export default {
     };
     //获取品牌  分类
     const getBrandAndClassList = () => {
-      getBrandList().then((res) => {
+      getBrandList().then(res => {
         parametr.brandList = res.data;
       });
-      getClassList().then((res) => {
-        parametr.classList = res.data.filter(v=>v.partentId!=null);
+      getClassList().then(res => {
+        parametr.classList = res.data.filter(v => v.partentId != null);
       });
     };
     const filterOptionPartent = (input, option) => {
-      return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return (
+        option.children[0].children
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     };
     return {
       data,
@@ -574,9 +504,9 @@ export default {
       onSaveSubmit,
       onBeforeUpload,
       getBrandAndClassList,
-      filterOptionPartent,
+      filterOptionPartent
     };
-  },
+  }
 };
 </script>
 

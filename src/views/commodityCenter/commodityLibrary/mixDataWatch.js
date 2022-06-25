@@ -134,7 +134,7 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
 
     /*table列合并*/
     if (column.length == 1) {
-        column[0].customRender = ({ text, index }) => {
+        column[0].customCell = ({ text, index }) => {
             const obj = {
                 children: text,
                 props: {},
@@ -144,7 +144,7 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
     }
 
     if (column.length == 2) {
-        column[0].customRender = ({ text, index, record }) => {
+        column[0].customCell = ({ text, index, record }) => {
             const obj = {
                 children: text,
                 props: {
@@ -170,7 +170,7 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
 
     }
     if (column.length == 3) {
-        column[0].customRender = ({ text, index, record }) => {
+        column[0].customCell = ({ text, index, record }) => {
             const obj = {
                 children: text,
                 props: {
@@ -192,7 +192,7 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
             return obj
         }
 
-        column[1].customRender = ({ text, index, record }) => {
+        column[1].customCell = ({ text, index, record }) => {
             const obj = {
                 children: text,
                 props: {

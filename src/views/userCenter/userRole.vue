@@ -35,35 +35,34 @@
 
         <a-table
           :dataSource="data"
-          :pagination="false"
           bordered
           rowKey="_id"
           :columns="columns"
-          :scroll="{x:1000}"
+          :scroll="{ x: 1000 }"
+          :pagination="{
+            size:'small',
+            total, 
+            onChange:onChangePage,
+            onShowSizeChange:handlePageSizeChange,
+            showTotal:(total) => `总计${total}`,
+            pageSize:queryInfo.pageSize,
+            current:queryInfo.pageNumber, 
+            showSizeChanger:true,
+            showQuickJumper:true,
+            position:['bottomCenter']}"
         >
-          <template #status="{ text }">
-            <div>
-              {{ statusMapFilter(text) }}
-            </div>
-          </template>
-          <template #action="{ text, record }">
-            <ul class="table-action">
-              <li><a @click="editRole(record)"> 编辑 </a></li>
-              <li><a @click="delRole(record._id)"> 删除 </a></li>
-            </ul>
+          <template #bodyCell="{ column, text,record }">
+            <template v-if="column.dataIndex === 'status'">
+               <div>{{ statusMapFilter(text) }}</div>
+            </template>
+             <template v-if="column.dataIndex === 'action'">
+               <ul class="table-action">
+                 <li><a @click="editRole(record)"> 编辑 </a></li>
+                 <li><a @click="delRole(record._id)"> 删除 </a></li>
+              </ul>
+            </template>
           </template>
         </a-table>
-        <a-pagination
-          size="small"
-          :total="total"
-          @change="onChangePage"
-          @showSizeChange="handlePageSizeChange"
-          :show-total="(total) => `总计${total}`"
-          :pageSize="queryInfo.pageSize"
-          :current="queryInfo.pageNumber"
-          show-size-changer
-          show-quick-jumper
-        />
       </a-card>
     </a-col>
     <add-edit-user-role ref="role" @refresh="refresh"></add-edit-user-role>
@@ -89,10 +88,7 @@ const columns = [
     title: "状态",
     dataIndex: "status",
     align: "center",
-    width:120,
-    slots: {
-      customRender: "status",
-    },
+    width: 120,
   },
   {
     title: "角色描述",
@@ -108,11 +104,8 @@ const columns = [
     title: "操作",
     dataIndex: "action",
     align: "center",
-    width:100,
-    fixed:'right',
-    slots: {
-      customRender: "action",
-    },
+    width: 100,
+    fixed: "right",
   },
 ];
 export default {

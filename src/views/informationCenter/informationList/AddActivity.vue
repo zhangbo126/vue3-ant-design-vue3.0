@@ -1,19 +1,6 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    :width="600"
-    ok-text="确认"
-    cancel-text="取消"
-    title="新增活动"
-    @ok="submitHandle"
-  >
-    <a-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      :label-col="{ span: 7 }"
-      :wrapper-col="{ span: 14 }"
-    >
+  <a-modal v-model:visible="visible" :width="600" ok-text="确认" cancel-text="取消" title="新增活动" @ok="submitHandle">
+    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="name" label="活动名称" name="name">
         <a-input placeholder="活动名称" style="width: 220px" v-model:value="form.name" />
       </a-form-item>
@@ -24,14 +11,7 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="活动封面" name="imageFilePath" ref="imageFilePathRef">
-        <a-upload
-          v-model:file-list="fileList"
-          list-type="picture-card"
-          name="file"
-          :before-upload="onBeforeUpload"
-          :customRequest="onCustomRequest"
-          :remove="onRemove"
-        >
+        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" :remove="onRemove">
           <div v-if="fileList.length == 0" class="ant-upload-text">
             <plus-outlined></plus-outlined>
             <div>上传</div>
@@ -39,11 +19,7 @@
         </a-upload>
       </a-form-item>
       <a-form-item label="活动内容" ref="content" name="content">
-        <a-textarea
-          v-model:value.trim="form.content"
-          placeholder="活动内容"
-          allow-clear
-        />
+        <a-textarea v-model:value.trim="form.content" placeholder="活动内容" allow-clear />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -52,24 +28,44 @@
 <script>
 const rules = {
   name: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string"
+    },
     {
       message: "活动名称长度由0-18位组成",
       min: 0,
       max: 18,
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   status: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "number" },
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "number"
+    }
   ],
   imageFilePath: [
-    { required: true, message: "请上传", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请上传",
+      trigger: ["change", "blur"],
+      type: "string"
+    }
   ],
   content: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
-  ],
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string"
+    }
+  ]
 };
 import { reactive, ref, toRefs } from "vue";
 
@@ -85,19 +81,20 @@ export default {
       name: null,
       imageFilePath: null,
       content: null,
-      status: 1,
+      status: 1
     });
     const formRef = ref();
     const imageFilePathRef = ref();
     const parametr = reactive({
       type: 1,
       visible: false,
-      fileList: [],
+      fileList: []
     });
 
     //上传图片前检测
-    const onBeforeUpload = (file) => {
-      const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const onBeforeUpload = file => {
+      const isJpgOrPng =
+        file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
         parametr.fileList = [];
         return message.error("图片格式jpg/png!");
@@ -109,17 +106,17 @@ export default {
       }
     };
     //图片上传
-    const onCustomRequest = (file) => {
+    const onCustomRequest = file => {
       const formData = new FormData();
       formData.append("file", file.file);
-      imgUpload(formData).then((res) => {
+      imgUpload(formData).then(res => {
         const file = [
           {
             uid: "-1",
             name: "image.png",
             status: "done",
-            url: res.data.path,
-          },
+            url: res.data.path
+          }
         ];
         parametr.fileList = file;
         form.imageFilePath = res.data.path;
@@ -127,7 +124,7 @@ export default {
       });
     };
     //图片删除
-    const onRemove = (e) => {
+    const onRemove = e => {
       parametr.fileList = [];
       form.imageFilePath = null;
     };
@@ -135,7 +132,7 @@ export default {
     //保存提交
     const submitHandle = () => {
       formRef.value.validate().then(() => {
-        addInformation(form).then((res) => {
+        addInformation(form).then(res => {
           handleSuccessTip(res);
         });
       });
@@ -147,7 +144,7 @@ export default {
       resultForm();
     };
 
-    const handleSuccessTip = (res) => {
+    const handleSuccessTip = res => {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
@@ -159,13 +156,13 @@ export default {
     const resultForm = () => {
       Object.assign(parametr, {
         visible: true,
-        fileList: [],
+        fileList: []
       });
       Object.assign(form, {
         name: null,
         imageFilePath: null,
         content: null,
-        status: 1,
+        status: 1
       });
     };
     return {
@@ -178,9 +175,9 @@ export default {
       submitHandle,
       onBeforeUpload,
       onCustomRequest,
-      onRemove,
+      onRemove
     };
-  },
+  }
 };
 </script>
 
