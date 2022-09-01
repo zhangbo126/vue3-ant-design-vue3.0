@@ -1,29 +1,11 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    :width="600"
-    ok-text="确认"
-    cancel-text="取消"
-    :title="type == 1 ? '新增品牌' : '编辑品牌'"
-    @ok="submitHandle"
-  >
-    <a-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      :label-col="{ span: 7 }"
-      :wrapper-col="{ span: 14 }"
-    >
+  <a-modal v-model:visible="visible" :width="600" ok-text="确认" cancel-text="取消" :title="type == 1 ? '新增品牌' : '编辑品牌'" @ok="submitHandle">
+    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="name" label="品牌名称" name="name">
         <a-input placeholder="品牌名称" style="width: 220px" v-model:value="form.name" />
       </a-form-item>
-
       <a-form-item label="排序" name="sort">
-        <a-input-number
-          placeholder="排序"
-          style="width: 220px"
-          v-model:value.trim="form.sort"
-        />
+        <a-input-number placeholder="排序" style="width: 220px" v-model:value.trim="form.sort" />
       </a-form-item>
       <a-form-item label="状态" name="status" ref="status">
         <a-radio-group v-model:value="form.status">
@@ -32,14 +14,7 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="品牌图标" name="logoFilePath">
-        <a-upload
-          v-model:file-list="fileList"
-          list-type="picture-card"
-          name="file"
-          :before-upload="onBeforeUpload"
-          :customRequest="onCustomRequest"
-          :remove="onRemove"
-        >
+        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" :remove="onRemove">
           <div v-if="fileList.length == 0" class="ant-upload-text">
             <plus-outlined></plus-outlined>
             <div>上传</div>
@@ -47,11 +22,7 @@
         </a-upload>
       </a-form-item>
       <a-form-item ref="introduce" label="描述" name="introduce">
-        <a-textarea
-          v-model:value.trim="form.introduce"
-          placeholder="描述"
-          :auto-size="{ minRows: 3, maxRows: 6 }"
-        />
+        <a-textarea v-model:value.trim="form.introduce" placeholder="描述" :auto-size="{ minRows: 3, maxRows: 6 }" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -60,17 +31,27 @@
 <script>
 const rules = {
   name: [
-    { required: true, message: "请输入", trigger: ["change", "blur"], type: "string" },
+    {
+      required: true,
+      message: "请输入",
+      trigger: ["change", "blur"],
+      type: "string"
+    },
     {
       message: "品牌名称长度由0-18位组成",
       min: 0,
       max: 18,
       trigger: ["change", "blur"],
-      type: "string",
-    },
+      type: "string"
+    }
   ],
   status: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "number" },
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "number"
+    }
   ],
   introduce: [
     {
@@ -78,9 +59,9 @@ const rules = {
       min: 2,
       max: 200,
       trigger: ["change", "blur"],
-      type: "string",
-    },
-  ],
+      type: "string"
+    }
+  ]
 };
 import { reactive, ref, toRefs } from "vue";
 
@@ -94,18 +75,19 @@ export default {
       sort: null,
       _id: null,
       status: 1,
-      introduce: null,
+      introduce: null
     });
     const formRef = ref();
     const parametr = reactive({
       type: 1,
       visible: false,
-      fileList: [],
+      fileList: []
     });
 
     //上传图片前检测
-    const onBeforeUpload = (file) => {
-      const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const onBeforeUpload = file => {
+      const isJpgOrPng =
+        file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
         return message.error("图片格式jpg/png!");
       }
@@ -115,24 +97,24 @@ export default {
       }
     };
     //图片上传
-    const onCustomRequest = (file) => {
+    const onCustomRequest = file => {
       const formData = new FormData();
       formData.append("file", file.file);
-      imgUpload(formData).then((res) => {
+      imgUpload(formData).then(res => {
         const file = [
           {
             uid: "-1",
             name: "image.png",
             status: "done",
-            url: res.data.path,
-          },
+            url: res.data.path
+          }
         ];
         parametr.fileList = file;
         form.logoFilePath = res.data.path;
       });
     };
     //图片删除
-    const onRemove = (e) => {
+    const onRemove = e => {
       parametr.fileList = [];
       form.logoFilePath = null;
     };
@@ -141,12 +123,12 @@ export default {
     const submitHandle = () => {
       formRef.value.validate().then(() => {
         if (parametr.type == 1) {
-          addBrand(form).then((res) => {
+          addBrand(form).then(res => {
             handleSuccessTip(res);
           });
           return;
         }
-        editBrand(form).then((res) => {
+        editBrand(form).then(res => {
           handleSuccessTip(res);
         });
       });
@@ -158,7 +140,7 @@ export default {
       resultForm();
     };
     //编辑打开弹框
-    const showEditModal = (obj) => {
+    const showEditModal = obj => {
       parametr.type = 2;
       parametr.visible = true;
       parametr.fileList = [];
@@ -168,7 +150,7 @@ export default {
         logoFilePath,
         sort,
         introduce,
-        _id,
+        _id
       });
       if (logoFilePath) {
         parametr.fileList = [
@@ -176,13 +158,13 @@ export default {
             uid: "-1",
             name: "image.png",
             status: "done",
-            url: logoFilePath,
-          },
+            url: logoFilePath
+          }
         ];
       }
     };
 
-    const handleSuccessTip = (res) => {
+    const handleSuccessTip = res => {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
@@ -194,7 +176,7 @@ export default {
     const resultForm = () => {
       Object.assign(parametr, {
         visible: true,
-        fileList: [],
+        fileList: []
       });
       Object.assign(form, {
         name: null,
@@ -202,7 +184,7 @@ export default {
         sort: null,
         _id: null,
         status: 1,
-        introduce: null,
+        introduce: null
       });
     };
     return {
@@ -215,9 +197,9 @@ export default {
       showEditModal,
       onBeforeUpload,
       onCustomRequest,
-      onRemove,
+      onRemove
     };
-  },
+  }
 };
 </script>
 

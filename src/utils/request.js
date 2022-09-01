@@ -14,12 +14,9 @@ const request = axios.create({
 
 //请求错误处理
 const errorHandler = (error) => {
-    const status = error.response.status
-    store.dispatch('Logout').then(() => {
-        setTimeout(() => {
-            message.warning('登录异常')
-        }, 1000)
-    })
+
+    return message.error(error.message)
+
 }
 
 //请求头同意处理
@@ -32,9 +29,19 @@ request.interceptors.request.use(config => {
 }, errorHandler)
 //请求返回数据格式同意处理
 request.interceptors.response.use((response) => {
-    if (response.data.code == 0) {
+    const { code } = response.data
+    if (code != 1) {
         return message.warning(response.data.message)
     }
+    //登录失效，异常处理
+    if (code == 403) {
+        store.dispatch('Logout').then(() => {
+            setTimeout(() => {
+                message.warning('登录异常')
+            }, 1000)
+        })
+    }
+
     return response.data
 }, errorHandler)
 

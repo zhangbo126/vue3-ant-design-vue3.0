@@ -289,7 +289,7 @@ export default {
               });
               return v;
             });
-            Object.assign(mixMaxItem.value, spaceInfo.spaceValueList);
+            mixMaxItem.value= ref(spaceInfo.spaceValueList).value
             Object.assign(form, {
               goodsName: spaceInfo.goodsName,
               categoryId: spaceInfo.categoryId,
@@ -304,9 +304,7 @@ export default {
     });
 
     //监听规格项数据变化
-    watch(
-      mixMaxItem.value,
-      (newValue, oldValue) => {
+    watch( mixMaxItem.value,(newValue, oldValue) => {
         const attrColumns = columns.value[0].children;
         const result = watchMix(newValue, oldValue, attrColumns, data.value);
         columns.value[0].children = result.column;
