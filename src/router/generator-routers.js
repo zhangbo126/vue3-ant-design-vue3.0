@@ -29,9 +29,7 @@ const rootRouter = {
         title: '首页'
     },
     redirect: '/home/page'
-
 }
-
 
 export const renderAsyncRouter = (menuList) => {
     return new Promise(reslove => {
@@ -41,8 +39,6 @@ export const renderAsyncRouter = (menuList) => {
         const renderRouter = generator(addRouter)
         const asyncRouter = []
         rootRouter.children = renderRouter.concat(hideRouter)
-        // rootRouter.redirect = renderRouter[0].path 
-
         asyncRouter.push(
             {
                 hide: true,
@@ -52,15 +48,21 @@ export const renderAsyncRouter = (menuList) => {
             },
             rootRouter
         )
-
         reslove({ asyncRouter, renderRouter })
     })
 
 }
 
+
+
+/** 
+ 处理树结构路由内容
+ * @param {Array} routerMap 要处理的异步路由
+ * @return  当前账号异步路由
+*/
+
 export const generator = (routerMap, parent) => {
     return routerMap.map(item => {
-
         const currentRouter = {
             // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
             path: item.url,
@@ -73,7 +75,6 @@ export const generator = (routerMap, parent) => {
             meta: {
                 title: item.title,
                 icon: item.icon || undefined,
-
             }
         }
         item.redirect && (currentRouter.redirect = item.redirect)
@@ -86,10 +87,13 @@ export const generator = (routerMap, parent) => {
     })
 }
 
-/*
+/** 
 
 list 结构转 树型
-
+ * @param {Array} menuTree 菜单原数据
+ * @param {Array} tree  菜单树级结构
+ * @param {String} partentId 菜单父级ID
+ * @return  
 */
 
 const treeMap = (menuTree, tree, partentId) => {

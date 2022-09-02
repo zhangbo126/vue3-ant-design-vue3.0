@@ -16,7 +16,7 @@
         <a-input placeholder="路由重定向地址" style="width: 220px" v-model:value.trim="form.redirectUrl" />
       </a-form-item>
       <a-form-item label="排序号" name="sort">
-        <a-input-number placeholder="排序号" style="width: 220px" :min="0" :max="1000" v-model:value.trim="form.sort" />
+        <a-input-number placeholder="排序号" style="width: 220px" :min="0" :max="1000" v-model:value="form.sort" />
       </a-form-item>
       <a-form-item label="唯一标识" name="key">
         <a-input placeholder="唯一标识" style="width: 220px" v-model:value.trim="form.key" />( 建议英文+下滑线组合)
@@ -104,12 +104,14 @@ export default {
       formRef.value
         .validate()
         .then(() => {
+          //新增
           if (parametr.type == 1) {
             addMenuTree(form).then(res => {
               handleSuccessTip(res);
             });
             return;
           }
+          //编辑
           editMenuTree(form).then(res => {
             handleSuccessTip(res);
           });

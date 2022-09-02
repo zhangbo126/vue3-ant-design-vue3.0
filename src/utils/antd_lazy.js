@@ -91,17 +91,12 @@ const ant = {
 
         Object.keys(antIcons).forEach(key => {
             Vue.component(key, antIcons[key])
-
-
         })
-
         Vue.config.globalProperties.$message = message
         Vue.config.globalProperties.$notification = notification
         Vue.config.globalProperties.$confirm = Modal.confirm
         Vue.config.globalProperties.$antIcons = antIcons
-
         Vue.config.productionTip = false
-
     }
 }
 

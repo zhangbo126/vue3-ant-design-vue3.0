@@ -1,29 +1,10 @@
 <template>
-  <a-modal
-    v-model:visible="visible"
-    :width="600"
-    ok-text="确认"
-    cancel-text="取消"
-    title="定义角色"
-    @ok="submitHandle"
-    @cancel="cancel"
-  >
-    <a-form
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      :label-col="{ span: 7 }"
-      :wrapper-col="{ span: 14 }"
-    >
-      <a-form-item ref="userAccount" label="账户名称">
-        {{ form.userAccount }}
-      </a-form-item>
-
+  <a-modal v-model:visible="visible" :width="600" ok-text="确认" cancel-text="取消" title="定义角色" @ok="submitHandle" @cancel="cancel">
+    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
+      <a-form-item ref="userAccount" label="账户名称">{{ form.userAccount }}</a-form-item>
       <a-form-item label="用户角色" name="userRole">
         <a-checkbox-group v-model:value="form.userRole">
-          <a-checkbox v-for="role in roleList" :key="role._id" :value="role._id">
-            {{ role.name }}
-          </a-checkbox>
+          <a-checkbox v-for="role in roleList" :key="role._id" :value="role._id">{{ role.name }}</a-checkbox>
         </a-checkbox-group>
       </a-form-item>
     </a-form>
@@ -33,8 +14,13 @@
 <script>
 const rules = {
   userRole: [
-    { required: true, message: "请选择", trigger: ["change", "blur"], type: "array" },
-  ],
+    {
+      required: true,
+      message: "请选择",
+      trigger: ["change", "blur"],
+      type: "array"
+    }
+  ]
 };
 import { reactive, ref, toRefs } from "vue";
 import { roleAssignment, getRoleList } from "@/api/UserCenter";
@@ -45,40 +31,40 @@ export default {
     const form = reactive({
       userAccount: null,
       userRole: null,
-      id: null,
+      id: null
     });
     const formRef = ref();
     const parametr = reactive({
       visible: false,
-      roleList: [],
+      roleList: []
     });
 
     const submitHandle = () => {
       formRef.value.validate().then(() => {
-        roleAssignment(form).then((res) => {
+        roleAssignment(form).then(res => {
           handleSuccessTip(res);
         });
       });
     };
 
-    const showModal = async (obj) => {
+    const showModal = async obj => {
       const { _id, userRole, userAccount } = obj;
       resultForm();
       await getRole();
       await Object.assign(form, {
         userAccount,
         userRole,
-        id: _id,
+        id: _id
       });
     };
     const getRole = () => {
-      getRoleList().then((res) => {
+      getRoleList().then(res => {
         if (res.code == 1) {
           parametr.roleList = res.data;
         }
       });
     };
-    const handleSuccessTip = (res) => {
+    const handleSuccessTip = res => {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
@@ -91,7 +77,7 @@ export default {
       Object.assign(form, {
         userAccount: null,
         userRole: null,
-        id: null,
+        id: null
       });
     };
     const cancel = () => {
@@ -104,9 +90,9 @@ export default {
       formRef,
       submitHandle,
       showModal,
-      cancel,
+      cancel
     };
-  },
+  }
 };
 </script>
 

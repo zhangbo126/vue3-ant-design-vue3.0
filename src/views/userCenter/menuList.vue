@@ -108,7 +108,7 @@ export default {
     const menu = ref(null);
     const pageData = reactive({
       queryInfo: {
-        pageSize: 10,
+        pageSize: 20,
         pageNumber: 1
       }
     });

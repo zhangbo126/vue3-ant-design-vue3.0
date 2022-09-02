@@ -106,6 +106,11 @@ const componentList = [
         describe: '二级菜单'
     },
     {
+        name: '首页',
+        component: 'Home',
+        describe: '一级菜单'
+    },
+    {
         name: '菜单管理',
         component: 'menuList',
         describe: '二级菜单'

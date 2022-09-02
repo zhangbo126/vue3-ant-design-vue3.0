@@ -77,14 +77,14 @@
           <a-table bordered :columns="columns"  size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
             <template #bodyCell="{ column, text,record }">
               <template v-if="column.dataIndex === 'price'">
-                <a-input-number :max="1000000" :min="1" v-model:value.trim="record.price" />
+                <a-input-number :max="1000000" :min="1" v-model:value="record.price" />
               </template>
               <template v-if="column.dataIndex === 'skuName'">
                 <a-input v-model:value.trim="record.skuName" />
               </template>
               <template v-if="column.dataIndex === 'weight'">
                 <div class="weight">
-                  <a-input-number v-model:value.trim="record.weight" :max="1000000" :min="1" />
+                  <a-input-number v-model:value="record.weight" :max="1000000" :min="1" />
                 </div>
               </template>
               <template v-if="column.dataIndex === 'goodsType'">
@@ -332,11 +332,11 @@ export default {
     };
     //添加小项
     const onAddMaxValue = index => {
-      const minMin = {
+      let minMin=reactive({
         specValue: "",
         key: Math.random() * 1000,
         isShowInp: true
-      };
+      })
       mixMaxItem.value[index].mixList.push(minMin);
     };
     //点击切换input输入
@@ -420,11 +420,13 @@ export default {
         if (!specValueRule) {
           return message.warning("请填写规格项名称");
         }
-
+        console.log(data.value)
         //价格是否输入验证
-        const priceRule = data.value.every(
-          v => v.price != "" && v.price != null
-        );
+        const priceRule = data.value.every(v =>{
+           
+          return  v.price != "" && v.price != null
+        });
+            
         if (!priceRule) {
           return message.warning("请填写商品价格");
         }
