@@ -11,7 +11,7 @@
         </a-select>
       </a-form-item>
       <a-form-item label="排序" name="sort">
-        <a-input-number placeholder="排序" style="width: 220px" v-model:value.trim="form.sort" />
+        <a-input-number placeholder="排序" style="width: 220px" v-model:value="form.sort" />
       </a-form-item>
       <a-form-item label="状态" name="status" ref="status">
         <a-radio-group v-model:value="form.status">
@@ -20,7 +20,7 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="分类图标" name="logoFilePath">
-        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" :remove="onRemove">
+        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" @remove="onRemove">
           <div v-if="fileList.length == 0" class="ant-upload-text">
             <plus-outlined></plus-outlined>
             <div>上传</div>

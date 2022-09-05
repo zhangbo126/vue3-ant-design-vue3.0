@@ -38,11 +38,11 @@ import {
     notification,
     message,
 } from 'ant-design-vue'
-
 import * as antIcons from '@ant-design/icons-vue'
 
 const ant = {
     install(Vue) {
+        
         // Vue.component(Button.name, Button)
         // Vue.component(Input.name, Input)
         // Vue.component(Input.Password.name, Input.Password)
@@ -88,7 +88,6 @@ const ant = {
         // Vue.component(Spin.name, Spin)
         // Vue.component(Card.name, Card)
         // Vue.component(Form.Item.name, Form.Item)
-
         Object.keys(antIcons).forEach(key => {
             Vue.component(key, antIcons[key])
         })

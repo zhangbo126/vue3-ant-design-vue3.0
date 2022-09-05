@@ -11,7 +11,7 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="活动封面" name="imageFilePath" ref="imageFilePathRef">
-        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" :remove="onRemove">
+        <a-upload v-model:file-list="fileList" list-type="picture-card" name="file" :before-upload="onBeforeUpload" :customRequest="onCustomRequest" @remove="onRemove">
           <div v-if="fileList.length == 0" class="ant-upload-text">
             <plus-outlined></plus-outlined>
             <div>上传</div>

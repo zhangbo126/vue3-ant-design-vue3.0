@@ -6,10 +6,7 @@
           <a-button type="primary" @click="router.back()">返回</a-button>
         </div>
         <div class="ueditor">
-          <vue-ueditor-wrap
-            v-model="form.mixDetail"
-            :config="config"
-          ></vue-ueditor-wrap>
+          <vue-ueditor-wrap v-model="form.mixDetail" :config="config"></vue-ueditor-wrap>
         </div>
         <div class="save">
           <a-button type="primary" @click="save">保存</a-button>
@@ -31,16 +28,16 @@ export default {
     const route = useRoute();
     const form = reactive({
       mixDetail: null,
-      id: route.query.id,
+      id: route.query.id
     });
     onMounted(() => {
-      getGoodsDetails(route.query.id).then((res) => {
+      getGoodsDetails(route.query.id).then(res => {
         form.mixDetail = res.data.mixDetail;
       });
     });
 
     const save = () => {
-      setGoodsDetails(form).then((res) => {
+      setGoodsDetails(form).then(res => {
         if (res.code == 1) {
           message.success("操作成功");
         }
@@ -50,9 +47,9 @@ export default {
       form,
       config,
       router,
-      save,
+      save
     };
-  },
+  }
 };
 </script>
 
