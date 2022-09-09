@@ -4,7 +4,6 @@
       <a-form-item ref="userAccount" label="账户名称" name="userAccount">
         <a-input placeholder="账户名称" style="width: 220px" v-model:value="form.userAccount" />
       </a-form-item>
-
       <a-form-item label="联系方式" name="phone">
         <a-input placeholder="联系方式" style="width: 220px" v-model:value.trim="form.phone" />
       </a-form-item>

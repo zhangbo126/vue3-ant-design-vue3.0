@@ -116,7 +116,18 @@ export default {
     const getList = async () => {
       const res = await getMenuTree(pageData.queryInfo);
       data.value = res.data;
+      setMenuChildren(data.value)
     };
+    //处理菜单数据
+    const setMenuChildren=(data)=>{
+      data.forEach(v=>{
+          if(v.children.length){
+            setMenuChildren(v.children)
+          }else{
+             delete v.children
+          }
+      })
+    }
     //新增角色
     const addMenu = () => {
       menu.value.showAddModal();

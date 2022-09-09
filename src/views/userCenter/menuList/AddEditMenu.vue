@@ -6,9 +6,8 @@
       </a-form-item>
       <a-form-item ref="menuType" label="菜单类型" name="menuType">
         <a-radio-group name="radioGroup" v-model:value="form.menuType">
-          <a-radio :value="1">目录</a-radio>
-          <a-radio :value="2">菜单</a-radio>
-          <a-radio :value="3">按钮</a-radio>
+          <a-radio :value="1">菜单</a-radio>
+          <a-radio :value="2">按钮</a-radio>
         </a-radio-group>
       </a-form-item>
       <a-form-item ref="parentId" label="父级菜单" name="parentId">
@@ -16,10 +15,10 @@
           <a-select-option v-for="menu in menuList" :value="menu._id" :key="menu._id">{{ menu.name }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="路由地址" name="url" v-if="form.menuType!=3">
+      <a-form-item label="路由地址" name="url" v-if="[1].includes(form.menuType)">
         <a-input size="small" placeholder="路由地址" style="width: 220px" v-model:value.trim="form.url" />
       </a-form-item>
-      <a-form-item label="路由重定向地址" name="redirectUrl" v-if="form.menuType!=3">
+      <a-form-item label="路由重定向地址" name="redirectUrl" v-if="[1].includes(form.menuType)">
         <a-input placeholder="路由重定向地址" style="width: 220px" v-model:value.trim="form.redirectUrl" />
       </a-form-item>
       <a-form-item label="排序号" name="sort">
@@ -28,12 +27,12 @@
       <a-form-item label="唯一标识" name="key">
         <a-input placeholder="唯一标识" style="width: 220px" v-model:value.trim="form.key" />( 建议英文+下滑线组合)
       </a-form-item>
-      <a-form-item label="使用组件" name="component" v-if="form.menuType!=3">
+      <a-form-item label="使用组件" name="component" v-if="[1].includes(form.menuType)">
         <a-select placeholder="使用组件" style="width: 220px" v-model:value="form.component" show-search :filter-option="filterOption">
           <a-select-option v-for="com in componentList" :value="com.component" :key="com.component">{{ com.component }}({{ com.name }})</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="图标" v-if="form.menuType!=3">
+      <a-form-item label="图标" v-if="form.menuType!=2">
         <a-select placeholder="图标" style="width: 220px" v-model:value="form.icon" show-search :filter-option="filterOption" :allowClear="true">
           <a-select-option v-for="icon in IconList" :value="icon" :key="icon">
             <span>{{ icon }}</span>
@@ -86,7 +85,7 @@ const rules = {
       required: true,
       message: "请选择",
       trigger: ["change", "blur"],
-      type: "string"
+      type: "number"
     }
   ]
 };
@@ -133,7 +132,6 @@ export default {
           });
         }
       } catch {}
-
     };
 
     const showAddModal = async () => {
@@ -210,20 +208,22 @@ export default {
 
     const resultForm = () => {
       parametr.visible = true;
-      Object.assign(form, {
-        name: null,
-        url: null,
-        redirectUrl: null,
-        key: null,
-        component: null,
-        sort: null,
-        parentId: null,
-        id: null,
-        status: null,
-        icon: null
-      });
+      // Object.assign(form, {
+      //   name: null,
+      //   url: null,
+      //   redirectUrl: null,
+      //   key: null,
+      //   component: null,
+      //   sort: null,
+      //   parentId: null,
+      //   id: null,
+      //   status: null,
+      //   icon: null,
+      //   menuType:1
+      // });
     };
     const cancel = () => {
+      formRef.value.resetFields();
     };
     return {
       componentList,
