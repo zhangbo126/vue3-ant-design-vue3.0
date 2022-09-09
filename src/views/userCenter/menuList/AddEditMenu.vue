@@ -224,7 +224,6 @@ export default {
       });
     };
     const cancel = () => {
-      formRef.value.resetFields();
     };
     return {
       componentList,

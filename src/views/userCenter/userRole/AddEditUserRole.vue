@@ -8,17 +8,11 @@
         <a-textarea v-model:value.trim="form.describe" />
       </a-form-item>
       <a-form-item label="角色权限">
-        <ul class="role-menu">
-          <li v-for="t1Menu in menuList" :key="t1Menu._id">
-            <a-checkbox v-model:checked="t1Menu.isChecked" :indeterminate="t1Menu.indeterminate" @change="(e) => onChangeT1(e, t1Menu)">{{ t1Menu.name }}</a-checkbox>
-            <div class="menu-t2" v-for="t2Menu in t1Menu.children" :key="t2Menu._id">
-              <a-checkbox v-model:checked="t2Menu.isChecked" @change="(e) => onChangeT2(e, t2Menu, t1Menu)" :indeterminate="t2Menu.indeterminate">{{ t2Menu.name }}</a-checkbox>
-              <div class="menu-t3" v-for="t3Menu in t2Menu.children" :key="t3Menu._id">
-                <a-checkbox v-model:checked="t3Menu.isChecked" @change="() => onChangeT3(t1Menu, t2Menu)">{{ t3Menu.name }}</a-checkbox>
-              </div>
-            </div>
-          </li>
-        </ul>
+        <a-tree checkable v-if="menuList.length" v-model:checkedKeys="form.roleMenu_List" defaultExpandAll :tree-data="menuList" :field-names="{title:'name',key:'_id'}">
+          <template #title="{ name }">
+            <span>{{ name }}</span>
+          </template>
+        </a-tree>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -59,18 +53,16 @@ export default {
       id: null,
       roleMenu_List: []
     });
-    const parametr = reactive({
+    const pageData = reactive({
       type: 1,
       visible: false,
       formRef: ref(),
       menuList: []
     });
-
     const submitHandle = () => {
-      parametr.formRef.validate().then(() => {
-        setCheckId(parametr.menuList, form.roleMenu_List);
+      pageData.formRef.validate().then(() => {
         //新增提交
-        if (parametr.type == 1) {
+        if (pageData.type == 1) {
           addRole(form).then(res => {
             handleSuccessTip(res);
           });
@@ -83,12 +75,14 @@ export default {
       });
     };
     const showAddModal = async e => {
-      parametr.type = 1;
-      resultForm();
-      getMenuList();
+       pageData.type = 1;
+       resultForm();
+       //获取菜单列表
+       const {data} = await getAddMenuList()
+       pageData.menuList = data;
     };
-    const showEditModal = obj => {
-      parametr.type = 2;
+    const showEditModal = async obj => {
+      pageData.type = 2;
       resultForm();
       const { name, describe, _id } = obj;
       Object.assign(form, {
@@ -96,31 +90,19 @@ export default {
         describe,
         id: _id
       });
-      getMenuListEdit();
+      //获取菜单列表
+       const {data} = await getEditMenuList(form.id)
+       pageData.menuList=data
+       filterMenu(pageData.menuList);
     };
-    //新增获取菜单
-    const getMenuList = () => {
-      getAddMenuList().then(res => {
-        parametr.menuList = res.data;
-        setMenuChange(parametr.menuList);
-      });
-    };
-    //编辑获取菜单
-    const getMenuListEdit = () => {
-      getEditMenuList(form.id).then(res => {
-        parametr.menuList = res.data;
-        setMenuChange(parametr.menuList);
-      });
-    };
-    const setMenuChange = menuList => {
+
+    const filterMenu = menuList => {
       menuList.forEach(v => {
-        v.isChecked = false;
-        v.indeterminate = false;
         if (v.isChange == 1) {
-          v.isChecked = true;
+          form.roleMenu_List.push(v._id);
         }
         if (v.children.length > 0) {
-          setMenuChange(v.children, v.isChecked);
+          filterMenu(v.children, v.isChecked);
         }
       });
     };
@@ -129,63 +111,14 @@ export default {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
-        parametr.visible = false;
+        pageData.visible = false;
       }
-    };
-
-    //递归处理已勾选的菜单ID
-    const setCheckId = (roleMenu_List, menuIdList) => {
-      roleMenu_List.forEach(v => {
-        if (v.isChecked || v.indeterminate) {
-          menuIdList.push(v._id);
-        }
-        if (v.children.length > 0) {
-          setCheckId(v.children, menuIdList);
-        }
-      });
-    };
-
-    //递归调用选中
-    const checkHandle = (list, checked) => {
-      list.forEach(v => {
-        v.isChecked = checked;
-        if (v.children.length > 0) {
-          checkHandle(v.children, checked);
-        }
-      });
-    };
-    //一级菜单选择
-    const onChangeT1 = (e, t1Menu) => {
-      checkHandle(t1Menu.children, e.target.checked);
-      t1Menu.indeterminate = false;
-    };
-    //二级菜单选择
-    const onChangeT2 = (e, t2Menu, t1Menu) => {
-      checkHandle(t2Menu.children, e.target.checked);
-      t2Menu.indeterminate = false;
-      t1Menu.isChecked = t1Menu.children.every(v => v.isChecked);
-      /*一级菜单选中*/
-      const t1Len = t1Menu.children.filter(v => v.isChecked).length;
-      t1Menu.indeterminate = t1Len != t1Menu.children.length && t1Len != 0;
-    };
-    //三级菜单选择
-    const onChangeT3 = (t1Menu, t2Menu) => {
-      /*二级菜单选中判断*/
-      const t2Len = t2Menu.children.filter(v => v.isChecked).length;
-      t2Menu.indeterminate = t2Len != 0 && t2Len != t2Menu.children.length;
-      t2Menu.isChecked = t2Len == t2Menu.children.length;
-
-      /*一级级菜单选中判断*/
-      t1Menu.isChecked = t1Menu.children.every(v => v.isChecked);
-      const t1Lenminate = t1Menu.children.some(v => v.indeterminate);
-      const t1Lenchecked = t1Menu.children.every(v => v.isChecked);
-      t1Menu.indeterminate = t1Lenminate || !t1Lenchecked;
     };
 
     //重置表单
     const resultForm = () => {
-      parametr.visible = true;
-      parametr.menuList = [];
+      pageData.visible = true;
+      pageData.menuList = [];
       Object.assign(form, {
         name: null,
         describe: null,
@@ -194,19 +127,15 @@ export default {
       });
     };
     const cancel = () => {
-      parametr.formRef.resetFields();
+      pageData.formRef.resetFields();
     };
     return {
       form,
       rules,
-      ...toRefs(parametr),
+      ...toRefs(pageData),
       submitHandle,
       showAddModal,
       showEditModal,
-      getMenuList,
-      onChangeT1,
-      onChangeT2,
-      onChangeT3,
       cancel
     };
   }
@@ -214,12 +143,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.role-menu {
-  .menu-t2 {
-    margin-left: 30px;
-    .menu-t3 {
-      margin-left: 30px;
-    }
-  }
-}
+
 </style>
