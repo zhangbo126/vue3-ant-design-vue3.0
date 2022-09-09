@@ -2,7 +2,7 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addRole">新增角色+</a-button>
+        <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Role']"  @click="addRole">新增角色+</a-button>
         <ul class="query-handle">
           <li>
             <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="角色名称" @keyup.enter="onChangeStatus" />
