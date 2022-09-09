@@ -2,27 +2,15 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addRole"
-          >新增角色+</a-button
-        >
+        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addRole">新增角色+</a-button>
         <ul class="query-handle">
           <li>
-            <a-input
-              style="width: 140px"
-              v-model:value.trim="queryInfo.name"
-              placeholder="角色名称"
-              @keyup.enter="onChangeStatus"
-            />
+            <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="角色名称" @keyup.enter="onChangeStatus" />
           </li>
           <li>
-            <a-select
-              style="width: 140px"
-              v-model:value="queryInfo.status"
-              placeholder="角色状态"
-              @change="onChangeStatus"
-            >
-              <a-select-option key="1" :value="1">使用中 </a-select-option>
-              <a-select-option key="2" :value="0">已停用 </a-select-option>
+            <a-select style="width: 140px" v-model:value="queryInfo.status" placeholder="角色状态" @change="onChangeStatus">
+              <a-select-option key="1" :value="1">使用中</a-select-option>
+              <a-select-option key="2" :value="0">已停用</a-select-option>
             </a-select>
           </li>
           <li>
@@ -53,12 +41,16 @@
         >
           <template #bodyCell="{ column, text,record }">
             <template v-if="column.dataIndex === 'status'">
-               <div>{{ statusMapFilter(text) }}</div>
+              <div>{{ statusMapFilter(text) }}</div>
             </template>
-             <template v-if="column.dataIndex === 'action'">
-               <ul class="table-action">
-                 <li><a @click="editRole(record)"> 编辑 </a></li>
-                 <li><a @click="delRole(record._id)"> 删除 </a></li>
+            <template v-if="column.dataIndex === 'action'">
+              <ul class="table-action">
+                <li>
+                  <a @click="editRole(record)">编辑</a>
+                </li>
+                <li>
+                  <a @click="delRole(record._id)">删除</a>
+                </li>
               </ul>
             </template>
           </template>
@@ -76,37 +68,37 @@ import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 const statusMap = {
   0: "已停用",
-  1: "使用中",
+  1: "使用中"
 };
 const columns = [
   {
     title: "角色名称",
     dataIndex: "name",
-    align: "center",
+    align: "center"
   },
   {
     title: "状态",
     dataIndex: "status",
     align: "center",
-    width: 120,
+    width: 120
   },
   {
     title: "角色描述",
     dataIndex: "describe",
-    align: "center",
+    align: "center"
   },
   {
     title: "角色权限",
     dataIndex: "roleMenuName_List",
-    align: "center",
+    align: "center"
   },
   {
     title: "操作",
     dataIndex: "action",
     align: "center",
     width: 100,
-    fixed: "right",
-  },
+    fixed: "right"
+  }
 ];
 export default {
   components: { AddEditUserRole },
@@ -118,19 +110,18 @@ export default {
         pageSize: 10,
         pageNumber: 1,
         name: null,
-        status: null,
+        status: null
       },
-      total: 0,
+      total: 0
     });
 
-    const getList = () => {
-      getRoleList(pageData.queryInfo).then((res) => {
-        data.value = res.data;
-        data.value.forEach((v) => {
-          v.roleMenuName_List = v.roleMenuName_List.join(",");
-        });
-        pageData.total = res.count;
+    const getList = async () => {
+      const res =await getRoleList(pageData.queryInfo);
+      data.value = res.data;
+      data.value.forEach(v => {
+        v.roleMenuName_List = v.roleMenuName_List.join(",");
       });
+      pageData.total = res.count;
     };
     const refresh = () => {
       getList();
@@ -138,26 +129,26 @@ export default {
     const addRole = () => {
       role.value.showAddModal();
     };
-    const editRole = (obj) => {
+    const editRole = obj => {
       role.value.showEditModal(obj);
     };
-    const delRole = (id) => {
+    const delRole = id => {
       Modal.confirm({
         title: "确认要执行操作吗?",
         okText: "确认",
         cancelText: "取消",
         onOk() {
-          removeRole(id).then((res) => {
+          removeRole(id).then(res => {
             if (res.code == 1) {
               message.success("操作成功");
               getList();
             }
           });
-        },
+        }
       });
     };
 
-    const onChangePage = (current) => {
+    const onChangePage = current => {
       pageData.queryInfo.pageNumber = current;
       getList();
     };
@@ -179,7 +170,7 @@ export default {
         pageNumber: 1,
         pageSize: 10,
         name: null,
-        status: null,
+        status: null
       });
       getList();
     };
@@ -188,7 +179,7 @@ export default {
       getList();
     });
 
-    const statusMapFilter = (type) => {
+    const statusMapFilter = type => {
       return statusMap[type];
     };
     return {
@@ -207,9 +198,9 @@ export default {
       onChangeStatus,
       handlePageSizeChange,
       onSearch,
-      onResult,
+      onResult
     };
-  },
+  }
 };
 </script>
 <style scoped lang="less">

@@ -138,7 +138,6 @@ const columns = [
 export default {
   components: { AddEditAccount, DefinitionRole },
   setup(props, content) {
-    console.log(props, content);
     const data = ref([]);
     const account = ref(null);
     const role = ref(null);
@@ -152,14 +151,14 @@ export default {
       },
       total: 0
     });
-
-    const getList = () => {
-      getAccountList(pageData.queryInfo).then(res => {
-        data.value = res.data;
-        pageData.total = res.count;
-        data.value.forEach(v => {
-          v.userRoleName = v.userRoleName.join(",");
-        });
+   //获取账号列表
+    const getList = async () => {
+      const res=await getAccountList(pageData.queryInfo);
+    
+      data.value = res.data;
+      pageData.total = res.count;
+      data.value.forEach(v => {
+        v.userRoleName = v.userRoleName.join(",");
       });
     };
     const refresh = () => {

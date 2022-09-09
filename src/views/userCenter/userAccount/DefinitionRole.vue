@@ -34,7 +34,7 @@ export default {
       id: null
     });
     const formRef = ref();
-    const parametr = reactive({
+    const pageData = reactive({
       visible: false,
       roleList: []
     });
@@ -50,30 +50,24 @@ export default {
     const showModal = async obj => {
       const { _id, userRole, userAccount } = obj;
       resultForm();
-      await getRole();
+      const { data } = await getRoleList();
+      pageData.roleList = data;
       await Object.assign(form, {
         userAccount,
         userRole,
         id: _id
       });
     };
-    const getRole = () => {
-      getRoleList().then(res => {
-        if (res.code == 1) {
-          parametr.roleList = res.data;
-        }
-      });
-    };
     const handleSuccessTip = res => {
       if (res.code == 1) {
         message.success("操作成功");
         context.emit("refresh");
-        parametr.visible = false;
+        pageData.visible = false;
       }
     };
 
     const resultForm = () => {
-      parametr.visible = true;
+      pageData.visible = true;
       Object.assign(form, {
         userAccount: null,
         userRole: null,
@@ -86,7 +80,7 @@ export default {
     return {
       form,
       rules,
-      ...toRefs(parametr),
+      ...toRefs(pageData),
       formRef,
       submitHandle,
       showModal,

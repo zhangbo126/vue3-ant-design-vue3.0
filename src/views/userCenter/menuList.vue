@@ -113,10 +113,9 @@ export default {
       }
     });
 
-    const getList = () => {
-      getMenuTree(pageData.queryInfo).then(res => {
-        data.value = res.data;
-      });
+    const getList = async () => {
+      const res = await getMenuTree(pageData.queryInfo);
+      data.value = res.data;
     };
     //新增角色
     const addMenu = () => {
