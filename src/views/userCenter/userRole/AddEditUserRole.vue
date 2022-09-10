@@ -8,7 +8,7 @@
         <a-textarea v-model:value.trim="form.describe" />
       </a-form-item>
       <a-form-item label="角色权限">
-        <a-tree checkable v-if="menuList.length" v-model:checkedKeys="form.roleMenu_List" defaultExpandAll :tree-data="menuList" :field-names="{title:'name',key:'_id'}">
+        <a-tree ref="treeRef"  checkable v-if="menuList.length"  v-model:checkedKeys="form.roleMenu_List" defaultExpandAll :tree-data="menuList" :field-names="{title:'name',key:'_id'}">
           <template #title="{ name }">
             <span>{{ name }}</span>
           </template>
@@ -59,6 +59,7 @@ export default {
       formRef: ref(),
       menuList: []
     });
+
     const submitHandle = () => {
       pageData.formRef.validate().then(() => {
         //新增提交
@@ -92,19 +93,8 @@ export default {
       });
       //获取菜单列表
        const {data} = await getEditMenuList(form.id)
-       pageData.menuList=data
-       filterMenu(pageData.menuList);
-    };
-
-    const filterMenu = menuList => {
-      menuList.forEach(v => {
-        if (v.isChange == 1) {
-          form.roleMenu_List.push(v._id);
-        }
-        if (v.children.length > 0) {
-          filterMenu(v.children, v.isChecked);
-        }
-      });
+       pageData.menuList=data.menuList
+       form.roleMenu_List=data.selectMenuIdList
     };
 
     const handleSuccessTip = res => {

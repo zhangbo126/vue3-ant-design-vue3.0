@@ -2,7 +2,7 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Role']"  @click="addRole">新增角色+</a-button>
+        <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Role']" @click="addRole">新增角色+</a-button>
         <ul class="query-handle">
           <li>
             <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="角色名称" @keyup.enter="onChangeStatus" />
@@ -20,7 +20,6 @@
             </a-space>
           </li>
         </ul>
-
         <a-table
           :dataSource="data"
           bordered
@@ -46,10 +45,10 @@
             <template v-if="column.dataIndex === 'action'">
               <ul class="table-action">
                 <li>
-                  <a @click="editRole(record)">编辑</a>
+                  <a v-auth="['Btn_Edit_Role']" @click="editRole(record)">编辑</a>
                 </li>
                 <li>
-                  <a @click="delRole(record._id)">删除</a>
+                  <a v-auth="['Btn_Delete_Role']" @click="delRole(record._id)">删除</a>
                 </li>
               </ul>
             </template>
@@ -116,7 +115,7 @@ export default {
     });
 
     const getList = async () => {
-      const res =await getRoleList(pageData.queryInfo);
+      const res = await getRoleList(pageData.queryInfo);
       data.value = res.data;
       data.value.forEach(v => {
         v.roleMenuName_List = v.roleMenuName_List.join(",");

@@ -2,7 +2,7 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addAccount">新增账号+</a-button>
+        <a-button type="primary" v-auth="['Btn_Add_Account']" :style="{ margin: '10px 0px' }" @click="addAccount">新增账号+</a-button>
         <ul class="query-handle">
           <li>
             <a-input style="width: 140px" v-model:value.trim="queryInfo.userAccount" placeholder="账号" @keyup.enter="onChangeStatus" />
@@ -48,19 +48,19 @@
             <template v-if="column.dataIndex === 'action'">
               <ul class="table-action">
                 <li>
-                  <a @click="removeAccount(record._id)">删除</a>
+                  <a  v-auth="['Btn_Delete_Account']" @click="removeAccount(record._id)">删除</a>
                 </li>
                 <li v-if="record.status == 0">
-                  <a @click="setAccountStatus(record._id, 1)">启用</a>
+                  <a v-auth="['Btn_Edit_Account']"  @click="setAccountStatus(record._id, 1)">启用</a>
                 </li>
                 <li v-if="record.status == 1">
-                  <a @click="setAccountStatus(record._id, 0)">禁用</a>
+                  <a v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id, 0)">禁用</a>
                 </li>
                 <li v-if="record.status == 1">
-                  <a @click="setRole(record)">定义角色</a>
+                  <a v-auth="['Btn_Edit_Account']" @click="setRole(record)">定义角色</a>
                 </li>
                 <li v-if="record.status == 1">
-                  <a @click="resultPass(record.id)">重置密码</a>
+                  <a v-auth="['Btn_Edit_Account']" @click="resultPass(record.id)">重置密码</a>
                 </li>
               </ul>
             </template>

@@ -2,7 +2,7 @@
   <a-row>
     <a-col :span="24">
       <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddgoods">新增商品+</a-button>
+        <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Goods']" @click="onAddgoods">新增商品+</a-button>
         <!-- 查询区域 -->
         <ul class="query-handle">
           <li>
@@ -114,10 +114,10 @@
             </template>
             <template v-if="column.dataIndex === 'action'">
               <ul class="table-action">
-                <li>
+                <li v-auth="['Btn_Edit_Goods']">
                   <a @click="onEditGoods(record)">编辑</a>
                 </li>
-                <li>
+                <li v-auth="['Btn_Edit_Goods']">
                   <a @click="setGoodsDetail(record)">设置商品详情</a>
                 </li>
               </ul>
