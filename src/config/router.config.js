@@ -48,7 +48,11 @@ export const routerMap = [
 
         ]
     },
-
+    {
+        hide: true,
+        path: '/:pathMatch(.*)*',
+        component: () => import('@/views/Exception/404'),
+    },
 
 ]
 

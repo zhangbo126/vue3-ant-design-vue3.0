@@ -23,6 +23,7 @@ router.beforeEach(async (to, from, next) => {
                     //生成动态路由
                     store.dispatch('GenerateRoutes', menuList).then(async (res) => {
                         const asyncRouter = res.asyncRouter
+                        console.log(res)
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
                         })

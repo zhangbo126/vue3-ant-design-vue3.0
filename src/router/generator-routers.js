@@ -38,15 +38,9 @@ export const renderAsyncRouter = (menuList) => {
         const renderRouter = generator(addRouter)
         const asyncRouter = []
         rootRouter.children = renderRouter.concat(hideRouter)
-        asyncRouter.push(
-            {
-                hide: true,
-                name: '404',
-                path: '/:pathMatch(.*)*',
-                component: () => import('@/views/Exception/404')
-            },
-            rootRouter
-        )
+        asyncRouter.push(rootRouter)
+            
+       
         reslove({ asyncRouter, renderRouter })
     })
 
