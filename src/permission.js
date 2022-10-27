@@ -23,11 +23,16 @@ router.beforeEach(async (to, from, next) => {
                     //生成动态路由
                     store.dispatch('GenerateRoutes', menuList).then(async (res) => {
                         const asyncRouter = res.asyncRouter
-                        console.log(res)
                         asyncRouter.forEach(v => {
                             router.addRoute(v)
                         })
-                        router.replace()
+                        // 请求带有 redirect 重定向时，登录自动重定向到该地址
+                        const redirect = decodeURIComponent(from.query.redirect || to.path)
+                        if (to.path === redirect) {
+                             router.replace({...to,replace:true})
+                        } else {
+                            next({ path: '/' })
+                        }
                     })
                 }).catch(() => {
                     //当前账号没有权限时

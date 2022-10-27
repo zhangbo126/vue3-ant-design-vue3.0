@@ -62,11 +62,11 @@
         </a-table>
       </a-card>
     </a-col>
-    <add-activity ref="activity" @refresh="refresh"></add-activity>
+    <add-activity ref="activity" @refresh="getList"></add-activity>
   </a-row>
 </template>
 
-<script>
+<script setup>
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 import {
@@ -116,121 +116,92 @@ const statusMap = {
   1: "进行中"
 };
 
-export default {
-  components: { AddActivity },
-  setup() {
-    const data = ref([]);
-    const activity = ref(null);
-    const pageData = reactive({
-      queryInfo: {
-        pageSize: 10,
-        pageNumber: 1,
-        name: null,
-        status: null
-      },
-      total: 0
-    });
+const data = ref([]);
+const activity = ref(null);
+const total = ref(0);
+const queryInfo = reactive({
+  pageSize: 10,
+  pageNumber: 1,
+  name: null,
+  status: null
+});
 
-    //新增活动
-    const onAddActivity = () => {
-      activity.value.showModal();
-    };
-    //结束活动
-    const endActivity = id => {
-      Modal.confirm({
-        title: "确认要执行操作吗?",
-        okText: "确认",
-        cancelText: "取消",
-        onOk() {
-          stopActivity(id).then(res => {
-            if (res.code == 1) {
-              message.success("操作成功");
-              getList();
-            }
-          });
-        }
-      });
-    };
-    //删除活动
-    const removeActivity = id => {
-      Modal.confirm({
-        title: "确认要执行操作吗?",
-        okText: "确认",
-        cancelText: "取消",
-        onOk() {
-          delActivity(id).then(res => {
-            if (res.code == 1) {
-              message.success("操作成功");
-              getList();
-            }
-          });
-        }
-      });
-    };
-    const getList = () => {
-      getActivityList(pageData.queryInfo).then(res => {
-        if (res.code != 1) {
-          return;
-        }
-        data.value = res.data;
-        pageData.total = res.count;
-      });
-    };
-
-    const onChangePage = current => {
-      pageData.queryInfo.pageNumber = current;
-      getList();
-    };
-    const onChangeSearch = () => {
-      getList();
-    };
-    const handlePageSizeChange = (current, size) => {
-      pageData.queryInfo.pageNumber = 1;
-      pageData.queryInfo.pageSize = size;
-      getList();
-    };
-    const onSearch = () => {
-      pageData.queryInfo.pageNumber = 1;
-      getList();
-    };
-    const onResult = () => {
-      Object.assign(pageData.queryInfo, {
-        pageNumber: 1,
-        pageSize: 10,
-        name: null,
-        status: null
-      });
-      getList();
-    };
-    const statusMapFilter = type => {
-      return statusMap[type];
-    };
-    onMounted(() => {
-      getList();
-    });
-
-    const refresh = () => {
-      getList();
-    };
-    return {
-      statusMap,
-      statusMapFilter,
-      activity,
-      data,
-      columns,
-      onChangePage,
-      onAddActivity,
-      onChangeSearch,
-      handlePageSizeChange,
-      ...toRefs(pageData),
-      onSearch,
-      onResult,
-      refresh,
-      endActivity,
-      removeActivity
-    };
-  }
+//新增活动
+const onAddActivity = () => {
+  activity.value.showModal();
 };
+//结束活动
+const endActivity = id => {
+  Modal.confirm({
+    title: "确认要执行操作吗?",
+    okText: "确认",
+    cancelText: "取消",
+    async onOk() {
+      const { code } = await stopActivity(id);
+      if (code == 1) {
+        message.success("操作成功");
+        getList();
+      }
+    }
+  });
+};
+//删除活动
+const removeActivity = id => {
+  Modal.confirm({
+    title: "确认要执行操作吗?",
+    okText: "确认",
+    cancelText: "取消",
+    async onOk() {
+      const { code } = await delActivity(id);
+      if (code == 1) {
+        message.success("操作成功");
+        getList();
+      }
+    }
+  });
+};
+const getList = async () => {
+  try {
+    const { data: list, count } = await getActivityList(queryInfo);
+    data.value = list;
+    total.value = count;
+  } catch {}
+};
+
+const onChangePage = current => {
+  queryInfo.pageNumber = current;
+  getList();
+};
+const onChangeSearch = () => {
+  queryInfo.pageNumber = 1;
+  getList();
+};
+const handlePageSizeChange = (current, size) => {
+  queryInfo.pageNumber = 1;
+  queryInfo.pageSize = size;
+  getList();
+};
+const onSearch = () => {
+  queryInfo.pageNumber = 1;
+  getList();
+};
+const onResult = () => {
+  Object.assign(queryInfo, {
+    pageNumber: 1,
+    pageSize: 10,
+    name: null,
+    status: null
+  });
+  getList();
+};
+const statusMapFilter = type => {
+  return statusMap[type];
+};
+onMounted(() => {
+  getList();
+});
 </script>
+
+
 
 <style scoped lang="less"></style>
