@@ -49,14 +49,8 @@
               </div>
             </template>
             <template v-if="column.dataIndex === 'action'">
-              <ul class="table-action">
-                <li v-if="record.status == 1">
-                  <a @click="endActivity(record._id)">结束活动</a>
-                </li>
-                <li v-if="record.status == 0">
-                  <a @click="removeActivity(record._id)">删除活动</a>
-                </li>
-              </ul>
+              <a-button v-if="record.status == 1" @click="endActivity(record._id)" type="link">结束活动</a-button>
+              <a-button v-if="record.status == 0" @click="removeActivity(record._id)" type="link">删除活动</a-button>
             </template>
           </template>
         </a-table>
