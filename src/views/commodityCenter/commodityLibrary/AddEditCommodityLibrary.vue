@@ -12,15 +12,14 @@
             <a-form-item ref="goodsName" label="商品名称" name="goodsName">
               <a-input placeholder="商品名称" style="width: 220px" v-model:value="form.goodsName" />
             </a-form-item>
-
             <a-form-item label="商品分类" ref="categoryId" name="categoryId">
               <a-select v-model:value="form.categoryId" placeholder="商品分类" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
-                <a-select-option v-for="c in classList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
+                <a-select-option v-for="c in pageData.classList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="商品品牌" ref="brandId" name="brandId">
               <a-select v-model:value="form.brandId" placeholder="商品品牌" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
-                <a-select-option v-for="c in brandList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
+                <a-select-option v-for="c in pageData.brandList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
               </a-select>
             </a-form-item>
             <a-form-item label="商品货号" ref="goodsNo" name="goodsNo">
@@ -74,7 +73,7 @@
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns"  size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
+          <a-table bordered :columns="columns" size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
             <template #bodyCell="{ column, text,record }">
               <template v-if="column.dataIndex === 'price'">
                 <a-input-number :max="1000000" :min="1" v-model:value="record.price" />
@@ -94,15 +93,15 @@
                   <a-radio :value="3">团购商品</a-radio>
                 </a-radio-group>
               </template>
-              <template v-if="column.dataIndex === 'designSketch'">  
-                  <div class="design-img">
-                    <a-upload :multiple="true" list-type="picture-card" name="file" v-model:file-list="record.designSketch" :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)" :customRequest="(e) => onCustomRequest(e, record)">
-                      <div v-if="record.designSketch.length < 8">
-                        <plus-outlined />
-                        <div class="ant-upload-text">上传</div>
-                      </div>
-                    </a-upload>
-                  </div>
+              <template v-if="column.dataIndex === 'designSketch'">
+                <div class="design-img">
+                  <a-upload :multiple="true" list-type="picture-card" name="file" v-model:file-list="record.designSketch" :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)" :customRequest="(e) => onCustomRequest(e, record)">
+                    <div v-if="record.designSketch.length < 8">
+                      <plus-outlined />
+                      <div class="ant-upload-text">上传</div>
+                    </div>
+                  </a-upload>
+                </div>
               </template>
             </template>
           </a-table>
@@ -115,7 +114,7 @@
   </a-row>
 </template>
 
-<script>
+<script setup>
 import { reactive, ref, toRefs, watch, onMounted, toRef } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
@@ -237,276 +236,276 @@ import {
   editGoods,
   getEditGoodsInfo
 } from "@/api/commodityCenter";
-export default {
-  setup() {
-    const form = reactive({
-      goodsName: null,
-      categoryId: null,
-      brandId: null,
-      goodsId: null,
-      goodsNo: null,
-      placeOrigin: null
-    });
-    const parametr = reactive({
-      classList: [],
-      brandList: [],
-      beforeImgFile: [],
-      afterImgFile: [],
-      brandList: [],
-      classList: []
-    });
+const form = reactive({
+  goodsName: null,
+  categoryId: null,
+  brandId: null,
+  goodsId: null,
+  goodsNo: null,
+  placeOrigin: null
+});
+const pageData = reactive({
+  classList: [],
+  brandList: [],
+  beforeImgFile: [],
+  afterImgFile: [],
+  brandList: []
+});
 
-    const data = ref([]);
-    const formRef = ref();
-    const columns = ref(column);
-    const route = useRoute();
-    const router = useRouter();
+const data = ref([]);
+const formRef = ref();
+const columns = ref(column);
+const route = useRoute();
+const router = useRouter();
 
-    const mixMaxItem = ref([
-      {
-        spaceName: "",
-        key: -1,
-        mixList: []
-      }
-    ]);
-
-    //页面加载获取数据
-    onMounted(async () => {
-      form.goodsId = route.query.goodsId;
-      await getBrandAndClassList();
-      if (form.goodsId) {
-        await getEditGoodsInfo(form.goodsId).then(res => {
-          if (res.code == 1) {
-            const spaceInfo = res.data.spaceInfo;
-            data.value = res.data.mixList.map(v => {
-              v.designSketch = v.designSketch.map(d => {
-                return {
-                  uid: d,
-                  name: d,
-                  status: "done",
-                  url: d
-                };
-              });
-              return v;
-            });
-            mixMaxItem.value= ref(spaceInfo.spaceValueList).value
-            Object.assign(form, {
-              goodsName: spaceInfo.goodsName,
-              categoryId: spaceInfo.categoryId,
-              brandId: spaceInfo.brandId,
-              goodsId: spaceInfo.goodsId,
-              goodsNo: spaceInfo.goodsNo,
-              placeOrigin: spaceInfo.placeOrigin
-            });
-          }
-        });
-      }
-    });
-
-    //监听规格项数据变化
-    watch( mixMaxItem.value,(newValue, oldValue) => {
-        const attrColumns = columns.value[0].children;
-        const result = watchMix(newValue, oldValue, attrColumns, data.value);
-        columns.value[0].children = result.column;
-        data.value = result.data;
-      },
-      {
-        immediate: false
-      }
-    );
-    // 添加大项
-    const onAddMixItem = () => {
-      const minMax = {
-        spaceName: "",
-        key: Math.random() * 1000,
-        mixList: []
-      };
-      if (mixMaxItem.value.length >= 3) {
-        return message.warning("最多添加3项");
-      }
-      mixMaxItem.value.push(minMax);
-    };
-    //删除大项
-    const onRemoveMixItem = index => {
-      mixMaxItem.value.splice(index, 1);
-    };
-    //添加小项
-    const onAddMaxValue = index => {
-      let minMin=reactive({
-        specValue: "",
-        key: Math.random() * 1000,
-        isShowInp: true
-      })
-      mixMaxItem.value[index].mixList.push(minMin);
-    };
-    //点击切换input输入
-    const onCheckoutValue = mixMin => {
-      mixMin.isShowInp = true;
-    };
-    //失焦隐藏 input
-    const onBlurMixValue = mixMin => {
-      mixMin.isShowInp = false;
-    };
-    //删除规格值
-    const onRemoveMinValue = (minList, i) => {
-      minList.splice(i, 1);
-    };
-
-    //上传图片前检测
-    const onBeforeUpload = (file, fileList, record) => {
-      return new Promise(async (reslove, reject) => {
-        const isJpgOrPng =
-          file.type === "image/jpeg" || file.type === "image/png";
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        parametr.beforeImgFile.push(file);
-        if (!isJpgOrPng || !isLt2M) {
-        } else {
-          parametr.afterImgFile.push(file);
-        }
-        // 判断批量上传图格式是否符合要求
-        //符合要求的数量 和已上传的数量不能超过 8
-        if (
-          parametr.afterImgFile.length > 8 ||
-          parametr.afterImgFile.length + record.designSketch.length > 8
-        ) {
-          parametr.beforeImgFile = [];
-          parametr.afterImgFile = [];
-          return message.error("效果图最多上传八张");
-        }
-
-        if (parametr.beforeImgFile.length == fileList.length) {
-          if (parametr.afterImgFile.length == fileList.length) {
-            return reslove();
-          }
-          parametr.beforeImgFile = [];
-          parametr.afterImgFile = [];
-          return message.error("图片格式jpg/png!，图片大小限制2MB!");
-        }
-      });
-    };
-    //图片上传
-    const onCustomRequest = (file, record) => {
-      const formData = new FormData();
-      parametr.afterImgFile.forEach(v => {
-        formData.append("file", v);
-      });
-
-      imgBatchUpload(formData).then(res => {
-        const imgArr = res.data;
-        const addImg = imgArr.map(v => {
-          let file = {
-            uid: v.path,
-            name: v.path,
-            status: "done",
-            url: v.path
-          };
-          return file;
-        });
-
-        record.designSketch = record.designSketch
-          .concat(addImg)
-          .filter(v => v.status == "done");
-        parametr.beforeImgFile = [];
-        parametr.afterImgFile = [];
-      });
-    };
-    //保存提交
-    const onSaveSubmit = () => {
-      formRef.value.validate().then(() => {
-        if (mixMaxItem.value.length == 0) {
-          return message.warning("请添加规格项");
-        }
-        const specValueRule = mixMaxItem.value.every(v => v.spaceName != "");
-        if (!specValueRule) {
-          return message.warning("请填写规格项名称");
-        }
-        console.log(data.value)
-        //价格是否输入验证
-        const priceRule = data.value.every(v =>{
-           
-          return  v.price != "" && v.price != null
-        });
-            
-        if (!priceRule) {
-          return message.warning("请填写商品价格");
-        }
-        //重量验证
-        const weightRule = data.value.every(
-          v => v.weight != "" && v.weight != null
-        );
-        if (!weightRule) {
-          return message.warning("请填写商品重量");
-        }
-
-        //效果图验证
-        const designSketchRule = data.value.every(
-          v => v.designSketch.length != 0
-        );
-        if (!designSketchRule) {
-          return message.warning("请上传商品效果图");
-        }
-
-        const submitData = {
-          mixInfo: form,
-          mixList: data.value,
-          spaceValueList: mixMaxItem.value
-        };
-        //编辑保存
-        if (form.goodsId) {
-          editGoods(submitData).then(res => {
-            if (res.code == 1) {
-              message.success("操作成功");
-            }
-          });
-          return;
-        }
-        //新增保存保存
-        addGoods(submitData).then(res => {
-          if (res.code == 1) {
-            message.success("操作成功");
-            router.back();
-          }
-        });
-      });
-    };
-    //获取品牌  分类
-    const getBrandAndClassList = () => {
-      getBrandList().then(res => {
-        parametr.brandList = res.data;
-      });
-      getClassList().then(res => {
-        parametr.classList = res.data.filter(v => v.partentId != null);
-      });
-    };
-    const filterOptionPartent = (input, option) => {
-      return (
-        option.children[0].children
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
-    };
-    return {
-      data,
-      columns,
-      rules,
-      form,
-      mixMaxItem,
-      formRef,
-      router,
-      onAddMixItem,
-      onRemoveMixItem,
-      onAddMaxValue,
-      onCheckoutValue,
-      onBlurMixValue,
-      onRemoveMinValue,
-      ...toRefs(parametr),
-      onCustomRequest,
-      onSaveSubmit,
-      onBeforeUpload,
-      getBrandAndClassList,
-      filterOptionPartent
-    };
+const mixMaxItem = ref([
+  {
+    spaceName: "",
+    key: -1,
+    mixList: []
   }
+]);
+
+//页面加载获取数据
+onMounted(async () => {
+  form.goodsId = route.query.goodsId;
+  //获取品牌，分类 商品信息
+  let all = [getBrandList(), getClassList(), getEditGoodsInfo(form.goodsId)];
+  const [brandList, classList, space] = await Promise.all(all);
+  Object.assign(pageData, {
+    brandList:brandList.data,
+    classList:classList.data
+  });
+  const {mixList,spaceInfo} =  space.data;
+  data.value = mixList.map(v => {
+    v.designSketch = v.designSketch.map(d => {
+      return {
+        uid: d,
+        name: d,
+        status: "done",
+        url: d
+      };
+    });
+    return v;
+  });
+  
+  mixMaxItem.value = ref(spaceInfo.spaceValueList).value;
+  console.log(mixMaxItem.value,spaceInfo)
+  const {
+    goodsName,
+    categoryId,
+    brandId,
+    goodsId,
+    goodsNo,
+    placeOrigin
+  } = spaceInfo;
+  Object.assign(form, {
+    goodsName,
+    categoryId,
+    brandId,
+    goodsId,
+    goodsNo,
+    placeOrigin
+  });
+});
+
+// if (form.goodsId) {
+//   await getEditGoodsInfo(form.goodsId).then(res => {
+//     if (res.code == 1) {
+//       const spaceInfo = res.data.spaceInfo;
+//       data.value = res.data.mixList.map(v => {
+//         v.designSketch = v.designSketch.map(d => {
+//           return {
+//             uid: d,
+//             name: d,
+//             status: "done",
+//             url: d
+//           };
+//         });
+//         return v;
+//       });
+//       mixMaxItem.value = ref(spaceInfo.spaceValueList).value;
+//       Object.assign(form, {
+//         goodsName: spaceInfo.goodsName,
+//         categoryId: spaceInfo.categoryId,
+//         brandId: spaceInfo.brandId,
+//         goodsId: spaceInfo.goodsId,
+//         goodsNo: spaceInfo.goodsNo,
+//         placeOrigin: spaceInfo.placeOrigin
+//       });
+//     }
+//   });
+// }
+
+//监听规格项数据变化
+watch(
+  mixMaxItem.value,
+  (newValue, oldValue) => {
+    const attrColumns = columns.value[0].children;
+    const result = watchMix(newValue, oldValue, attrColumns, data.value);
+    columns.value[0].children = result.column;
+    data.value = result.data;
+  },
+  {
+    immediate: false
+  }
+);
+// 添加大项
+const onAddMixItem = () => {
+  const minMax = {
+    spaceName: "",
+    key: Math.random() * 1000,
+    mixList: []
+  };
+  if (mixMaxItem.value.length >= 3) {
+    return message.warning("最多添加3项");
+  }
+  mixMaxItem.value.push(minMax);
+};
+//删除大项
+const onRemoveMixItem = index => {
+  mixMaxItem.value.splice(index, 1);
+};
+//添加小项
+const onAddMaxValue = index => {
+  let minMin = reactive({
+    specValue: "",
+    key: Math.random() * 1000,
+    isShowInp: true
+  });
+  mixMaxItem.value[index].mixList.push(minMin);
+};
+//点击切换input输入
+const onCheckoutValue = mixMin => {
+  mixMin.isShowInp = true;
+};
+//失焦隐藏 input
+const onBlurMixValue = mixMin => {
+  mixMin.isShowInp = false;
+};
+//删除规格值
+const onRemoveMinValue = (minList, i) => {
+  minList.splice(i, 1);
+};
+
+//上传图片前检测
+const onBeforeUpload = (file, fileList, record) => {
+  return new Promise(async (reslove, reject) => {
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    pageData.beforeImgFile.push(file);
+    if (!isJpgOrPng || !isLt2M) {
+    } else {
+      pageData.afterImgFile.push(file);
+    }
+    // 判断批量上传图格式是否符合要求
+    //符合要求的数量 和已上传的数量不能超过 8
+    if (
+      pageData.afterImgFile.length > 8 ||
+      pageData.afterImgFile.length + record.designSketch.length > 8
+    ) {
+      pageData.beforeImgFile = [];
+      pageData.afterImgFile = [];
+      return message.error("效果图最多上传八张");
+    }
+
+    if (pageData.beforeImgFile.length == fileList.length) {
+      if (pageData.afterImgFile.length == fileList.length) {
+        return reslove();
+      }
+      pageData.beforeImgFile = [];
+      pageData.afterImgFile = [];
+      return message.error("图片格式jpg/png!，图片大小限制2MB!");
+    }
+  });
+};
+//图片上传
+const onCustomRequest = (file, record) => {
+  const formData = new FormData();
+  pageData.afterImgFile.forEach(v => {
+    formData.append("file", v);
+  });
+
+  imgBatchUpload(formData).then(res => {
+    const imgArr = res.data;
+    const addImg = imgArr.map(v => {
+      let file = {
+        uid: v.path,
+        name: v.path,
+        status: "done",
+        url: v.path
+      };
+      return file;
+    });
+
+    record.designSketch = record.designSketch
+      .concat(addImg)
+      .filter(v => v.status == "done");
+    pageData.beforeImgFile = [];
+    pageData.afterImgFile = [];
+  });
+};
+//保存提交
+const onSaveSubmit = () => {
+  formRef.value.validate().then(() => {
+    if (mixMaxItem.value.length == 0) {
+      return message.warning("请添加规格项");
+    }
+    const specValueRule = mixMaxItem.value.every(v => v.spaceName != "");
+    if (!specValueRule) {
+      return message.warning("请填写规格项名称");
+    }
+    console.log(data.value);
+    //价格是否输入验证
+    const priceRule = data.value.every(v => {
+      return v.price != "" && v.price != null;
+    });
+
+    if (!priceRule) {
+      return message.warning("请填写商品价格");
+    }
+    //重量验证
+    const weightRule = data.value.every(
+      v => v.weight != "" && v.weight != null
+    );
+    if (!weightRule) {
+      return message.warning("请填写商品重量");
+    }
+
+    //效果图验证
+    const designSketchRule = data.value.every(v => v.designSketch.length != 0);
+    if (!designSketchRule) {
+      return message.warning("请上传商品效果图");
+    }
+
+    const submitData = {
+      mixInfo: form,
+      mixList: data.value,
+      spaceValueList: mixMaxItem.value
+    };
+    //编辑保存
+    if (form.goodsId) {
+      editGoods(submitData).then(res => {
+        if (res.code == 1) {
+          message.success("操作成功");
+        }
+      });
+      return;
+    }
+    //新增保存保存
+    addGoods(submitData).then(res => {
+      if (res.code == 1) {
+        message.success("操作成功");
+        router.back();
+      }
+    });
+  });
+};
+
+const filterOptionPartent = (input, option) => {
+  return (
+    option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+  );
 };
 </script>
 

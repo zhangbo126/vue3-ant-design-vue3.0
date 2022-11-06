@@ -150,12 +150,14 @@ const columns = [
   {
     title: "品牌名称",
     dataIndex: "brandName",
-    align: "center"
+    align: "center",
+    width: 140
   },
   {
     title: "分类名称",
     dataIndex: "categoryName",
-    align: "center"
+    align: "center",
+    width: 140
   },
 
   {
