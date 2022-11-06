@@ -51,7 +51,7 @@
             </template>
             <template v-if="column.dataIndex === 'action'">
               <a-button @click="onDelclass(record._id)" type="link">删除</a-button>
-              <a-button @click="onEditclass(record._id)" type="link">编辑</a-button>
+              <a-button @click="onEditclass(record)" type="link">编辑</a-button>
             </template>
           </template>
         </a-table>

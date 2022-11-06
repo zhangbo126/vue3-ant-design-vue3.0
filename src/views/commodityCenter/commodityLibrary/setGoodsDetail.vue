@@ -16,40 +16,30 @@
   </a-row>
 </template>
 
-<script>
+<script setup>
 import { ref, reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { setGoodsDetails, getGoodsDetails } from "@/api/commodityCenter";
 import { message } from "ant-design-vue";
 import config from "@/config/ueditorConfig";
-export default {
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    const form = reactive({
-      mixDetail: null,
-      id: route.query.id
-    });
-    onMounted(() => {
-      getGoodsDetails(route.query.id).then(res => {
-        form.mixDetail = res.data.mixDetail;
-      });
-    });
+const router = useRouter();
+const route = useRoute();
+const form = reactive({
+  mixDetail: null,
+  id: route.query.id
+});
+onMounted(() => {
+  getGoodsDetails(route.query.id).then(res => {
+    form.mixDetail = res.data.mixDetail;
+  });
+});
 
-    const save = () => {
-      setGoodsDetails(form).then(res => {
-        if (res.code == 1) {
-          message.success("操作成功");
-        }
-      });
-    };
-    return {
-      form,
-      config,
-      router,
-      save
-    };
-  }
+const save = () => {
+  setGoodsDetails(form).then(res => {
+    if (res.code == 1) {
+      message.success("操作成功");
+    }
+  });
 };
 </script>
 
