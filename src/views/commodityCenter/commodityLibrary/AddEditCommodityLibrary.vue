@@ -73,7 +73,7 @@
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns" size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
+          <a-table bordered :columns="columns" size="small"  :pagination="false" :dataSource="data" :scroll="{x:1200}">
             <template #bodyCell="{ column, text,record }">
               <template v-if="column.dataIndex === 'price'">
                 <a-input-number :max="1000000" :min="1" v-model:value="record.price" />
@@ -82,7 +82,7 @@
                 <a-input v-model:value.trim="record.skuName" />
               </template>
               <template v-if="column.dataIndex === 'weight'">
-                <div class="weight">
+                <div class="weight">  
                   <a-input-number v-model:value="record.weight" :max="1000000" :min="1" />
                 </div>
               </template>
@@ -259,15 +259,27 @@ const route = useRoute();
 const router = useRouter();
 
 const mixMaxItem = ref([
-  {
-    spaceName: "",
-    key: -1,
-    mixList: []
-  }
+  // {
+  //   spaceName: "",
+  //   key: -1,
+  //   mixList: []
+  // }
 ]);
 
+//监听规格项数据变化
+watch(mixMaxItem.value, (newValue, oldValue) => {
+    const attrColumns = columns.value[0].children;
+    const result = watchMix(newValue, oldValue, [], data.value);
+    columns.value[0].children = ref(result.column).value;
+    data.value = result.data;
+  },
+  {
+    immediate: false,
+    deep:true
+  }
+);
 //页面加载获取数据
-onMounted(async () => {
+ onMounted( async() => {
   form.goodsId = route.query.goodsId;
   //获取品牌，分类 商品信息
   let all = [getBrandList(), getClassList(), getEditGoodsInfo(form.goodsId)];
@@ -276,6 +288,7 @@ onMounted(async () => {
     brandList:brandList.data,
     classList:classList.data
   });
+  if(!route.query.goodsId)return
   const {mixList,spaceInfo} =  space.data;
   data.value = mixList.map(v => {
     v.designSketch = v.designSketch.map(d => {
@@ -288,9 +301,11 @@ onMounted(async () => {
     });
     return v;
   });
-  
-  mixMaxItem.value = ref(spaceInfo.spaceValueList).value;
-  console.log(mixMaxItem.value,spaceInfo)
+  // mixMaxItem.value=[]
+  spaceInfo.spaceValueList.forEach(v=>{
+    mixMaxItem.value.push(v)
+  })
+ 
   const {
     goodsName,
     categoryId,
@@ -309,47 +324,8 @@ onMounted(async () => {
   });
 });
 
-// if (form.goodsId) {
-//   await getEditGoodsInfo(form.goodsId).then(res => {
-//     if (res.code == 1) {
-//       const spaceInfo = res.data.spaceInfo;
-//       data.value = res.data.mixList.map(v => {
-//         v.designSketch = v.designSketch.map(d => {
-//           return {
-//             uid: d,
-//             name: d,
-//             status: "done",
-//             url: d
-//           };
-//         });
-//         return v;
-//       });
-//       mixMaxItem.value = ref(spaceInfo.spaceValueList).value;
-//       Object.assign(form, {
-//         goodsName: spaceInfo.goodsName,
-//         categoryId: spaceInfo.categoryId,
-//         brandId: spaceInfo.brandId,
-//         goodsId: spaceInfo.goodsId,
-//         goodsNo: spaceInfo.goodsNo,
-//         placeOrigin: spaceInfo.placeOrigin
-//       });
-//     }
-//   });
-// }
 
-//监听规格项数据变化
-watch(
-  mixMaxItem.value,
-  (newValue, oldValue) => {
-    const attrColumns = columns.value[0].children;
-    const result = watchMix(newValue, oldValue, attrColumns, data.value);
-    columns.value[0].children = result.column;
-    data.value = result.data;
-  },
-  {
-    immediate: false
-  }
-);
+
 // 添加大项
 const onAddMixItem = () => {
   const minMax = {
@@ -503,9 +479,7 @@ const onSaveSubmit = () => {
 };
 
 const filterOptionPartent = (input, option) => {
-  return (
-    option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-  );
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
 </script>
 

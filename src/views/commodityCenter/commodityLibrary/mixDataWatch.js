@@ -1,6 +1,6 @@
 
 
-import { toRaw } from 'vue'
+import { toRaw ,ref} from 'vue'
 export const watchMix = (newValue, oldValue, columns, oldData) => {
     const attrInfo = {}
 
@@ -8,9 +8,6 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
     newValue = newValue.filter(v => {
         return v.mixList.length > 0
     })
-
-
-
     /*动态处理表头*/
     let column = []
     newValue.forEach((v, i) => {
