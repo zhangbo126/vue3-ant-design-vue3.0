@@ -12,24 +12,18 @@
               <component :is="$antIcons[text]" />
             </template>
             <template v-if="column.dataIndex === 'action'">
-              <ul>
-                <li>
-                  <a @click="editMenu(record)">编辑</a>
-                </li>
-                <li>
-                  <a @click="removeMenu(record._id)">删除</a>
-                </li>
-              </ul>
+              <a-button type="link" @click="editMenu(record)">编辑</a-button>
+              <a-button type="link" @click="removeMenu(record._id)">删除</a-button>
             </template>
           </template>
         </a-table>
       </a-card>
     </a-col>
-    <add-edit-menu ref="menu" @refresh="refresh"></add-edit-menu>
+    <add-edit-menu ref="menu" @refresh="getList"></add-edit-menu>
   </a-row>
 </template>
 
-<script>
+<script setup>
 import { getMenuTree, removeMenuTree } from "@/api/UserCenter";
 import AddEditMenu from "./menuList/AddEditMenu.vue";
 import { reactive, ref, toRefs, onMounted } from "vue";
@@ -101,80 +95,58 @@ const columns = [
     // }
   }
 ];
-export default {
-  components: { AddEditMenu },
-  setup() {
-    const data = ref([]);
-    const menu = ref(null);
-    const pageData = reactive({
-      queryInfo: {
-        pageSize: 20,
-        pageNumber: 1
-      }
-    });
+const data = ref([]);
+const menu = ref(null);
+const pageData = reactive({
+  queryInfo: {
+    pageSize: 20,
+    pageNumber: 1
+  }
+});
 
-    const getList = async () => {
-      const res = await getMenuTree(pageData.queryInfo);
-      data.value = res.data;
-      setMenuChildren(data.value)
-    };
-    //处理菜单数据
-    const setMenuChildren=(data)=>{
-      data.forEach(v=>{
-          if(v.children.length){
-            setMenuChildren(v.children)
-          }else{
-             delete v.children
-          }
-      })
+const getList = async () => {
+  const res = await getMenuTree(pageData.queryInfo);
+  data.value = res.data;
+  setMenuChildren(data.value);
+};
+//处理菜单数据
+const setMenuChildren = data => {
+  data.forEach(v => {
+    if (v.children.length) {
+      setMenuChildren(v.children);
+    } else {
+      delete v.children;
     }
-    //新增角色
-    const addMenu = () => {
-      menu.value.showAddModal();
-    };
-    const editMenu = obj => {
-      menu.value.showEditModal(obj);
-    };
-    const removeMenu = id => {
-      Modal.confirm({
-        title: "确认要执行操作吗?",
-        okText: "确认",
-        cancelText: "取消",
-        onOk() {
-          removeMenuTree(id).then(res => {
-            if (res.code == 1) {
-              message.success("操作成功");
-              getList();
-            }
-          });
+  });
+};
+//新增角色
+const addMenu = () => {
+  menu.value.showAddModal();
+};
+const editMenu = obj => {
+  menu.value.showEditModal(obj);
+};
+const removeMenu = id => {
+  Modal.confirm({
+    title: "确认要执行操作吗?",
+    okText: "确认",
+    cancelText: "取消",
+    onOk() {
+      removeMenuTree(id).then(res => {
+        if (res.code == 1) {
+          message.success("操作成功");
+          getList();
         }
       });
-    };
-    const statusMapFilter = type => {
-      return statusMap[type];
-    };
-    const refresh = () => {
-      getList();
-    };
-    onMounted(() => {
-      getList();
-    });
-
-    return {
-      data,
-      menu,
-      ...toRefs(pageData),
-      columns,
-      statusMap,
-      getList,
-      addMenu,
-      editMenu,
-      statusMapFilter,
-      refresh,
-      removeMenu
-    };
-  }
+    }
+  });
 };
+const statusMapFilter = type => {
+  return statusMap[type];
+};
+onMounted(() => {
+  getList();
+});
 </script>
 
 <style></style>

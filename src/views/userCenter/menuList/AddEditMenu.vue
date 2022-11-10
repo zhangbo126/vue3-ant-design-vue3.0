@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:visible="visible" :width="690" ok-text="确认" cancel-text="取消" :title="type == 1 ? '新增菜单' : '编辑菜单'" @ok="submitHandle" @cancel="cancel">
+  <a-modal v-model:visible="pageData.visible" :width="690" :destroyOnClose="true" ok-text="确认" cancel-text="取消" :title="pageData.type == 1 ? '新增菜单' : '编辑菜单'" @ok="submitHandle" @cancel="onCancelModal">
     <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="name" label="菜单名称" name="name">
         <a-input size="small" placeholder="菜单名称" style="width: 220px" v-model:value.trim="form.name" />
@@ -11,7 +11,7 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item ref="parentId" label="父级菜单" name="parentId">
-        <a-select size="small" style="width: 220px" v-model:value="form.parentId" :field-names="{value:'_id',label:'name'}" :options="menuList" placeholder="父级菜单" show-search :allowClear="true" :filter-option="filterOptionPartent">
+        <a-select size="small" style="width: 220px" v-model:value="form.parentId" :field-names="{value:'_id',label:'name'}" :options="pageData.menuList" placeholder="父级菜单" show-search :allowClear="true" :filter-option="filterOptionPartent">
           <!-- <a-select-option v-for="menu in menuList" :value="menu._id" :key="menu._id">{{ menu.name }}</a-select-option> -->
         </a-select>
       </a-form-item>
@@ -46,7 +46,7 @@
   </a-modal>
 </template>
 
-<script>
+<script setup>
 const rules = {
   name: [
     {
@@ -93,140 +93,135 @@ import { reactive, ref, toRefs } from "vue";
 import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenter";
 import { message } from "ant-design-vue";
 import { componentList, IconList } from "@/config/asyncRouter.js";
-export default {
-  setup(props, context) {
-    const form = reactive({
-      name: null,
-      url: null,
-      redirectUrl: null,
-      key: null,
-      component: null,
-      sort: null,
-      parentId: null,
-      id: null,
-      status: null,
-      menuType: 1,
-      icon: null
-    });
-    const formRef = ref();
-    const pageData = reactive({
-      type: 1,
-      visible: false,
-      menuList: []
-    });
+const emit = defineEmits(["refresh"]);
+const form = reactive({
+  name: null,
+  url: null,
+  redirectUrl: null,
+  key: null,
+  component: null,
+  sort: null,
+  parentId: null,
+  id: null,
+  status: null,
+  menuType: 1,
+  icon: null
+});
+const formRef = ref();
+const pageData = reactive({
+  type: 1,
+  visible: false,
+  menuList: []
+});
 
-    const submitHandle = async () => {
-      try {
-        let valid = await formRef.value.validateFields();
-        if (valid) {
-          //新增
-          if (pageData.type == 1) {
-            addMenuTree(form).then(res => {
-              handleSuccessTip(res);
-            });
-            return;
-          }
-          //编辑
-          editMenuTree(form).then(res => {
-            handleSuccessTip(res);
-          });
-        }
-      } catch {}
-    };
-
-    const showAddModal = async () => {
-      resultForm();
-      pageData.type = 1;
-      const {data} =await getMenuList();
-      pageData.menuList =data
-      pageData.menuList.forEach(v=>{
-          delete v.children
-      })
-    };
-
-    const showEditModal =async obj => {
-      pageData.visible = true;
-      pageData.type = 2;
-      const {
-        name,
-        url,
-        _id,
-        component,
-        sort,
-        parentId,
-        key,
-        redirectUrl,
-        icon,
-        menuType
-      } = obj;
-      Object.assign(form, {
-        name,
-        url,
-        id: _id,
-        component,
-        sort,
-        parentId,
-        key,
-        redirectUrl,
-        status,
-        icon,
-        menuType
-      });
-
-       const {data} =await getMenuList();
-       pageData.menuList =data
-       pageData.menuList = pageData.menuList.filter(v => v.id != form.id);
-       pageData.menuList.forEach(v=>{
-          delete v.children
-      })
-    };
-
-
-    const handleSuccessTip = res => {
-      if (res.code == 1) {
-        formRef.value.resetFields();
-        message.success("操作成功");
-        context.emit("refresh");
-        pageData.visible = false;
+const submitHandle = async () => {
+  try {
+    let valid = await formRef.value.validateFields();
+    if (valid) {
+      //新增
+      if (pageData.type == 1) {
+        addMenuTree(form).then(res => {
+          handleSuccessTip(res);
+        });
+        return;
       }
-    };
+      //编辑
+      editMenuTree(form).then(res => {
+        handleSuccessTip(res);
+      });
+    }
+  } catch {}
+};
 
-    const filterOption = (input, option) => {
-      return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-    };
-    const filterOptionPartent = (input, option) => {
-      return option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0
-    };
+const showAddModal = async () => {
+  pageData.visible = true;
+  pageData.type = 1;
+  const { data } = await getMenuList();
+  pageData.menuList = data;
+  pageData.menuList.forEach(v => {
+    delete v.children;
+  });
+};
 
-    const resultForm = () => {
-      pageData.visible = true;
+const showEditModal = async obj => {
+  pageData.visible = true;
+  pageData.type = 2;
+  const {
+    name,
+    url,
+    _id,
+    component,
+    sort,
+    parentId,
+    key,
+    redirectUrl,
+    icon,
+    menuType
+  } = obj;
+  Object.assign(form, {
+    name,
+    url,
+    id: _id,
+    component,
+    sort,
+    parentId,
+    key,
+    redirectUrl,
+    status,
+    icon,
+    menuType
+  });
 
-    };
-    const cancel = () => {
-      formRef.value.resetFields();
-    };
-    return {
-      componentList,
-      IconList,
-      form,
-      rules,
-      ...toRefs(pageData),
-      formRef,
-      submitHandle,
-      showAddModal,
-      showEditModal,
-      filterOption,
-      filterOptionPartent,
-      cancel
-    };
+  const { data } = await getMenuList();
+  pageData.menuList = data;
+  pageData.menuList = pageData.menuList.filter(v => v.id != form.id);
+  pageData.menuList.forEach(v => {
+    delete v.children;
+  });
+};
+
+const handleSuccessTip = res => {
+  if (res.code == 1) {
+    formRef.value.resetFields();
+    message.success("操作成功");
+    emit("refresh");
+    pageData.visible = false;
   }
 };
+
+const filterOption = (input, option) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+const filterOptionPartent = (input, option) => {
+  return option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+
+const onCancelModal = () => {
+  formRef.value.resetFields();
+  Object.assign(form, {
+    name: null,
+    url: null,
+    redirectUrl: null,
+    key: null,
+    component: null,
+    sort: null,
+    parentId: null,
+    id: null,
+    status: null,
+    menuType: 1,
+    icon: null
+  });
+};
+Object.assign(pageData, {
+  type: 1,
+  visible: false,
+  menuList: []
+});
+defineExpose({
+  showAddModal,
+  showEditModal
+});
 </script>
 
 <style lang="less" scoped>
-.role-menu {
-  .menu-t2 {
-    margin-left: 30px;
-  }
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:visible="visible" :width="600" ok-text="确认" cancel-text="取消" :title="type == 1 ? '新增账号' : '编辑账号'" @ok="submitHandle" @cancel="cancel">
+  <a-modal v-model:visible="pageData.visible" :width="600" ok-text="确认" :destroyOnClose="true" cancel-text="取消" :title="pageData.type == 1 ? '新增账号' : '编辑账号'" @ok="submitHandle" @cancel="onCancelModal">
     <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="userAccount" label="账户名称" name="userAccount">
         <a-input placeholder="账户名称" style="width: 220px" v-model:value="form.userAccount" />
@@ -14,7 +14,7 @@
   </a-modal>
 </template>
 
-<script>
+<script setup>
 const rules = {
   userAccount: [
     {
@@ -62,84 +62,66 @@ const rules = {
 import { reactive, ref, toRefs } from "vue";
 import { addAccount, editMenuTree } from "@/api/UserCenter";
 import { message } from "ant-design-vue";
+const emit = defineEmits(["refresh"]);
+const form = reactive({
+  userAccount: null,
+  phone: null,
+  email: null,
+  id: null
+});
+const formRef = ref();
+const pageData = reactive({
+  type: 1,
+  visible: false,
+});
 
-export default {
-  setup(props, context) {
-    const form = reactive({
-      userAccount: null,
-      phone: null,
-      email: null,
-      id: null
-    });
-    const formRef = ref();
-    const parametr = reactive({
-      type: 1,
-      visible: false,
-      menuList: []
-    });
-
-    const submitHandle = () => {
-      formRef.value.validate().then(() => {
-        if (parametr.type == 1) {
-          addAccount(form).then(res => {
-            handleSuccessTip(res);
-          });
-          return;
-        }
-        editMenuTree(form).then(res => {
-          handleSuccessTip(res);
-        });
+const submitHandle = () => {
+  formRef.value.validate().then(() => {
+    if (pageData.type == 1) {
+      addAccount(form).then(res => {
+        handleSuccessTip(res);
       });
-    };
+      return;
+    }
+    editMenuTree(form).then(res => {
+      handleSuccessTip(res);
+    });
+  });
+};
 
-    const showAddModal = async () => {
-      parametr.type = 1;
-      resultForm();
-    };
+const showAddModal = async () => {
+  pageData.type = 1;
+  pageData.visible = true;
+};
 
-    const handleSuccessTip = res => {
-      if (res.code == 1) {
-        message.success("操作成功");
-        context.emit("refresh");
-        parametr.visible = false;
-      }
-    };
-
-    const filterOption = (input, option) => {
-      return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-    };
-    const filterOptionPartent = (input, option) => {
-      return (
-        option.children[0].children
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
-    };
-    const cancel = () => {
-      formRef.value.resetFields();
-    };
-    const resultForm = () => {
-      parametr.visible = true;
-      Object.assign(form, {
-        userAccount: null,
-        phone: null,
-        email: null,
-        id: null
-      });
-    };
-    return {
-      cancel,
-      form,
-      rules,
-      ...toRefs(parametr),
-      formRef,
-      submitHandle,
-      showAddModal,
-      filterOption,
-      filterOptionPartent
-    };
+const handleSuccessTip = res => {
+  if (res.code == 1) {
+    message.success("操作成功");
+    emit("refresh");
+    pageData.visible = false;
   }
 };
+
+const filterOption = (input, option) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+const filterOptionPartent = (input, option) => {
+  return (
+    option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+  );
+};
+const onCancelModal = () => {
+  formRef.value.resetFields();
+  Object.assign(form, {
+    userAccount: null,
+    phone: null,
+    email: null,
+    id: null
+  });
+};
+defineExpose({
+  showAddModal,
+});
 </script>
 
 <style lang="less" scoped></style>
