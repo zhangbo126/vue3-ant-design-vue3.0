@@ -172,7 +172,7 @@ const handleSuccessTip = res => {
 const onCancelModal = () => {
   formRef.value.resetFields();
   Object.assign(pageData, {
-    visible: true,
+    visible: false,
     fileList: []
   });
 };

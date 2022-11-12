@@ -270,9 +270,7 @@ const onResult = () => {
   });
   getList();
 };
-const refresh = () => {
-  getList();
-};
+
 onMounted(() => {
   const queryInfo = proxy.$session.get("commodity_libray_info");
   if (queryInfo) {

@@ -1,9 +1,44 @@
 
 
-import { toRaw ,ref} from 'vue'
+import { toRaw, ref } from 'vue'
+
+/**
+ * @param {[Array]} mixArr 源数据 （二维数组）
+ * @return {Array}  skuData 笛卡尔积
+ */
+
+const dimensionSkuFlot = (mixArr) => {
+    if (mixArr.length < 2) return mixArr[0] || [];
+    let skuData = [].reduce.call(mixArr, function (col, set) {
+        let res = [];
+        col.forEach((c) => {
+            set.forEach((s) => {
+                let t = [].concat(Array.isArray(c) ? c : [c]);
+                t.push(s);
+                res.push(t);
+            });
+        });
+        return res;
+    });
+
+    return skuData.map((v) => {
+        let obj = {};
+        v.forEach((v, i) => {
+            obj["specValue" + (1 + i)] = v.specValue;
+            obj["mixKey" + (1 + i)] = v.key;
+        });
+        return obj;
+    });
+};
+
+/**
+ * @param {[Array]} newValue  最新规格项
+ * @return {Array}  oldData  上一次编辑值
+ */
+
 export const watchMix = (newValue, oldValue, columns, oldData) => {
     const attrInfo = {}
-
+    let mixTowArr = []
     //过滤出有属性的值
     newValue = newValue.filter(v => {
         return v.mixList.length > 0
@@ -23,90 +58,15 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
         }
         column.push(map)
     })
-
-
     newValue.forEach((v, i) => {
         attrInfo[`attr${i + 1}`] = toRaw(v.mixList)
+        mixTowArr.push(toRaw(v.mixList))
     })
 
     const { attr1, attr2, attr3, attr4 } = attrInfo
-
-    const renderData = () => {
-        let data = []
-        if (newValue.length == 1) {
-            attr1.forEach(t1 => {
-                let res = {
-                    specValue1: t1.specValue,
-                    mixKey1: t1.key
-                }
-                data.push(res)
-            })
-
-            return data
-        }
-        if (newValue.length == 2) {
-            attr1.forEach(t1 => {
-                attr2.forEach(t2 => {
-                    let res = {
-                        specValue1: t1.specValue,
-                        specValue2: t2.specValue,
-                        mixKey1: t1.key,
-                        mixKey2: t2.key,
-                    }
-                    data.push(res)
-                })
-
-            })
-            return data
-        }
-        if (newValue.length == 3) {
-            attr1.forEach(t1 => {
-                attr2.forEach(t2 => {
-                    attr3.forEach(t3 => {
-                        let res = {
-                            specValue1: t1.specValue,
-                            specValue2: t2.specValue,
-                            specValue3: t3.specValue,
-                            mixKey1: t1.key,
-                            mixKey2: t2.key,
-                            mixKey3: t3.key,
-                        }
-                        data.push(res)
-                    })
-                })
-
-            })
-            return data
-        }
-        if (newValue.length == 4) {
-            attr1.forEach(t1 => {
-                attr2.forEach(t2 => {
-                    attr3.forEach(t3 => {
-                        attr4.forEach(t4 => {
-                            let res = {
-                                specValue1: t1.specValue,
-                                specValue2: t2.specValue,
-                                specValue3: t3.specValue,
-                                specValue4: t4.specValue,
-                                mixKey1: t1.key,
-                                mixKey2: t2.key,
-                                mixKey3: t3.key,
-                                mixKey4: t4.key,
-                            }
-                            data.push(res)
-                        })
-                    })
-                })
-
-            })
-            return data
-        }
-
-    }
-
-    let data = renderData() || []
+    //sku笛卡尔积阶乘 数据格式处理
+    let data = dimensionSkuFlot(mixTowArr)
     //对比上一次的数据 赋值已填写的内容
-
     data.forEach(v => {
         v.price = ''
         v.weight = ''
@@ -117,15 +77,12 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
         toRaw(oldData).forEach(o => {
             const minKeyRule1 = v.mixKey1 == o.mixKey1 && v.mixKey2 == o.mixKey2 && v.mixKey3 == o.mixKey3 && v.mixKey4 == o.mixKey4
             const minKeyRule2 = v.specValue1 == o.specValue1 && v.specValue2 == o.specValue2 && v.specValue3 == o.specValue3 && v.specValue4 == o.specValue4
+            const { price, weight, designSketch, skuName, goodsId, goodsType } = o
             if (minKeyRule1 || minKeyRule2) {
-                v.price = o.price
-                v.weight = o.weight
-                v.designSketch = o.designSketch
-                v.skuName = o.skuName
-                v.goodsId = o.goodsId
-                v.goodsType = o.goodsType
+                Object.assign(v, {
+                    price, weight, designSketch, skuName, goodsId, goodsType
+                })
             }
-
         })
     })
 

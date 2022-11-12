@@ -1,41 +1,20 @@
 <template>
   <div class="login">
-    <a-form
-      name="custom-validation"
-      ref="formRef"
-      :model="form"
-      :rules="rules"
-      v-bind="layout"
-    >
+    <a-form name="custom-validation" ref="formRef" :model="form" :rules="rules" v-bind="layout">
       <a-form-item required name="userAccount">
         <a-input v-model:value="form.userAccount" size="large" placeholder="账号" />
       </a-form-item>
       <a-form-item required name="passWord">
-        <a-input-password
-          v-model:value="form.passWord"
-          size="large"
-          type="password"
-          placeholder="密码"
-          autocomplete="off"
-        />
+        <a-input-password v-model:value="form.passWord" size="large" type="password" placeholder="密码" autocomplete="off" />
       </a-form-item>
-
       <a-form-item>
-        <a-button
-          class="login-btn"
-          size="large"
-          type="primary"
-          html-type="submit"
-          :loading="loading"
-          @click="onSubmit"
-          >登录</a-button
-        >
+        <a-button class="login-btn" size="large" type="primary" html-type="submit" :loading="loading" @click="onSubmit">登录</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
-<script>
-import { defineComponent, reactive, ref } from "vue";
+<script setup>
+import { reactive, ref } from "vue";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
@@ -57,63 +36,49 @@ const rules = {
   userAccount: [
     {
       validator: usernameRule,
-      trigger: ["change", "blur"],
-    },
+      trigger: ["change", "blur"]
+    }
   ],
   passWord: [
     {
       validator: passwordRule,
-      trigger: ["change", "blur"],
-    },
-  ],
+      trigger: ["change", "blur"]
+    }
+  ]
 };
-export default defineComponent({
-  setup() {
-    const form = reactive({
-      userAccount: "admin",
-      passWord: "zb123456",
-    });
-    const loading = ref();
-    const formRef = ref();
-    const store = useStore();
-    const router = useRouter();
-
-    const onSubmit = () => {
-      formRef.value.validate().then((res) => {
-        store
-          .dispatch("Login", form)
-          .then(() => {
-            loading.value = true;
-            router.push("/");
-            message.success("登录成功");
-          })
-          .catch((res) => {
-            loading.value = false;
-            message.warning(res.message);
-          });
-      });
-    };
-
-    const layout = {
-      labelCol: {
-        span: 0,
-      },
-      wrapperCol: {
-        span: 24,
-      },
-    };
-
-    return {
-      form,
-      rules,
-      layout,
-      onSubmit,
-      store,
-      loading,
-      formRef,
-    };
-  },
+const form = reactive({
+  userAccount: "admin",
+  passWord: "zb123456"
 });
+const loading = ref();
+const formRef = ref();
+const store = useStore();
+const router = useRouter();
+
+const onSubmit = () => {
+  formRef.value.validate().then(res => {
+    store
+      .dispatch("Login", form)
+      .then(() => {
+        loading.value = true;
+        router.push("/home/page");
+        message.success("登录成功");
+      })
+      .catch(res => {
+        loading.value = false;
+        message.warning(res.message);
+      });
+  });
+};
+
+const layout = {
+  labelCol: {
+    span: 0
+  },
+  wrapperCol: {
+    span: 24
+  }
+};
 </script>
 
 <style scoped lang="less">

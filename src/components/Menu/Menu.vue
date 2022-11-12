@@ -1,7 +1,5 @@
 <template>
-  <div>
     <a-menu mode="inline" theme="dark" :forceSubMenuRender="true" v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys">
-      <!-- :inline-collapsed="collapsed" -->
       <template v-for="item in menuTrees" :key="item.name">
         <template v-if="!item.children">
           <a-menu-item :key="item.name" v-if="!item.hide">
@@ -13,11 +11,9 @@
         </template>
       </template>
     </a-menu>
-  </div>
 </template>
-<script>
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
+
+<script setup>
 const SubMenu = {
   name: "SubMenu",
   props: {
@@ -46,45 +42,21 @@ const SubMenu = {
       </template>
     </a-sub-menu>
   `
-};
-export default defineComponent({
-  components: {
-    "sub-menu": SubMenu
-  },
-  // data() {
-  //   return {
-  //     collapsed: true,
-  //     selectedKeys: [this.$route.name]
-  //   };
-  // },
-  watch: {
-    // $route: function(n, o) {
-    //   this.$nextTick(() => {
-    //     this.selectedKeys = [n.name];
-    //   });
-    // }
-  },
-  // computed: {
-  //   ...mapState({
-  //     menuTree: state => state.permission.addRouters
-  //   })
-  // }
-});
-</script>
-
-<script setup>
-
+}
 import {useStore} from 'vuex'
 import {useRoute} from 'vue-router'
-import {computed,toRaw,reactive,ref} from 'vue'
+import {computed,toRaw,reactive,ref,watch} from 'vue'
 const store = useStore()
 const route = useRoute()
-const selectedKeys =[route.name]
-const openKeys =['P_User_Cente']
+//当前选中项
+const selectedKeys =ref([route.name])
+//当前展开项
+const openKeys =ref([route.meta.partentName || ""])
 const collapsed = ref(true)
 const  menuTrees = computed(()=>store.state.permission.addRouters)
-console.log(menuTrees.value)
- 
+watch(route,(n,o)=>{
+   selectedKeys.value = [n.name]
+})
  
 
 </script>

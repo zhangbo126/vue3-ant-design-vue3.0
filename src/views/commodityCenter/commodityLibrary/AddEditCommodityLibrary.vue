@@ -73,7 +73,7 @@
         </div>
         <!-- 规格表格 -->
         <div class="mix-table">
-          <a-table bordered :columns="columns" size="small"  :pagination="false" :dataSource="data" :scroll="{x:1200}">
+          <a-table bordered :columns="columns" size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
             <template #bodyCell="{ column, text,record }">
               <template v-if="column.dataIndex === 'price'">
                 <a-input-number :max="1000000" :min="1" v-model:value="record.price" />
@@ -82,7 +82,7 @@
                 <a-input v-model:value.trim="record.skuName" />
               </template>
               <template v-if="column.dataIndex === 'weight'">
-                <div class="weight">  
+                <div class="weight">
                   <a-input-number v-model:value="record.weight" :max="1000000" :min="1" />
                 </div>
               </template>
@@ -182,20 +182,21 @@ const rules = {
     }
   ]
 };
+const children = ref([
+    {
+      title: "",
+      dataIndex: "specValue1",
+      align: "center",
+      width: 200
+    }
+]);
 const column = [
   {
     title: "商品规格",
     dataIndex: "name",
     key: "name",
     align: "center",
-    children: [
-      {
-        title: "",
-        dataIndex: "specValue1",
-        align: "center",
-        width: 200
-      }
-    ]
+    children: children.value
   },
   {
     title: "SKU名称",
@@ -228,6 +229,7 @@ const column = [
     align: "center"
   }
 ];
+
 import {
   imgBatchUpload,
   getBrandList,
@@ -257,17 +259,12 @@ const formRef = ref();
 const columns = ref(column);
 const route = useRoute();
 const router = useRouter();
-
-const mixMaxItem = ref([
-  // {
-  //   spaceName: "",
-  //   key: -1,
-  //   mixList: []
-  // }
-]);
+const mixMaxItem = ref([]);
 
 //监听规格项数据变化
-watch(mixMaxItem.value, (newValue, oldValue) => {
+watch(
+  mixMaxItem.value,
+  (newValue, oldValue) => {
     const attrColumns = columns.value[0].children;
     const result = watchMix(newValue, oldValue, [], data.value);
     columns.value[0].children = ref(result.column).value;
@@ -275,21 +272,28 @@ watch(mixMaxItem.value, (newValue, oldValue) => {
   },
   {
     immediate: false,
-    deep:true
+    deep: true
   }
 );
 //页面加载获取数据
- onMounted( async() => {
+onMounted(async () => {
   form.goodsId = route.query.goodsId;
   //获取品牌，分类 商品信息
   let all = [getBrandList(), getClassList(), getEditGoodsInfo(form.goodsId)];
   const [brandList, classList, space] = await Promise.all(all);
   Object.assign(pageData, {
-    brandList:brandList.data,
-    classList:classList.data
+    brandList: brandList.data,
+    classList: classList.data
   });
-  if(!route.query.goodsId)return
-  const {mixList,spaceInfo} =  space.data;
+  if (!route.query.goodsId) {
+    mixMaxItem.value.push({
+      spaceName: "",
+      key: -1,
+      mixList: []
+    });
+    return;
+  }
+  const { mixList, spaceInfo } = space.data;
   data.value = mixList.map(v => {
     v.designSketch = v.designSketch.map(d => {
       return {
@@ -302,10 +306,10 @@ watch(mixMaxItem.value, (newValue, oldValue) => {
     return v;
   });
   // mixMaxItem.value=[]
-  spaceInfo.spaceValueList.forEach(v=>{
-    mixMaxItem.value.push(v)
-  })
- 
+  spaceInfo.spaceValueList.forEach(v => {
+    mixMaxItem.value.push(v);
+  });
+
   const {
     goodsName,
     categoryId,
@@ -323,8 +327,6 @@ watch(mixMaxItem.value, (newValue, oldValue) => {
     placeOrigin
   });
 });
-
-
 
 // 添加大项
 const onAddMixItem = () => {
