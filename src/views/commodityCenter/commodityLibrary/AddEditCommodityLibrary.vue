@@ -62,7 +62,7 @@
                   </div>
                 </div>
                 <div class="add-value">
-                  <a @click="onAddMaxValue(index)">添加规格值+</a>
+                  <a @click="onAddMaxValue(mixMax.mixList)">添加规格值+</a>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
               <template v-if="column.dataIndex === 'designSketch'">
                 <div class="design-img">
                   <a-upload :multiple="true" list-type="picture-card" name="file" v-model:file-list="record.designSketch" :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)" :customRequest="(e) => onCustomRequest(e, record)">
-                    <div v-if="record.designSketch.length < 8">
+                    <div v-if="record.designSketch?.length < 8">
                       <plus-outlined />
                       <div class="ant-upload-text">上传</div>
                     </div>
@@ -183,12 +183,24 @@ const rules = {
   ]
 };
 const children = ref([
-    {
-      title: "",
-      dataIndex: "specValue1",
-      align: "center",
-      width: 200
-    }
+  {
+    title: "",
+    dataIndex: "specValue1",
+    align: "center",
+    width: 200
+  },
+  {
+    title: "",
+    dataIndex: "specValue2",
+    align: "center",
+    width: 200
+  },
+  {
+    title: "",
+    dataIndex: "specValue3",
+    align: "center",
+    width: 200
+  }
 ]);
 const column = [
   {
@@ -268,7 +280,7 @@ watch(
     const attrColumns = columns.value[0].children;
     const result = watchMix(newValue, oldValue, [], data.value);
     columns.value[0].children = ref(result.column).value;
-    data.value = result.data;
+    data.value = result.dataSource;
   },
   {
     immediate: false,
@@ -286,11 +298,12 @@ onMounted(async () => {
     classList: classList.data
   });
   if (!route.query.goodsId) {
-    mixMaxItem.value.push({
+    let item = ref({
       spaceName: "",
       key: -1,
       mixList: []
     });
+    mixMaxItem.value.push(item.value);
     return;
   }
   const { mixList, spaceInfo } = space.data;
@@ -330,11 +343,11 @@ onMounted(async () => {
 
 // 添加大项
 const onAddMixItem = () => {
-  const minMax = {
+  const minMax = reactive({
     spaceName: "",
     key: Math.random() * 1000,
     mixList: []
-  };
+  });
   if (mixMaxItem.value.length >= 3) {
     return message.warning("最多添加3项");
   }
@@ -345,13 +358,14 @@ const onRemoveMixItem = index => {
   mixMaxItem.value.splice(index, 1);
 };
 //添加小项
-const onAddMaxValue = index => {
+const onAddMaxValue = mixMin => {
   let minMin = reactive({
     specValue: "",
     key: Math.random() * 1000,
     isShowInp: true
   });
-  mixMaxItem.value[index].mixList.push(minMin);
+  // mixMaxItem.value[index].mixList.push(minMin);
+  mixMin.push(minMin);
 };
 //点击切换input输入
 const onCheckoutValue = mixMin => {

@@ -8,7 +8,7 @@ import { toRaw, ref } from 'vue'
  */
 
 const dimensionSkuFlot = (mixArr) => {
-    if (mixArr.length < 2) return mixArr[0] || [];
+    if (mixArr.length == 0) return []
     let skuData = [].reduce.call(mixArr, function (col, set) {
         let res = [];
         col.forEach((c) => {
@@ -20,10 +20,10 @@ const dimensionSkuFlot = (mixArr) => {
         });
         return res;
     });
-
     return skuData.map((v) => {
+        let map = Array.isArray(v) ? v : [v]
         let obj = {};
-        v.forEach((v, i) => {
+        map.forEach((v, i) => {
             obj["specValue" + (1 + i)] = v.specValue;
             obj["mixKey" + (1 + i)] = v.key;
         });
@@ -31,43 +31,67 @@ const dimensionSkuFlot = (mixArr) => {
     });
 };
 
+
+
+
+
+/**
+ * @param {[Array]} dataSource  源数据
+ * @param {Array} keys   要合并的关键字
+ */
+
+const combineRow = (dataSource, keys) => {
+    keys.forEach(key => {
+        for (var i = 0; i < dataSource.length; i++) {
+            const item = dataSource[i]
+            let count = 1
+            for (let j = i + 1; j < dataSource.length; j++) {
+                // 如果是同一个值，往后递增
+                if (item[key] === dataSource[j][key]) {
+                    count++
+                    // 往后相同的值都设为空单元格
+                    dataSource[j][`${key}RowSpan`] = 0
+                    // 只有同值第一个才设置合并的单元格数
+                    item[`${key}RowSpan`] = count
+                    // 所有都是为同一个值的情况
+                    // 如果到了尾部，则循环结束
+                    if (j === dataSource.length - 1) {
+                        return
+                    }
+                } else {
+                    // 指针跳转到下一个，从下一排开始
+                    i = j - 1
+                    count = 1
+                    dataSource[j][`${key}RowSpan`] = 0
+                    break
+                }
+            }
+        }
+    })
+}
+
+
+
+
 /**
  * @param {[Array]} newValue  最新规格项
- * @return {Array}  oldData  上一次编辑值
+ * @param {[Array]} oldData  上一次编辑值
+ * @return {dataSource,column}  
  */
 
 export const watchMix = (newValue, oldValue, columns, oldData) => {
-    const attrInfo = {}
     let mixTowArr = []
     //过滤出有属性的值
     newValue = newValue.filter(v => {
         return v.mixList.length > 0
     })
-    /*动态处理表头*/
-    let column = []
     newValue.forEach((v, i) => {
-        if (!v.mixList.length) {
-            return
-        }
-        let map = {
-            title: v.spaceName,
-            dataIndex: `specValue${i + 1}`,
-            align: "center",
-            width: 200,
-
-        }
-        column.push(map)
-    })
-    newValue.forEach((v, i) => {
-        attrInfo[`attr${i + 1}`] = toRaw(v.mixList)
         mixTowArr.push(toRaw(v.mixList))
     })
-
-    const { attr1, attr2, attr3, attr4 } = attrInfo
     //sku笛卡尔积阶乘 数据格式处理
-    let data = dimensionSkuFlot(mixTowArr)
+    let dataSource = dimensionSkuFlot(mixTowArr)
     //对比上一次的数据 赋值已填写的内容
-    data.forEach(v => {
+    dataSource.forEach(v => {
         v.price = ''
         v.weight = ''
         v.skuName = ''
@@ -86,125 +110,61 @@ export const watchMix = (newValue, oldValue, columns, oldData) => {
         })
     })
 
+
+    /*动态处理表头*/
+    let column = []
+    newValue.forEach((v, i) => {
+        if (!v.mixList.length) {
+            return
+        }
+        let map = {
+            title: v.spaceName,
+            dataIndex: `specValue${i + 1}`,
+            align: "center",
+            width: 200,
+        }
+        column.push(map)
+    })
+
     /*table列合并*/
-    if (column.length == 1) {
-        column[0].customCell = ({ text, index }) => {
-            const obj = {
-                children: text,
-                props: {},
-            }
-            return obj
-        }
-    }
-
     if (column.length == 2) {
-        column[0].customCell = ({ text, index, record }) => {
-            const obj = {
-                children: text,
-                props: {
-                    rowSpan: 0
-                },
-            }
+        //列合并前提条件
+        if (dataSource.length > 2) {
+            combineRow(dataSource, ['specValue1'])
+        }
+        column[0].customCell = (record, rowIndex, column) => {
 
-            let prev = data[index - 1]  //上一项
-            let next = data[index + 1]  //下一项
-            let current = data[index] //当前项
-            let rowSpanNum = data.length / attr1.length  //相同的值要被合并的数量
-            let isRow
-            const isRowFlag1 = attr2.length == 1
-            const isRowFlag2 = attr2.length == 1 && attr1.length > 1
-            if (isRowFlag1 || isRowFlag2) {
-                isRow = true
+            let rowSpan = record.specValue1RowSpan
+            return {
+                rowSpan
             }
-
-            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'specValue1', prev, next, current, isRow)
-            return obj
         }
 
-
     }
+
     if (column.length == 3) {
-        column[0].customCell = ({ text, index, record }) => {
-            const obj = {
-                children: text,
-                props: {
-                    rowSpan: 0
-                },
+        //列合并前提条件
+        if (dataSource.length > 2) {
+            combineRow(dataSource, ['specValue1', 'specValue2'])
+        }
+        column[0].customCell = (record, rowIndex, column) => {
+            let rowSpan = record.specValue1RowSpan
+            return {
+                rowSpan
             }
-
-            let prev = data[index - 1]  //上一项
-            let next = data[index + 1]  //下一项
-            let current = data[index] //当前项
-            let rowSpanNum = data.length / attr1.length  //相同的值要被合并的数量
-            let isRow
-            const isRowFlag1 = attr2.length > 1 || attr3.length > 1
-
-            if (!isRowFlag1) {
-                isRow = true
-            }
-            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'specValue1', prev, next, current, isRow)
-            return obj
         }
 
-        column[1].customCell = ({ text, index, record }) => {
-            const obj = {
-                children: text,
-                props: {
-                    rowSpan: 0
-                },
+        column[1].customCell = (record, rowIndex, column) => {
+            let rowSpan = record.specValue2RowSpan
+            return {
+                rowSpan
             }
-            let prev = data[index - 1]  //上一项
-            let next = data[index + 1]  //下一项
-            let current = data[index] //当前项
-            let rowSpanNum = data.length / attr2.length / attr1.length  //相同的值要被合并的数量
-            if (attr2.length == 1) {
-                rowSpanNum = 0
-            }
-            let isRow = false
-            const isRowFlag1 = attr1.length == 1 && attr2.length == 1 && attr3.length == 1
-            const isRowFlag2 = attr1.length > 1 && (attr2.length == 1 && attr3.length == 1)
-            const isRowFlag3 = attr2.length > 1 && (attr1.length == 1 && attr3.length == 1)
-
-            if (isRowFlag1 || isRowFlag2 || isRowFlag3) {
-                isRow = true
-            }
-            if (attr2.length == 1 || attr3.length == 1) {
-                return {
-                    children: text
-                }
-            }
-            obj.props.rowSpan = rowSpanMerge(rowSpanNum, 'specValue2', prev, next, current, isRow)
-
-            return obj
         }
     }
 
-
-    /*
-        rowSpanNum 合并数量
-        specValue 操作列参数名
-        prev  上一项
-        next 下一项
-        current 当前项
-        len 当前规格数量
-    */
-    const rowSpanMerge = (rowSpanNum, specValue, prev, next, current, isRow) => {
-        //判断只有一行数据时
-        if (next && next[specValue] == current[specValue] && !prev) {
-            return rowSpanNum
-        }
-        if ((next && next[specValue] == current[specValue] && prev && prev[specValue] != current[specValue])) {
-            return rowSpanNum
-        }
-        if (isRow) {
-
-            return 1
-        }
-        return 0
-    }
     return {
         column,
-        data
+        dataSource
     }
 }
 
