@@ -22,14 +22,13 @@
           <user-menus></user-menus>
         </div>
       </a-layout-header>
-      <!-- <div :style="{ height: '64px' }"></div> -->
-      <a-layout-content :style="{ backgroundColor: '#fff'}">
+      <a-layout-content>
         <s-tab></s-tab>
-        <div :style="{ background: '#fff', minHeight: '360px' }">
+        <div class="app-content" >
           <router-view></router-view>
         </div>
       </a-layout-content>
-      <a-layout-footer style="text-align: center; padding-left: 210px">VUE3.0 + Ant-Design-Vue 2.0</a-layout-footer>
+      
     </a-layout>
   </a-layout>
 </template>
@@ -79,6 +78,7 @@ const collapsed = ref(false);
 .layout-content {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .layout-header {
@@ -98,6 +98,15 @@ const collapsed = ref(false);
   }
 }
 
+.a-layout-content{
+   background-color: #fff;
+ 
+}
+.app-content{
+  background-color: #fff;
+  height: calc(100vh - 100px);
+  overflow: scroll;
+}
 .site-layout .site-layout-background {
   background: #fff;
 }
