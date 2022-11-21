@@ -1,5 +1,5 @@
 <template>
-  <a-layout style="min-height: 100vh">
+  <a-layout class="app-layout">
     <a-layout-sider v-model:collapsed="collapsed" collapsible id="components-layout-demo-side">
       <template #trigger>
         <MenuFoldOutlined v-show="collapsed" />
@@ -11,8 +11,9 @@
       </div>
       <s-menu></s-menu>
     </a-layout-sider>
+    <div class="sider-hidden" :style="{width:!collapsed?'200px':'80px'}"></div>
     <a-layout class="layout-content">
-      <a-layout-header :style="{ width:` calc(100% - ${collapsed ? '80px' : '200px'})` }" class="layout-header">
+      <a-layout-header class="layout-header">
         <div class="trigger">
           <MenuFoldOutlined v-if="collapsed" @click="collapsed = !collapsed" :style="{ fontSize: '20px', cursor: 'pointer' }" />
           <MenuUnfoldOutlined @click="collapsed = !collapsed" :style="{ fontSize: '20px', cursor: 'pointer' }" v-else />
@@ -21,8 +22,8 @@
           <user-menus></user-menus>
         </div>
       </a-layout-header>
-      <div :style="{ height: '64px' }"></div>
-      <a-layout-content :style="{ backgroundColor: '#fff', paddingLeft: collapsed ? '80px' : '200px' }">
+      <!-- <div :style="{ height: '64px' }"></div> -->
+      <a-layout-content :style="{ backgroundColor: '#fff'}">
         <s-tab></s-tab>
         <div :style="{ background: '#fff', minHeight: '360px' }">
           <router-view></router-view>
@@ -32,30 +33,25 @@
     </a-layout>
   </a-layout>
 </template>
-<script>
+<script setup>
 import { ref } from "vue";
 import SMenu from "@/components/Menu/Menu";
 import STab from "@/components/MultiTab/MultiTab";
 import UserMenus from "../tools/UserMenus.vue";
-export default {
-  components: {
-    SMenu,
-    STab,
-    UserMenus
-  },
-  setup() {
-    const collapsed = ref(false);
-    return {
-      collapsed
-    };
-  }
-};
+const collapsed = ref(false);
 </script>
 <style scoped lang="less">
 #components-layout-demo-side {
+  overflow: hidden;
+  flex: 0 0 208px;
+  max-width: 208px;
+  min-width: 208px;
+  width: 208px;
   position: fixed;
-  z-index: 1000;
-  min-height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  height: 100%;
 }
 #components-layout-demo-side .logo {
   height: 32px;
@@ -72,6 +68,14 @@ export default {
     color: #fff;
   }
 }
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+.sider-hidden {
+  flex-shrink: 0;
+  overflow: hidden;
+}
 .layout-content {
   display: flex;
   flex-direction: column;
@@ -81,9 +85,6 @@ export default {
   border-bottom: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
-  position: fixed;
-  top: 0;
-  z-index: 1000;
   background: #fff;
   padding: 0;
   right: 0;

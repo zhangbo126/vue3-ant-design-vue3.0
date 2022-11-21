@@ -35,20 +35,6 @@ export const routerMap = [
         ]
     },
     {
-        path: '/home',
-        component: BasicLayouts,
-        redirect: '/home/page',
-        children: [
-            {
-                path: '/home/page',
-                component: () => import('@/views/Home/Home'),
-                name: 'Home',
-                meta: { title: '首页' }
-            }
-
-        ]
-    },
-    {
         hide: true,
         path: '/:pathMatch(.*)*',
         component: () => import('@/views/Exception/404'),

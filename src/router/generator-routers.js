@@ -16,6 +16,7 @@ const constantRouterComponents = {
     'commodityClass': () => import('@/views/commodityCenter/commodityClass'),
     'commodityLibrary': () => import('@/views/commodityCenter/commodityLibrary'),
     'informationList': () => import('@/views/informationCenter/informationList'),
+    'Home': () => import('@/views/Home/Home'),
 }
 
 
@@ -60,7 +61,6 @@ export const generator = (routerMap, parent) => {
             path: url,
             // 路由名称，建议唯一
             name,
-
             // 该路由对应页面的 组件 :方案1
             component: constantRouterComponents[component],
             // 该路由对应页面的 组件 :方案2 (动态加载)
@@ -69,7 +69,6 @@ export const generator = (routerMap, parent) => {
                 title,
                 icon: icon || undefined,
                 partentName,   //父级菜单名称 
-
             }
         }
         item.redirect && (currentRouter.redirect = item.redirect)
@@ -87,7 +86,7 @@ export const generator = (routerMap, parent) => {
 list 结构转 树型
  * @param {Array} menuTree 菜单原数据
  * @param {Array} tree  菜单树级结构
- * @param {String} partentId 菜单父级ID
+ * @param {String} partent 父级菜单
  * @return  
 */
 

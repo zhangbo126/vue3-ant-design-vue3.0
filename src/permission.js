@@ -18,27 +18,20 @@ router.beforeEach(async (to, from, next) => {
             next({ path: from.path || '/loginview/login' })
         } else {
             if (store.state.permission.addRouters.length == 0) {
-                store.dispatch('GetUserInfo').then(user => {
-                    const menuList = user.data.menuList
-                    //生成动态路由
-                    store.dispatch('GenerateRoutes', menuList).then(async (res) => {
-                        const asyncRouter = res.asyncRouter
-                        asyncRouter.forEach(v => {
-                            router.addRoute(v)
-                        })
-                        // 请求带有 redirect 重定向时，登录自动重定向到该地址
-                        const redirect = decodeURIComponent(from.query.redirect || to.path)
-                        if (to.path === redirect) {
-                             router.replace({...to,replace:true})
-                        } else {
-                            next({ path: '/' })
-                        }
+                try {
+                    //获取用户信息
+                    const { data } = await store.dispatch('GetUserInfo')
+                    const menuList = data.menuList
+                    const { asyncRouter } = await store.dispatch('GenerateRoutes', menuList)
+                    asyncRouter.forEach(v => {
+                        router.addRoute(v)
                     })
-                }).catch(() => {
-                    //当前账号没有权限时
-                    VueCookies.remove(ACCESS_TOKEN)
-                    router.push('/not/notrole')
-                })
+                    // 请求带有 redirect 重定向时，登录自动重定向到该地址
+                    const redirect = decodeURIComponent(from.query.redirect || to.path)
+                    router.replace({ ...to, replace: true })
+                } catch {
+                    next({ path: '/loginview/login' })
+                }
                 next()
             } else {
                 next()
