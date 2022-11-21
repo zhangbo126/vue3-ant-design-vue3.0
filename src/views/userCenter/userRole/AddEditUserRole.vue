@@ -42,7 +42,7 @@ import {
   addRole,
   getEditMenuList,
   eidtRole
-} from "@/api/UserCenter";
+} from "@/api/UserCenters";
 import { message } from "ant-design-vue";
 const emit = defineEmits(["refresh"]);
 const form = reactive({

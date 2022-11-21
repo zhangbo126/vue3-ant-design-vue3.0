@@ -93,7 +93,6 @@ export function getMenuList() {
     return request({
         url: api.getMenuList,
         method: 'post',
-
     })
 }
 

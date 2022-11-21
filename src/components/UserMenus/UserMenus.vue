@@ -11,27 +11,25 @@
             <span>退出登录</span>
           </a-menu-item>
           <!-- <a-menu-item @click="handlePass">
-			  <span>密码修改</span>
-          </a-menu-item>-->
+            <span>密码修改</span>
+          </a-menu-item> -->
         </a-menu>
       </template>
     </a-dropdown>
-    <!-- <pass-modify ref="modify"></pass-modify> -->
+    <!-- <pass-modify-modal ref="modify"></pass-modify-modal> -->
   </div>
 </template>
   
-  <script setup>
+<script setup>
 import { useStore } from "vuex";
 import { reactive, toRefs, ref } from "vue";
 import { Modal } from "ant-design-vue";
-
-const modify = ref(null);
+// import PassModifyModal from "./PassModifyModal.vue";
+const modify = ref();
 const store = useStore();
 const state = reactive({
   userInfo: store.state.login.userInfo
 });
-
-console.log(state.userInfo.userAccount);
 
 const handleLogout = () => {
   Modal.confirm({
@@ -48,7 +46,7 @@ const handlePass = () => {
 };
 </script>
   
-  <style lang="less" scoped>
+ <style lang="less" scoped>
 .user-dropdown {
   cursor: pointer;
   padding: 0px 20px;

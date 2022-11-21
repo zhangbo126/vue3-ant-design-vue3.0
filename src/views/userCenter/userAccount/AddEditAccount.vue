@@ -60,7 +60,7 @@ const rules = {
   ]
 };
 import { reactive, ref, toRefs } from "vue";
-import { addAccount, editMenuTree } from "@/api/UserCenter";
+import { addAccount, editMenuTree } from "@/api/UserCenters";
 import { message } from "ant-design-vue";
 const emit = defineEmits(["refresh"]);
 const form = reactive({

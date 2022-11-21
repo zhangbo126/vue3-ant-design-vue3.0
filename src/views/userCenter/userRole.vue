@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { getRoleList, removeRole } from "@/api/UserCenter";
+import { getRoleList, removeRole } from "@/api/UserCenters";
 import AddEditUserRole from "./userRole/AddEditUserRole.vue";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";

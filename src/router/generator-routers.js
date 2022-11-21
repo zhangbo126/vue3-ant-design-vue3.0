@@ -2,7 +2,6 @@
 
 import { BasicLayouts, RouteView } from '@/layouts'
 import { hideRouter } from '@/config/router.config.js'
-
 // 前端路由表
 const constantRouterComponents = {
     // 基础页面 layout 必须引入

@@ -90,7 +90,7 @@ const rules = {
   ]
 };
 import { reactive, ref, toRefs } from "vue";
-import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenter";
+import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenters";
 import { message } from "ant-design-vue";
 import { componentList, IconList } from "@/config/asyncRouter.js";
 const emit = defineEmits(["refresh"]);

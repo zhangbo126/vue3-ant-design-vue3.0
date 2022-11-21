@@ -69,7 +69,7 @@ import {
   delAccount,
   accountStatusSet,
   resultPassWord
-} from "@/api/UserCenter";
+} from "@/api/UserCenters";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 import moment from "moment";
