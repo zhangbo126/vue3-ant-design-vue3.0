@@ -4,14 +4,12 @@
       <a-form-item ref="oldPassWord" label="原密码" name="oldPassWord">
         <a-input-password placeholder="原密码" style="width: 220px" v-model:value.trim="form.oldPassWord" />
       </a-form-item>
-
       <a-form-item label="新密码" name="passWord">
         <a-input-password placeholder="新密码" style="width: 220px" v-model:value.trim="form.passWord" />
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
-
 <script>
 const rules = {
   oldPassWord: [

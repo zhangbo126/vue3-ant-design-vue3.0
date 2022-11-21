@@ -28,7 +28,6 @@
           <router-view></router-view>
         </div>
       </a-layout-content>
-      
     </a-layout>
   </a-layout>
 </template>
@@ -36,7 +35,7 @@
 import { ref } from "vue";
 import SMenu from "@/components/Menu/Menu";
 import STab from "@/components/MultiTab/MultiTab";
-import UserMenus from "../tools/UserMenus.vue";
+import UserMenus from "@/components/UserMenus/UserMenus.vue";
 const collapsed = ref(false);
 </script>
 <style scoped lang="less">
