@@ -38,11 +38,12 @@ import {
     notification,
     message,
 } from 'ant-design-vue'
-import * as antIcons from '@ant-design/icons-vue'
 
+import * as antIcons from '@ant-design/icons-vue'
+import { ZTable } from '@/components'
 const ant = {
     install(Vue) {
-        
+        Vue.component('ZTable', ZTable)
         // Vue.component(Button.name, Button)
         // Vue.component(Input.name, Input)
         // Vue.component(Input.Password.name, Input.Password)

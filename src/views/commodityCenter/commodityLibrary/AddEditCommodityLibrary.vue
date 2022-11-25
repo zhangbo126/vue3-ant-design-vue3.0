@@ -1,7 +1,6 @@
 <template>
-  <a-row>
-    <a-col :span="24">
-      <a-card>
+  <div class="sku-content">
+   
         <!-- 商品基本信息 -->
         <div class="goods-info">
           <div class="back">
@@ -109,9 +108,8 @@
         <div class="save-submit">
           <a-button type="primary" @click="onSaveSubmit">保存</a-button>
         </div>
-      </a-card>
-    </a-col>
-  </a-row>
+    
+  </div>
 </template>
 
 <script setup>
@@ -500,6 +498,9 @@ const filterOptionPartent = (input, option) => {
 </script>
 
 <style scoped lang="less">
+.sku-content{
+   padding: 10px;
+}
 .goods-info {
   .info-title {
     font-weight: bold;
@@ -617,9 +618,9 @@ const filterOptionPartent = (input, option) => {
   }
 }
 .save-submit {
-  height: 71px;
+  height: 50px;
   background-color: #ffff;
-  line-height: 71px;
+  line-height: 50px;
   text-align: center;
   position: fixed;
   width: 100%;

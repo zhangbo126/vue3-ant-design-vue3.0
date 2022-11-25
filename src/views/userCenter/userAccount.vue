@@ -4,13 +4,13 @@
       <a-button type="primary" v-auth="['Btn_Add_Account']" :style="{ margin: '10px 0px' }" @click="addAccount">新增账号+</a-button>
       <ul class="query-handle">
         <li>
-          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.userAccount" placeholder="账号" @keyup.enter="onChangeStatus" />
+          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.userAccount" placeholder="账号" @keyup.enter="onSearch" />
         </li>
         <li>
-          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.email" placeholder="邮箱" @keyup.enter="onChangeStatus" />
+          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.email" placeholder="邮箱" @keyup.enter="onSearch" />
         </li>
         <li>
-          <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="角色状态" @change="onChangeStatus">
+          <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="角色状态" @change="onSearch">
             <a-select-option key="1" :value="1">使用中</a-select-option>
             <a-select-option key="2" :value="0">已停用</a-select-option>
           </a-select>
@@ -22,24 +22,7 @@
           </a-space>
         </li>
       </ul>
-      <a-table
-        :dataSource="data"
-        bordered
-        rowKey="_id"
-        :scroll="{ x: 1300 }"
-        :columns="columns"
-        :pagination="{
-          size:'small',
-          total:pageData.total, 
-          onChange:onChangePage,
-          onShowSizeChange:handlePageSizeChange,
-          showTotal:(total) => `总计${total}`,
-          pageSize:pageData.queryInfo.pageSize,
-          current:pageData.queryInfo.pageNumber, 
-          showSizeChanger:true,
-          showQuickJumper:true,
-          position:['bottomCenter']}"
-      >
+      <z-table :dataSource="data" bordered rowKey="_id" :scroll="{ x: 1300 }" :columns="columns" v-model:pageNumber="pageData.queryInfo.pageNumber" v-model:pageSize="pageData.queryInfo.pageSize" v-model:total="pageData.total" @onPagination="onPagination">
         <template #bodyCell="{ column, text,record }">
           <template v-if="column.dataIndex === 'status'">
             <div>{{ statusMapFilter(text) }}</div>
@@ -52,7 +35,7 @@
             <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="resultPass(record._id)">重置密码</a-button>
           </template>
         </template>
-      </a-table>
+      </z-table>
     </a-col>
     <!-- 新增账户 -->
     <add-edit-account ref="account" @refresh="getList"></add-edit-account>
@@ -202,16 +185,7 @@ const resultPass = id => {
   });
 };
 
-const onChangePage = current => {
-  pageData.queryInfo.pageNumber = current;
-  getList();
-};
-const handlePageSizeChange = (current, size) => {
-  pageData.queryInfo.pageNumber = 1;
-  pageData.queryInfo.pageSize = size;
-  getList();
-};
-const onChangeStatus = () => {
+const onPagination = () => {
   getList();
 };
 const onSearch = () => {

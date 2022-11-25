@@ -15,29 +15,13 @@
         </li>
         <li>
           <a-space>
-            <a-button @click="onSearch" type="primary">搜索</a-button>
+            <a-button @click="onChangeSearch" type="primary">搜索</a-button>
             <a-button @click="onResult">重置</a-button>
           </a-space>
         </li>
       </ul>
       <!-- 表内容 -->
-      <a-table
-        :dataSource="data"
-        bordered
-        rowKey="_id"
-        :columns="columns"
-        :pagination="{
-          size:'small',
-          total, 
-          onChange:onChangePage,
-          onShowSizeChange:handlePageSizeChange,
-          showTotal:(total) => `总计${total}`,
-          pageSize:queryInfo.pageSize,
-          current:queryInfo.pageNumber, 
-          showSizeChanger:true,
-          showQuickJumper:true,
-          position:['bottomCenter']}"
-      >
+      <z-table :dataSource="dataSource" bordered rowKey="_id" :columns="columns" v-model:pageNumber="queryInfo.pageNumber" v-model:pageSize="queryInfo.pageSize" v-model:total="total" @onPagination="onPagination">
         <template #bodyCell="{ column, text,record }">
           <template v-if="column.dataIndex === 'status'">
             <div>{{ statusMapFilter(text) }}</div>
@@ -52,7 +36,7 @@
             <a-button v-if="record.status == 0" @click="removeActivity(record._id)" type="link">删除活动</a-button>
           </template>
         </template>
-      </a-table>
+      </z-table>
     </a-col>
     <add-activity ref="activity" @refresh="getList"></add-activity>
   </a-row>
@@ -61,7 +45,11 @@
 <script setup>
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
-import { getActivityList,  delActivity,  stopActivity } from "@/api/informationCenter";
+import {
+  getActivityList,
+  delActivity,
+  stopActivity
+} from "@/api/informationCenter";
 import AddActivity from "./informationList/AddActivity.vue";
 
 const columns = [
@@ -104,7 +92,7 @@ const statusMap = {
   1: "进行中"
 };
 
-const data = ref([]);
+const dataSource = ref([]);
 const activity = ref(null);
 const total = ref(0);
 const queryInfo = reactive({
@@ -151,28 +139,19 @@ const removeActivity = id => {
 const getList = async () => {
   try {
     const { data: list, count } = await getActivityList(queryInfo);
-    data.value = list;
+    dataSource.value = list;
     total.value = count;
   } catch {}
 };
 
-const onChangePage = current => {
-  queryInfo.pageNumber = current;
+const onPagination = current => {
   getList();
 };
 const onChangeSearch = () => {
   queryInfo.pageNumber = 1;
   getList();
 };
-const handlePageSizeChange = (current, size) => {
-  queryInfo.pageNumber = 1;
-  queryInfo.pageSize = size;
-  getList();
-};
-const onSearch = () => {
-  queryInfo.pageNumber = 1;
-  getList();
-};
+
 const onResult = () => {
   Object.assign(queryInfo, {
     pageNumber: 1,

@@ -5,10 +5,10 @@
       <!-- 查询区域 -->
       <ul class="query-handle">
         <li>
-          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.name" placeholder="品牌名称" @keyup.enter="onChangeSearch" />
+          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.name" placeholder="品牌名称" @keyup.enter="onSearch" />
         </li>
         <li>
-          <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="状态" @change="onChangeSearch">
+          <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="状态" @change="onSearch">
             <a-select-option key="1" :value="1">使用中</a-select-option>
             <a-select-option key="2" :value="0">已停用</a-select-option>
           </a-select>
@@ -21,23 +21,7 @@
         </li>
       </ul>
       <!-- 表内容 -->
-      <a-table
-        :dataSource="data"
-        bordered
-        rowKey="_id"
-        :columns="columns"
-        :pagination="{
-          size:'small',
-          total:pageData.total, 
-          onChange:onChangePage,
-          onShowSizeChange:handlePageSizeChange,
-          showTotal:(total) => `总计${total}`,
-          pageSize:pageData.queryInfo.pageSize,
-          current:pageData.queryInfo.pageNumber, 
-          showSizeChanger:true,
-          showQuickJumper:true,
-          position:['bottomCenter']}"
-      >
+      <z-table :dataSource="data" bordered rowKey="_id" :columns="columns" v-model:pageNumber="pageData.queryInfo.pageNumber" v-model:pageSize="pageData.queryInfo.pageSize" v-model:total="pageData.total" @onPagination="onPagination">
         <template #bodyCell="{ column, text,record }">
           <template v-if="column.dataIndex === 'status'">
             <div>{{ statusMapFilter(text) }}</div>
@@ -52,7 +36,7 @@
             <a-button type="link" @click="onEditbrand(record)">编辑</a-button>
           </template>
         </template>
-      </a-table>
+      </z-table>
     </a-col>
     <!-- 新增编辑商品品牌-->
     <add-edit-brand ref="brand" @refresh="getList"></add-edit-brand>
@@ -146,16 +130,8 @@ const onEditbrand = obj => {
 const onAddbrand = () => {
   brand.value.showAddModal();
 };
-const handlePageSizeChange = (current, size) => {
-  pageData.queryInfo.pageNumber = 1;
-  pageData.queryInfo.pageSize = size;
-  getList();
-};
-const onChangePage = current => {
-  pageData.queryInfo.pageNumber = current;
-  getList();
-};
-const onChangeSearch = () => {
+
+const onPagination = () => {
   getList();
 };
 const onSearch = () => {

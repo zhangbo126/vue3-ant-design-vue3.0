@@ -4,10 +4,10 @@
         <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Role']" @click="addRole">新增角色+</a-button>
         <ul class="query-handle">
           <li>
-            <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.name" placeholder="角色名称" @keyup.enter="onChangeStatus" />
+            <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.name" placeholder="角色名称" @keyup.enter="onSearch" />
           </li>
           <li>
-            <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="角色状态" @change="onChangeStatus">
+            <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="角色状态" @change="onSearch">
               <a-select-option key="1" :value="1">使用中</a-select-option>
               <a-select-option key="2" :value="0">已停用</a-select-option>
             </a-select>
@@ -19,23 +19,13 @@
             </a-space>
           </li>
         </ul>
-        <a-table
+        <z-table
           :dataSource="dataSource"
           bordered
           rowKey="_id"
           :columns="columns"
           :scroll="{ x: 1000 }"
-          :pagination="{
-            size:'small',
-            total:pageData.total, 
-            onChange:onChangePage,
-            onShowSizeChange:handlePageSizeChange,
-            showTotal:(total) => `总计${total}`,
-            pageSize:pageData.queryInfo.pageSize,
-            current:pageData.queryInfo.pageNumber, 
-            showSizeChanger:true,
-            showQuickJumper:true,
-            position:['bottomCenter']}"
+          v-model:pageNumber="pageData.queryInfo.pageNumber" v-model:pageSize="pageData.queryInfo.pageSize" v-model:total="pageData.total" @onPagination="onPagination"
         >
           <template #bodyCell="{ column, text,record }">
             <template v-if="column.dataIndex === 'status'">
@@ -46,7 +36,7 @@
               <a-button type="link" v-auth="['Btn_Delete_Role']" @click="delRole(record._id)">删除</a-button>
             </template>
           </template>
-        </a-table>
+        </z-table>
     </a-col>
     <add-edit-user-role ref="role" @refresh="getList"></add-edit-user-role>
   </a-row>
@@ -134,16 +124,8 @@ const delRole = id => {
   });
 };
 
-const onChangePage = current => {
-  pageData.queryInfo.pageNumber = current;
-  getList();
-};
-const handlePageSizeChange = (current, size) => {
-  pageData.queryInfo.pageNumber = 1;
-  pageData.queryInfo.pageSize = size;
-  getList();
-};
-const onChangeStatus = () => {
+
+const onPagination = () => {
   getList();
 };
 const onSearch = () => {
