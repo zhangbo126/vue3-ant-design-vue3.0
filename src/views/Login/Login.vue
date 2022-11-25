@@ -50,7 +50,7 @@ const form = reactive({
   userAccount: "admin",
   passWord: "zb123456"
 });
-const loading = ref();
+const loading = ref(false);
 const formRef = ref();
 const store = useStore();
 const router = useRouter();
@@ -66,7 +66,6 @@ const onSubmit = () => {
       })
       .catch(res => {
         loading.value = false;
-        message.warning(res.message);
       });
   });
 };

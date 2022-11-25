@@ -1,11 +1,9 @@
 // eslint-disable-next-line
-
-import { BasicLayouts, RouteView } from '@/layouts'
+import {  RouteView } from '@/layouts'
 import { hideRouter } from '@/config/router.config.js'
 // 前端路由表
 const constantRouterComponents = {
     // 基础页面 layout 必须引入
-    BasicLayouts: BasicLayouts,
     RouteView: RouteView,
     // 你需要动态引入的页面组件
     'userRole': () => import('@/views/userCenter/userRole'),
@@ -22,11 +20,7 @@ const constantRouterComponents = {
 // 根级菜单
 const rootRouter = {
     name: 'BasicLayouts',
-    path: '/',
-    component: BasicLayouts,
-    meta: {
-        title: '首页'
-    },
+    component: ()=>import('@/layouts/BasicLayouts'),
     redirect: '/home/page'
 }
 

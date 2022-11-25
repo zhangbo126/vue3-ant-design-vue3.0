@@ -1,6 +1,8 @@
 import request from '@/utils/request'
 
 
+
+
 const api = {
     addInformation: '/information/addInformation',
     stopActivity: '/information/stopActivity',

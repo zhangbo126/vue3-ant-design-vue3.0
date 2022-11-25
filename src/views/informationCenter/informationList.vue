@@ -1,33 +1,32 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddActivity">新增活动+</a-button>
-        <!-- 查询区域 -->
-        <ul class="query-handle">
-          <li>
-            <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="活动名称" @keyup.enter="onChangeSearch" />
-          </li>
-          <li>
-            <a-select style="width: 140px" v-model:value="queryInfo.status" placeholder="状态" @change="onChangeSearch">
-              <a-select-option key="1" :value="1">进行中</a-select-option>
-              <a-select-option key="2" :value="0">已结束</a-select-option>
-            </a-select>
-          </li>
-          <li>
-            <a-space>
-              <a-button @click="onSearch" type="primary">搜索</a-button>
-              <a-button @click="onResult">重置</a-button>
-            </a-space>
-          </li>
-        </ul>
-        <!-- 表内容 -->
-        <a-table
-          :dataSource="data"
-          bordered
-          rowKey="_id"
-          :columns="columns"
-          :pagination="{
+      <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddActivity">新增活动+</a-button>
+      <!-- 查询区域 -->
+      <ul class="query-handle">
+        <li>
+          <a-input style="width: 140px" v-model:value.trim="queryInfo.name" placeholder="活动名称" @keyup.enter="onChangeSearch" />
+        </li>
+        <li>
+          <a-select style="width: 140px" v-model:value="queryInfo.status" placeholder="状态" @change="onChangeSearch">
+            <a-select-option key="1" :value="1">进行中</a-select-option>
+            <a-select-option key="2" :value="0">已结束</a-select-option>
+          </a-select>
+        </li>
+        <li>
+          <a-space>
+            <a-button @click="onSearch" type="primary">搜索</a-button>
+            <a-button @click="onResult">重置</a-button>
+          </a-space>
+        </li>
+      </ul>
+      <!-- 表内容 -->
+      <a-table
+        :dataSource="data"
+        bordered
+        rowKey="_id"
+        :columns="columns"
+        :pagination="{
           size:'small',
           total, 
           onChange:onChangePage,
@@ -38,23 +37,22 @@
           showSizeChanger:true,
           showQuickJumper:true,
           position:['bottomCenter']}"
-        >
-          <template #bodyCell="{ column, text,record }">
-            <template v-if="column.dataIndex === 'status'">
-              <div>{{ statusMapFilter(text) }}</div>
-            </template>
-            <template v-if="column.dataIndex === 'imageFilePath'">
-              <div>
-                <img :src="text" width="120" alt />
-              </div>
-            </template>
-            <template v-if="column.dataIndex === 'action'">
-              <a-button v-if="record.status == 1" @click="endActivity(record._id)" type="link">结束活动</a-button>
-              <a-button v-if="record.status == 0" @click="removeActivity(record._id)" type="link">删除活动</a-button>
-            </template>
+      >
+        <template #bodyCell="{ column, text,record }">
+          <template v-if="column.dataIndex === 'status'">
+            <div>{{ statusMapFilter(text) }}</div>
           </template>
-        </a-table>
-      </a-card>
+          <template v-if="column.dataIndex === 'imageFilePath'">
+            <div>
+              <img :src="text" width="120" alt />
+            </div>
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <a-button v-if="record.status == 1" @click="endActivity(record._id)" type="link">结束活动</a-button>
+            <a-button v-if="record.status == 0" @click="removeActivity(record._id)" type="link">删除活动</a-button>
+          </template>
+        </template>
+      </a-table>
     </a-col>
     <add-activity ref="activity" @refresh="getList"></add-activity>
   </a-row>
@@ -63,11 +61,7 @@
 <script setup>
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
-import {
-  getActivityList,
-  delActivity,
-  stopActivity
-} from "@/api/informationCenter";
+import { getActivityList,  delActivity,  stopActivity } from "@/api/informationCenter";
 import AddActivity from "./informationList/AddActivity.vue";
 
 const columns = [

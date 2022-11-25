@@ -1,7 +1,6 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card>
         <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Goods']" @click="onAddgoods">新增商品+</a-button>
         <!-- 查询区域 -->
         <ul class="query-handle">
@@ -117,7 +116,6 @@
             </template>
           </template>
         </a-table>
-      </a-card>
     </a-col>
   </a-row>
 </template>

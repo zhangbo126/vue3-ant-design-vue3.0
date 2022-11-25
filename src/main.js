@@ -11,4 +11,11 @@ import GlobalProperties from "@/utils/globalProperties.js";  //自定义封装�
 import Auth from '@/utils/auth.js' //自定义全局指令
 import './permission'
 const app = createApp(App)
-app.use(GlobalProperties).use(router).use(store).use(Antd).use(VueUeditorWrap).use(Antd_Lazy).use(Auth).mount('#app')
+app.use(GlobalProperties)
+app.use(store)
+app.use(router)
+app.use(Antd)
+app.use(VueUeditorWrap)
+app.use(Antd_Lazy)
+app.use(Auth)
+app.mount('#app')

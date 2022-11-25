@@ -10,13 +10,13 @@
           <a-menu-item @click="handleLogout">
             <span>退出登录</span>
           </a-menu-item>
-          <!-- <a-menu-item @click="handlePass">
+          <a-menu-item @click="handlePass">
             <span>密码修改</span>
-          </a-menu-item> -->
+          </a-menu-item>
         </a-menu>
       </template>
     </a-dropdown>
-    <!-- <pass-modify-modal ref="modify"></pass-modify-modal> -->
+    <pass-modify-modal ref="modify"></pass-modify-modal>
   </div>
 </template>
   
@@ -24,7 +24,7 @@
 import { useStore } from "vuex";
 import { reactive, toRefs, ref } from "vue";
 import { Modal } from "ant-design-vue";
-// import PassModifyModal from "./PassModifyModal.vue";
+import PassModifyModal from "./PassModifyModal.vue";
 const modify = ref();
 const store = useStore();
 const state = reactive({

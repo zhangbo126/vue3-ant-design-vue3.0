@@ -1,7 +1,6 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card>
         <a-button type="primary" :style="{ margin: '10px 0px' }" v-auth="['Btn_Add_Role']" @click="addRole">新增角色+</a-button>
         <ul class="query-handle">
           <li>
@@ -48,7 +47,6 @@
             </template>
           </template>
         </a-table>
-      </a-card>
     </a-col>
     <add-edit-user-role ref="role" @refresh="getList"></add-edit-user-role>
   </a-row>

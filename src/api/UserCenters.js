@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+
 const api = {
     getRoleList: '/role/getRoleList',
     getAddMenuList: '/role/addGetMenuTree',
@@ -21,7 +22,6 @@ const api = {
     editPasswordTesting: '/users/editPasswordTesting',
     roleAssignment: '/users/roleAssignment',
 }
-
 
 //获取角色列表
 export function getRoleList(data) {
@@ -200,5 +200,9 @@ export function editPasswordTesting(passWord) {
         }
     })
 }
+
+
+
+
 
 

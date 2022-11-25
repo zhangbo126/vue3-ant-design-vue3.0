@@ -1,34 +1,33 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card>
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass">新增分类+</a-button>
-        <!-- 查询区域 -->
-        <ul class="query-handle">
-          <li>
-            <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.name" placeholder="分类名称" @keyup.enter="onChangeSearch" />
-          </li>
-          <li>
-            <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="状态" @change="onChangeSearch">
-              <a-select-option key="1" :value="1">使用中</a-select-option>
-              <a-select-option key="2" :value="0">已停用</a-select-option>
-            </a-select>
-          </li>
-          <li>
-            <a-space>
-              <a-button @click="onSearch" type="primary">搜索</a-button>
-              <a-button @click="onResult">重置</a-button>
-            </a-space>
-          </li>
-        </ul>
-        <!-- 表内容 -->
-        <a-table
-          :dataSource="dataSource"
-          :loading="pageData.loading"
-          bordered
-          rowKey="_id"
-          :columns="columns"
-          :pagination="{
+      <a-button type="primary" :style="{ margin: '10px 0px' }" @click="onAddclass">新增分类+</a-button>
+      <!-- 查询区域 -->
+      <ul class="query-handle">
+        <li>
+          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.name" placeholder="分类名称" @keyup.enter="onChangeSearch" />
+        </li>
+        <li>
+          <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="状态" @change="onChangeSearch">
+            <a-select-option key="1" :value="1">使用中</a-select-option>
+            <a-select-option key="2" :value="0">已停用</a-select-option>
+          </a-select>
+        </li>
+        <li>
+          <a-space>
+            <a-button @click="onSearch" type="primary">搜索</a-button>
+            <a-button @click="onResult">重置</a-button>
+          </a-space>
+        </li>
+      </ul>
+      <!-- 表内容 -->
+      <a-table
+        :dataSource="dataSource"
+        :loading="pageData.loading"
+        bordered
+        rowKey="_id"
+        :columns="columns"
+        :pagination="{
           size:'small',
           total:pageData.total, 
           onChange:onChangePage,
@@ -39,23 +38,22 @@
           showSizeChanger:true,
           showQuickJumper:true,
           position:['bottomCenter']}"
-        >
-          <template #bodyCell="{ column, text,record }">
-            <template v-if="column.dataIndex === 'status'">
-              <div>{{ statusMapFilter(text) }}</div>
-            </template>
-            <template v-if="column.dataIndex === 'logoFilePath'">
-              <div>
-                <img :src="text" width="120" alt />
-              </div>
-            </template>
-            <template v-if="column.dataIndex === 'action'">
-              <a-button @click="onDelclass(record._id)" type="link">删除</a-button>
-              <a-button @click="onEditclass(record)" type="link">编辑</a-button>
-            </template>
+      >
+        <template #bodyCell="{ column, text,record }">
+          <template v-if="column.dataIndex === 'status'">
+            <div>{{ statusMapFilter(text) }}</div>
           </template>
-        </a-table>
-      </a-card>
+          <template v-if="column.dataIndex === 'logoFilePath'">
+            <div>
+              <img :src="text" width="120" alt />
+            </div>
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <a-button @click="onDelclass(record._id)" type="link">删除</a-button>
+            <a-button @click="onEditclass(record)" type="link">编辑</a-button>
+          </template>
+        </template>
+      </a-table>
     </a-col>
     <!-- 新增编辑商品分类 -->
     <add-edit-class ref="classify" @refresh="getList"></add-edit-class>

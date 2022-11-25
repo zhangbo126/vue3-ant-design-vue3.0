@@ -1,7 +1,6 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card>
         <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addMenu">新增菜单+</a-button>
         <a-table :dataSource="data" bordered rowKey="_id" :columns="columns" :scroll="{ x: 1400 }">
           <template #bodyCell="{ column, text,record }">
@@ -17,7 +16,6 @@
             </template>
           </template>
         </a-table>
-      </a-card>
     </a-col>
     <add-edit-menu ref="menu" @refresh="getList"></add-edit-menu>
   </a-row>

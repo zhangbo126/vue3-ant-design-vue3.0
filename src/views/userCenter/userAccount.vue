@@ -1,35 +1,34 @@
 <template>
   <a-row>
     <a-col :span="24">
-      <a-card>
-        <a-button type="primary" v-auth="['Btn_Add_Account']" :style="{ margin: '10px 0px' }" @click="addAccount">新增账号+</a-button>
-        <ul class="query-handle">
-          <li>
-            <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.userAccount" placeholder="账号" @keyup.enter="onChangeStatus" />
-          </li>
-          <li>
-            <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.email" placeholder="邮箱" @keyup.enter="onChangeStatus" />
-          </li>
-          <li>
-            <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="角色状态" @change="onChangeStatus">
-              <a-select-option key="1" :value="1">使用中</a-select-option>
-              <a-select-option key="2" :value="0">已停用</a-select-option>
-            </a-select>
-          </li>
-          <li>
-            <a-space>
-              <a-button @click="onSearch" type="primary">搜索</a-button>
-              <a-button @click="onResult">重置</a-button>
-            </a-space>
-          </li>
-        </ul>
-        <a-table
-          :dataSource="data"
-          bordered
-          rowKey="_id"
-          :scroll="{ x: 1300 }"
-          :columns="columns"
-          :pagination="{
+      <a-button type="primary" v-auth="['Btn_Add_Account']" :style="{ margin: '10px 0px' }" @click="addAccount">新增账号+</a-button>
+      <ul class="query-handle">
+        <li>
+          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.userAccount" placeholder="账号" @keyup.enter="onChangeStatus" />
+        </li>
+        <li>
+          <a-input style="width: 140px" v-model:value.trim="pageData.queryInfo.email" placeholder="邮箱" @keyup.enter="onChangeStatus" />
+        </li>
+        <li>
+          <a-select style="width: 140px" v-model:value="pageData.queryInfo.status" placeholder="角色状态" @change="onChangeStatus">
+            <a-select-option key="1" :value="1">使用中</a-select-option>
+            <a-select-option key="2" :value="0">已停用</a-select-option>
+          </a-select>
+        </li>
+        <li>
+          <a-space>
+            <a-button @click="onSearch" type="primary">搜索</a-button>
+            <a-button @click="onResult">重置</a-button>
+          </a-space>
+        </li>
+      </ul>
+      <a-table
+        :dataSource="data"
+        bordered
+        rowKey="_id"
+        :scroll="{ x: 1300 }"
+        :columns="columns"
+        :pagination="{
           size:'small',
           total:pageData.total, 
           onChange:onChangePage,
@@ -40,21 +39,20 @@
           showSizeChanger:true,
           showQuickJumper:true,
           position:['bottomCenter']}"
-        >
-          <template #bodyCell="{ column, text,record }">
-            <template v-if="column.dataIndex === 'status'">
-              <div>{{ statusMapFilter(text) }}</div>
-            </template>
-            <template v-if="column.dataIndex === 'action'">
-              <a-button type="link" v-if="record.status == 0" v-auth="['Btn_Delete_Account']" @click="removeAccount(record._id)">删除</a-button>
-              <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">启用</a-button>
-              <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">禁用</a-button>
-              <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setRole(record)">定义角色</a-button>
-              <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="resultPass(record._id)">重置密码</a-button>
-            </template>
+      >
+        <template #bodyCell="{ column, text,record }">
+          <template v-if="column.dataIndex === 'status'">
+            <div>{{ statusMapFilter(text) }}</div>
           </template>
-        </a-table>
-      </a-card>
+          <template v-if="column.dataIndex === 'action'">
+            <a-button type="link" v-if="record.status == 0" v-auth="['Btn_Delete_Account']" @click="removeAccount(record._id)">删除</a-button>
+            <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">启用</a-button>
+            <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">禁用</a-button>
+            <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setRole(record)">定义角色</a-button>
+            <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="resultPass(record._id)">重置密码</a-button>
+          </template>
+        </template>
+      </a-table>
     </a-col>
     <!-- 新增账户 -->
     <add-edit-account ref="account" @refresh="getList"></add-edit-account>

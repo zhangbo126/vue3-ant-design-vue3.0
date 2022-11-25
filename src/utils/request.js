@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { message } from 'ant-design-vue'
 import VueCookies from 'vue-cookies'
-import store from '@/store/'
+import store from '@/store'
 const request = axios.create({
     baseURL: process.env.VUE_APP_API_BASE_URL,
     timeout: 6000,
@@ -11,10 +11,8 @@ const request = axios.create({
 
 
 
-
 //请求错误处理
 const errorHandler = (error) => {
-
     return message.error(error.message)
 
 }

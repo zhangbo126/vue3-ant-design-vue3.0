@@ -9,7 +9,7 @@
         <img src="https://store.antdv.com/pro/preview/img/logo.59818776.png" />
         <span>一韵茶叶管理系统</span>
       </div>
-      <s-menu></s-menu>
+      <z-menu></z-menu>
     </a-layout-sider>
     <div class="sider-hidden" :style="{width:!collapsed?'200px':'80px'}"></div>
     <a-layout class="layout-content">
@@ -23,8 +23,8 @@
         </div>
       </a-layout-header>
       <a-layout-content>
-        <s-tab></s-tab>
-        <div class="app-content" >
+        <z-tab></z-tab>
+        <div class="app-content">
           <router-view></router-view>
         </div>
       </a-layout-content>
@@ -33,8 +33,8 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import SMenu from "@/components/Menu/Menu";
-import STab from "@/components/MultiTab/MultiTab";
+import ZMenu from "@/components/Menu/Menu";
+import ZTab from "@/components/MultiTab/MultiTab";
 import UserMenus from "@/components/UserMenus/UserMenus.vue";
 const collapsed = ref(false);
 </script>
@@ -97,14 +97,14 @@ const collapsed = ref(false);
   }
 }
 
-.a-layout-content{
-   background-color: #fff;
- 
+.a-layout-content {
+  background-color: #fff;
 }
-.app-content{
+.app-content {
   background-color: #fff;
   height: calc(100vh - 100px);
   overflow: scroll;
+  padding-left: 10px;
 }
 .site-layout .site-layout-background {
   background: #fff;

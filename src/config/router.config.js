@@ -45,7 +45,7 @@ export const routerMap = [
 /*隐藏路由菜单*/
 export const hideRouter = [
     {
-        path: '/home',
+        path: '/hide',
         component: RouteView,
         children: [
             {
