@@ -6,13 +6,15 @@ import { getUserInfo, login } from '@/api/login'
 const logins = {
     state: {
         userInfo: {},
-        btnAuthList:[],//按钮权限列表
+        btnAuthList: [],//按钮权限列表
     },
     mutations: {
+        //设置当前用户信息
         SET_USER_INFO: (state, result) => {
             state.userInfo = result.userInfo
         },
-        SET_USER_BTN:(state, btnAuthList) => {
+        //设置当前账号权限按钮
+        SET_USER_BTN: (state, btnAuthList) => {
             state.btnAuthList = btnAuthList
         },
     },
@@ -31,19 +33,16 @@ const logins = {
                 })
             })
         },
-        GetUserInfo({ commit }) {
+        GetUserInfo({ commit, dispatch }) {
             return new Promise((reslove, reject) => {
                 getUserInfo().then(res => {
-                    if (res.code == 1) {
-                        commit('SET_USER_INFO', res.data)
-                        commit('SET_USER_BTN', res.data.btnAuthList)
-                        reslove(res)
+                    if(!res.data){
+                       return  dispatch('Logout')
                     }
-                    if (res.code == -1) {
-                        reject(-1)
-                    }
-                }).catch(() => {
-                    reject()
+                    commit('SET_USER_INFO', res.data)
+                    commit('SET_USER_BTN', res.data.btnAuthList)                    
+                    reslove(res)
+                }).catch((err) => {
                 })
             })
         },
