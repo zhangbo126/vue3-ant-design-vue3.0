@@ -11,9 +11,10 @@
 
 
 5.界面
-![输入图片说明](public/image_1.png)
-![输入图片说明](public/image_2.png)
-![输入图片说明](public/image_3.png)
-![输入图片说明](public/image_4.png)
-6.商品预览端
-![输入图片说明](public/wx.png)
+![输入图片说明](public/image/image_1.png)
+![输入图片说明](public/image/image_2.png)
+![输入图片说明](public/image/image_3.png)
+![输入图片说明](public/image/image_4.png)
+6.小程序端预览端
+![输入图片说明](public/image/wx.png)
+![输入图片说明](public/image/wx_2.png)
