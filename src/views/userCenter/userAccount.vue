@@ -29,7 +29,7 @@
           </template>
           <template v-if="column.dataIndex === 'action'">
             <a-button type="link" v-if="record.status == 0" v-auth="['Btn_Delete_Account']" @click="removeAccount(record._id)">删除</a-button>
-            <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">启用</a-button>
+            <a-button type="link" v-if="record.status == 0" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">启用</a-button>
             <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setAccountStatus(record._id)">禁用</a-button>
             <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="setRole(record)">定义角色</a-button>
             <a-button type="link" v-if="record.status == 1" v-auth="['Btn_Edit_Account']" @click="resultPass(record._id)">重置密码</a-button>
@@ -175,7 +175,7 @@ const resultPass = id => {
     okText: "确认",
     cancelText: "取消",
     onOk() {
-      resultPassWord(id).then(res => {
+      resultPassWord({id}).then(res => {
         if (res.code == 1) {
           message.success("操作成功");
           getList();

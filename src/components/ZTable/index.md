@@ -11,7 +11,14 @@
 
 <!-- 使用方式 -->
 ```html
-  <z-table  :scroll="{ x: 1000 }" :row-selection="rowSelection" :dataSource="dataSource" :columns="columns" v-model:pageNumber="pageInfo.pageNumber" v-model:pageSize="pageInfo.pageSize" @onPagination="onPagination">
+  <z-table  
+	:scroll="{ x: 1000 }" 
+	:row-selection="rowSelection" 
+	:dataSource="dataSource"
+	:columns="columns" 
+	v-model:pageNumber="pageInfo.pageNumber" 
+	v-model:pageSize="pageInfo.pageSize" 
+	@onPagination="onPagination">
       <template #headerCell="{column}">
         <div v-if="column.dataIndex=='name'">zhang</div>
       </template>
@@ -20,7 +27,7 @@
           <a-button>操作</a-button>
         </div>
       </template>
-    </z-table>
+</z-table>
 ```
 
 ## API

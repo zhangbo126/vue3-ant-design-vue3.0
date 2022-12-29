@@ -134,6 +134,7 @@ const submitHandle = () => {
 // 新增打开弹框
 const showAddModal = async () => {
   pageData.type = 1;
+  pageData.visible=true
 };
 //编辑打开弹框
 const showEditModal = obj => {
