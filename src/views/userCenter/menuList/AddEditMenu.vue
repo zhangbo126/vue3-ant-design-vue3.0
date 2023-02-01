@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model:visible="pageData.visible" :width="690" :destroyOnClose="true" ok-text="确认" cancel-text="取消" :title="pageData.type == 1 ? '新增菜单' : '编辑菜单'" @ok="submitHandle" @cancel="onCancelModal">
+  <a-modal  v-model:visible="pageData.visible" :width="690" :destroyOnClose="true" ok-text="确认" cancel-text="取消" :title="pageData.type == 1 ? '新增菜单' : '编辑菜单'" @ok="submitHandle" @cancel="onCancelModal">
     <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
       <a-form-item ref="name" label="菜单名称" name="name">
         <a-input size="small" placeholder="菜单名称" style="width: 220px" v-model:value.trim="form.name" />
@@ -12,7 +12,6 @@
       </a-form-item>
       <a-form-item ref="parentId" label="父级菜单" name="parentId">
         <a-select size="small" style="width: 220px" v-model:value="form.parentId" :field-names="{value:'_id',label:'name'}" :options="pageData.menuList" placeholder="父级菜单" show-search :allowClear="true" :filter-option="filterOptionPartent">
-          <!-- <a-select-option v-for="menu in menuList" :value="menu._id" :key="menu._id">{{ menu.name }}</a-select-option> -->
         </a-select>
       </a-form-item>
       <a-form-item label="路由地址" name="url" v-if="[1].includes(form.menuType)">
@@ -44,6 +43,7 @@
       </a-form-item>
     </a-form>
   </a-modal>
+
 </template>
 
 <script setup>
@@ -93,6 +93,7 @@ import { reactive, ref, toRefs } from "vue";
 import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenters";
 import { message } from "ant-design-vue";
 import { componentList, IconList } from "@/config/asyncRouter.js";
+
 const emit = defineEmits(["refresh"]);
 const form = reactive({
   name: null,
@@ -217,6 +218,7 @@ Object.assign(pageData, {
   visible: false,
   menuList: []
 });
+
 defineExpose({
   showAddModal,
   showEditModal

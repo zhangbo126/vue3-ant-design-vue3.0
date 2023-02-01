@@ -1,8 +1,11 @@
 <template>
-  <a-tabs v-if="pageInfo.multTab.length" 
+  <a-tabs
+      v-if="pageInfo.multTab.length" 
       v-model:activeKey="pageInfo.activeKey"
-      type="editable-card" hide-add
-      @edit="onClone" @change="onChangeTab">
+      type="editable-card"
+      hide-add
+      @edit="onClone"
+      @change="onChangeTab">
     <a-tab-pane v-for="tab in pageInfo.multTab" :closable="pageInfo.multTab.length != 1" :key="tab.path" :tab="tab.title"></a-tab-pane>
   </a-tabs>
 </template>

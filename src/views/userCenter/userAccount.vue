@@ -45,12 +45,7 @@
 </template>
 
 <script setup>
-import {
-  getAccountList,
-  delAccount,
-  accountStatusSet,
-  resultPassWord
-} from "@/api/UserCenters";
+import { getAccountList, delAccount,accountStatusSet, resultPassWord } from "@/api/UserCenters";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 import moment from "moment";
@@ -120,7 +115,6 @@ const pageData = reactive({
 //获取账号列表
 const getList = async () => {
   const res = await getAccountList(pageData.queryInfo);
-
   data.value = res.data;
   pageData.total = res.count;
   data.value.forEach(v => {

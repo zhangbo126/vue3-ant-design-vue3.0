@@ -1,21 +1,21 @@
 <template>
   <a-row>
     <a-col :span="24">
-        <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addMenu">新增菜单+</a-button>
-        <a-table :dataSource="data" bordered rowKey="_id" :columns="columns" :scroll="{ x: 1400 }">
-          <template #bodyCell="{ column, text,record }">
-            <template v-if="column.dataIndex === 'status'">
-              <div>{{ statusMapFilter(text) }}</div>
-            </template>
-            <template v-if="column.dataIndex === 'icon'">
-              <component :is="$antIcons[text]" />
-            </template>
-            <template v-if="column.dataIndex === 'action'">
-              <a-button type="link" @click="editMenu(record)">编辑</a-button>
-              <a-button type="link" @click="removeMenu(record._id)">删除</a-button>
-            </template>
+      <a-button type="primary" :style="{ margin: '10px 0px' }" @click="addMenu">新增菜单+</a-button>
+      <a-table :dataSource="data" bordered rowKey="_id" :columns="columns" :scroll="{ x: 1400 }">
+        <template #bodyCell="{ column, text,record }">
+          <template v-if="column.dataIndex === 'status'">
+            <div>{{ statusMapFilter(text) }}</div>
           </template>
-        </a-table>
+          <template v-if="column.dataIndex === 'icon'">
+            <component :is="$antIcons[text]" />
+          </template>
+          <template v-if="column.dataIndex === 'action'">
+            <a-button type="link" @click="editMenu(record)">编辑</a-button>
+            <a-button type="link" @click="removeMenu(record._id)">删除</a-button>
+          </template>
+        </template>
+      </a-table>
     </a-col>
     <add-edit-menu ref="menu" @refresh="getList"></add-edit-menu>
   </a-row>
