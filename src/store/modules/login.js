@@ -2,7 +2,7 @@
 import VueCookies from 'vue-cookies'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { getUserInfo, login } from '@/api/login'
-
+import { webScoketInit} from '@/utils/webScoket'; //webscoket 全局方法
 const logins = {
     state: {
         userInfo: {},
@@ -23,7 +23,6 @@ const logins = {
             return new Promise((reslove, reject) => {
                 login(userInfo).then(res => {
                     const result = res.data
-
                     if (res.code == 1) {
                         VueCookies.set(ACCESS_TOKEN, result.token, 10 * 24 * 60 * 60 * 1000)
                         reslove(res)
@@ -36,11 +35,13 @@ const logins = {
         GetUserInfo({ commit, dispatch }) {
             return new Promise((reslove, reject) => {
                 getUserInfo().then(res => {
-                    if(!res.data){
-                       return  dispatch('Logout')
+                    if (!res.data) {
+                        return dispatch('Logout')
                     }
                     commit('SET_USER_INFO', res.data)
-                    commit('SET_USER_BTN', res.data.btnAuthList)                    
+                    commit('SET_USER_BTN', res.data.btnAuthList)
+                    //scoket 初始化连接
+                    webScoketInit()
                     reslove(res)
                 }).catch((err) => {
                 })

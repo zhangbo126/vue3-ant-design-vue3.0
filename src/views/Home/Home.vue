@@ -27,6 +27,15 @@
 </template>
 
 <script setup>
+import { getCurrentInstance, onMounted } from "vue";
+
+const { $scoketEvent } = getCurrentInstance().proxy;
+onMounted(() => {
+  $scoketEvent.messageSend("1231312313");
+  $scoketEvent.messageReceived(msg => {
+    console.log(msg);
+  });
+});
 </script>
 
 <style></style>
