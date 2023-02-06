@@ -1,6 +1,6 @@
 import session from "./session";  //会话缓存全局方法
 import url from './config/routerPath' //全局静态路由
-import { messageReceived, messageSend, onError, onClose } from './webScoket'; //webscoket 全局方法
+import { messageReceived, messageSend, onClose } from './webScoket'; //webscoket 全局方法
 const globalProperties = {
 	install(Vue) {
 		Vue.config.globalProperties.$session = session
@@ -9,7 +9,7 @@ const globalProperties = {
 			messageSend,
 			messageReceived,
 			onClose,
-			onError
+			
 		}
 	}
 }
