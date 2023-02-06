@@ -100,7 +100,7 @@ scoket 心跳检测机制方法
 
 */
 let heartCheck = {
-	timeout: 5000,// 每隔30s 进行一次检测 
+	timeout: 30000,// 每隔30s 进行一次检测 
 	timeoutObj: null, // 延时发送消息对象（启动心跳新建这个对象，收到消息后重置对象）
 	reset: function () {
 		clearTimeout(this.timeoutObj);
