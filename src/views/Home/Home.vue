@@ -27,15 +27,17 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted } from "vue";
+import { getCurrentInstance, onMounted, onUnmounted } from "vue";
 
 const { $scoketEvent } = getCurrentInstance().proxy;
 onMounted(() => {
   $scoketEvent.messageSend("1231312313");
-  $scoketEvent.messageReceived(msg => {
-    console.log(msg);
-  });
 });
+
+$scoketEvent.messageListener(msg => {
+  console.log(msg);
+});
+onUnmounted(() => {});
 </script>
 
 <style></style>

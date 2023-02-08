@@ -152,10 +152,4 @@ const statusMapFilter = type => {
 };
 </script>
 <style scoped lang="less">
-.query-handle {
-  display: flex;
-  li {
-    margin-right: 8px;
-  }
-}
 </style>

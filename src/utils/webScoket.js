@@ -2,14 +2,14 @@
  * scoket 连接方法
  * @param {String} scoketUrl scoket连接url
  * @param {Boolean} isConcent scoket 连接状态
+ * @param {Function} globalCallback   scoket 回调函数 
  * @type {}
  * @return {} 
 */
 
-
-
 let scoket = null
 let isConcent = false //连接状态
+let globalCallback = (e) => { e }
 const scoketUrl = process.env.VUE_APP_WEBSCOKET_URL
 //scoket 初始化连接
 const webScoketInit = () => {
@@ -27,10 +27,7 @@ const webScoketInit = () => {
 					heartCheck.start()
 					reslove()
 				}
-				scoket.onmessage = (msg) => {
-					//收到服务端消息 重置心跳
-					heartCheck.reset()
-				}
+				scoket.onmessage = onMessage
 				//监听socket错误信息
 				scoket.onerror = onError
 				//关闭scoket 连接
@@ -44,7 +41,60 @@ const webScoketInit = () => {
 
 
 
-//发送消息
+
+
+
+//scoket 消息监听
+function onMessage(msg) {
+	//收到服务端心跳检测返回消息 重置心跳
+	if (msg.data == 'HeartBeat') {
+		console.log('收到服务端心跳检测')
+		heartCheck.reset()
+	} else {
+		//如果不是心跳检测回应则触发消息回调
+		globalCallback(msg.data)
+	}
+}
+
+//监听socket错误信息
+function onError(err) {
+	isConcent = false
+	console.log('err', err)
+}
+
+
+//监听socket关闭
+function onClose(err) {
+	isConcent = false
+	//关闭scoket
+	scoket.close()
+	console.log('执行重连')
+	//重新连接
+	webScoketInit()
+}
+
+
+
+
+/** 
+ * 消息监听方法
+ * @param {Function} callback  回调函数
+ * @return {} 
+*/
+
+function messageListener(callback) {
+	if (typeof callback == 'function') {
+		globalCallback = callback
+	}
+}
+
+
+
+/** 
+ *  向服务端发送消息的方法
+ * @param {String} message 发送的内容（必须是字符串）
+ * @return {} 
+*/
 function messageSend(message) {
 	const { readyState, OPEN, CLOSED, CLOSING, CONNECTING } = scoket
 	switch (readyState) {
@@ -66,38 +116,14 @@ function messageSend(message) {
 	}
 }
 
-//接收服务端消息
-function messageReceived(callback) {
-	scoket.addEventListener('message', (msg) => {
-		const data = msg.data
-		callback(data)
-	})
-}
-
-//监听socket错误信息
-function onError(err) {
-	isConcent=false
-	//重新连接
-	console.log('err',err)
-}
 
 
-//监听socket关闭
-function onClose(err) {
-	isConcent=false
-	//关闭scoket
-	scoket.close()
-    console.log('执行重连')
-	//重新连接
-	webScoketInit()
-}
 
 
 /*
-scoket 心跳检测机制方法
-每间隔 30s 向服务端发起一个询问 HeartBeat 如果服务端返回消息则重置心跳
-如果scoket 抛错则需要进行scoket重连
-
+  scoket 心跳检测机制方法
+  每间隔 30s 向服务端发起一个询问 HeartBeat 如果服务端返回消息表示连接正常则重置心跳
+  如果scoket 抛错则需要进行scoket重连
 */
 let heartCheck = {
 	timeout: 30000,// 每隔30s 进行一次检测 
@@ -108,7 +134,7 @@ let heartCheck = {
 	},
 	start: function () {
 		this.timeoutObj = setTimeout(function () {
-			console.log('开始心跳检测')
+			console.log('发送心跳检测')
 			//如果连接开启则发送心跳
 			if (isConcent) {
 				scoket.send("HeartBeat");
@@ -124,7 +150,5 @@ let heartCheck = {
 export {
 	webScoketInit,
 	messageSend,
-	messageReceived,
-	onClose,
-	scoket
+	messageListener,
 }
