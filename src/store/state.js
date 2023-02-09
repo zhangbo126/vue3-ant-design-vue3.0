@@ -1,6 +1,5 @@
 const state = {
-    name: 'ZHANG_66',
-
+    auth: 'ZHANG_66',
 }
 
 export default state

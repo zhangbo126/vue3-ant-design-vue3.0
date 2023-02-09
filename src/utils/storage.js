@@ -30,6 +30,7 @@ const session = {
 		sessionStorage.clear()
 	}
 }
+
 const local = {
 	set: (key, value) => {
 		if (!key || !value) { return null }
