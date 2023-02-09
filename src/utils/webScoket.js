@@ -1,5 +1,5 @@
 /** 
- * scoket 连接方法
+ * @description scoket 连接方法
  * @param {String} scoketUrl scoket连接url
  * @param {Boolean} isConcent scoket 连接状态
  * @param {Function} globalCallback   scoket 回调函数 
@@ -77,7 +77,7 @@ function onClose(err) {
 
 
 /** 
- * 消息监听方法
+ * @description 消息监听方法
  * @param {Function} callback  回调函数
  * @return {} 
 */
@@ -91,7 +91,7 @@ function messageListener(callback) {
 
 
 /** 
- *  向服务端发送消息的方法
+ *  @description 向服务端发送消息的方法
  * @param {String} message 发送的内容（必须是字符串）
  * @return {} 
 */
@@ -120,9 +120,9 @@ function messageSend(message) {
 
 
 
-/*
-  scoket 心跳检测机制方法
-  每间隔 30s 向服务端发起一个询问 HeartBeat 如果服务端返回消息表示连接正常则重置心跳
+/** 
+   @description 每间隔 scoket 心跳检测机制方法 30s 向服务端发起一个询问
+   HeartBeat 如果服务端返回消息表示连接正常则重置心跳
   如果scoket 抛错则需要进行scoket重连
 */
 let heartCheck = {

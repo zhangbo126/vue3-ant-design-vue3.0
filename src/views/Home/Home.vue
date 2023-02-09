@@ -28,16 +28,22 @@
 
 <script setup>
 import { getCurrentInstance, onMounted, onUnmounted } from "vue";
+import{getLocationParams,deepCopy} from '@/utils/utilityFunction'
 
 const { $scoketEvent } = getCurrentInstance().proxy;
+
+
 onMounted(() => {
   $scoketEvent.messageSend("1231312313");
+
 });
 
 $scoketEvent.messageListener(msg => {
   console.log(msg);
 });
-onUnmounted(() => {});
+onUnmounted(() => {
+   
+});
 </script>
 
 <style></style>
