@@ -1,18 +1,12 @@
 <template>
-  <a-tabs
-      v-if="pageInfo.multTab.length" 
-      v-model:activeKey="pageInfo.activeKey"
-      type="editable-card"
-      hide-add
-      @edit="onClone"
-      @change="onChangeTab">
+  <a-tabs v-if="pageInfo.multTab.length" v-model:activeKey="pageInfo.activeKey" type="editable-card" hide-add @edit="onClone" @change="onChangeTab">
     <a-tab-pane v-for="tab in pageInfo.multTab" :closable="pageInfo.multTab.length != 1" :key="tab.path" :tab="tab.title"></a-tab-pane>
   </a-tabs>
 </template>
 
 <script setup>
 import { watch, ref, reactive } from "vue";
-import { useRoute,useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 const pageInfo = reactive({
   activeKey: null,
   multTab: [],
@@ -41,14 +35,18 @@ const onChangeTab = () => {
 //监听路由变化
 watch(route, (n, o) => {
   pageInfo.activeKey = n.path;
+  const {
+    path,
+    meta: { title, hideTabs }
+  } = n;
+
   //判断是否有重复的路由
   if (!pageInfo.fullPath.includes(n.path)) {
-    const tab = {
-      title: n.meta.title,
-      path: n.path
-    };
+    const tab = { title,path };
     pageInfo.fullPath.push(n.path);
-    pageInfo.multTab.push(tab);
+    if (!hideTabs) {
+       pageInfo.multTab.push(tab);
+    }
   }
 });
 </script>
@@ -60,7 +58,7 @@ watch(route, (n, o) => {
 :deep(.ant-tabs-card) {
   background-color: #fff;
 }
-:deep(.ant-tabs-nav){
-   margin: 0 !important;
+:deep(.ant-tabs-nav) {
+  margin: 0 !important;
 }
 </style>
