@@ -144,7 +144,7 @@ function deepCopy(source) {
   * @return {String} url 
 */
 
-function getAssetsImage(imageName) {
+function drawAssetsImage(imageName) {
 	const fromat = ['gif', 'jpeg', 'png','jpg']
 	let regxName = imageName.substring(imageName.lastIndexOf('.')+1)
 	if (fromat.includes(regxName)) {
@@ -163,5 +163,5 @@ export {
 	formatDuringTime,
 	getLocationParams,
 	deepCopy,
-	getAssetsImage,
+	drawAssetsImage,
 }
