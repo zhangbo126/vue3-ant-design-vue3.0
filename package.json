@@ -10,6 +10,7 @@
     "ant-design-vue": "^3.2.13",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "default-passive-events": "^2.0.0",
     "echarts": "^5.4.0",
     "echarts-gl": "^2.0.9",
     "mockjs2": "1.0.8",
