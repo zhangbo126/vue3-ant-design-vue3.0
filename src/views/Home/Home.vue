@@ -22,28 +22,47 @@
           <a href="https://gitee.com/ZHANG_6666/uni-app" target="_brank">https://gitee.com/ZHANG_6666/uni-app</a>
         </div>
       </div>
+      <div id="echarts"></div>
     </template>
   </a-result>
 </template>
 
 <script setup>
-import { getCurrentInstance, onMounted, onUnmounted } from "vue";
-import{getLocationParams,deepCopy} from '@/utils/utilityFunction'
+import { getCurrentInstance, onMounted, onUnmounted ,ref} from "vue";
+import { getLocationParams, deepCopy } from "@/utils/utilityFunction";
+import {GEO_3D_OPTIONS} from '@/config/echartsConfig.js'
+import * as echarts from "echarts";
+import "echarts-gl";
 
 const { $scoketEvent } = getCurrentInstance().proxy;
-
-
+const myChart =ref()
 onMounted(() => {
-  $scoketEvent.messageSend("1231312313");
-
+  echartsInit()
 });
 
-$scoketEvent.messageListener(msg => {
-  console.log(msg);
-});
+const echartsInit = () => {
+   myChart.value = echarts.init(document.getElementById("echarts"));
+   myChart.value.setOption(GEO_3D_OPTIONS);
+   window.addEventListener('resize',myChart.value.resize)
+};
+
+// onMounted(() => {
+//   $scoketEvent.messageSend("1231312313");
+// });
+
+// $scoketEvent.messageListener(msg => {
+//    console.log(msg);
+// });
+
+//清除监听
 onUnmounted(() => {
-   
+    window.removeEventListener('resize',myChart.value.resize)
 });
 </script>
 
-<style></style>
+<style scoped>
+#echarts {
+  width: 100%;
+  height: 500px;
+}
+</style>

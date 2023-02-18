@@ -138,6 +138,24 @@ function deepCopy(source) {
 
 
 
+/** 
+   @description 获取本地 assets>image下图片方法
+  * @param {String} imageName  图片名称 ！带格式
+  * @return {String} url 
+*/
+
+function getAssetsImage(imageName) {
+	const fromat = ['gif', 'jpeg', 'png','jpg']
+	let regxName = imageName.substring(imageName.lastIndexOf('.')+1)
+	if (fromat.includes(regxName)) {
+		return require(`@/assets/image/${imageName}`)
+	} else {
+		throw '图片传入格式不正确请检测'
+	}
+
+}
+
+
 export {
 	onlyKey,
 	arrayDuplicateRemoval,
@@ -145,4 +163,5 @@ export {
 	formatDuringTime,
 	getLocationParams,
 	deepCopy,
+	getAssetsImage,
 }

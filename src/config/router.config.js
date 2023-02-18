@@ -7,7 +7,7 @@ import { BasicLayouts, LoginView, RouteView, BlankLayout } from '@/layouts'
  *   @param {String} title 路由标题, 用于显示面包屑, 页面标题 *推荐设置
  *   @param {String}  icon 路由在 menu 上显示的图标
  *   @param {Boolean}  keepAlive   该路由是否被缓存  默认 false 
- *   @param {Boolean}  hideTabs    该路由是否展示在 tabs 组件上  默认 false 
+ *   @param {Boolean}  hideTabs    该路由是否在 tabs组件上被隐藏  默认 false 
  *    
  */
 

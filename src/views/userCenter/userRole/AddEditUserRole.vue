@@ -8,7 +8,7 @@
         <a-textarea v-model:value.trim="form.describe" />
       </a-form-item>
       <a-form-item label="角色权限">
-        <a-tree ref="treeRef" checkable v-if="pageData.menuList.length" v-model:checkedKeys="form.roleMenu_List" defaultExpandAll :tree-data="pageData.menuList" :field-names="{title:'name',key:'_id'}">
+        <a-tree ref="treeRef" checkable v-if="pageData.menuList.length"  v-model:checkedKeys="form.roleMenu_List" defaultExpandAll :tree-data="pageData.menuList" :field-names="{title:'name',key:'_id'}">
           <template #title="{ name }">
             <span>{{ name }}</span>
           </template>
@@ -36,13 +36,8 @@ const rules = {
     }
   ]
 };
-import { reactive, ref, toRefs } from "vue";
-import {
-  getAddMenuList,
-  addRole,
-  getEditMenuList,
-  eidtRole
-} from "@/api/UserCenters";
+import { reactive, ref } from "vue";
+import { getAddMenuList, addRole, getEditMenuList,  eidtRole } from "@/api/UserCenters";
 import { message } from "ant-design-vue";
 const emit = defineEmits(["refresh"]);
 const form = reactive({
@@ -57,7 +52,6 @@ const pageData = reactive({
   visible: false,
   menuList: []
 });
-
 const submitHandle = () => {
   formRef.value.validate().then(() => {
     //新增提交
@@ -118,6 +112,5 @@ defineExpose({
   showAddModal
 });
 </script>
-
 <style lang="less" scoped>
 </style>
