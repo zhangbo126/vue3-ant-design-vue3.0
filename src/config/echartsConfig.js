@@ -21,7 +21,7 @@ export const GEO_3D_OPTIONS = {
 		// }, {
 		// 	offset: 1, color: '#998866' // 地面颜色
 		// }], false),
-		environment: drawAssetsImage('earth_geo_2.jpg'),
+		// environment: drawAssetsImage('earth_geo_2.jpg'),
 		// environment: [ { itemStyle: { normal: { color: '#fff', shadowBlur: 2, shadowColor: '#fff', opacity: 0.5 } } }, { type: 'image', repeat: 'no-repeat', url: 'https://www.your-url.com/image.jpg', width: 100, height: 100, left: 0, top: 0, z: -2 }, { type: 'lines3D', silent: true, effect: { show: true, trailWidth: 10, trailLength: 0.2, trailOpacity: 1, trailColor: '#fff' } } ],
 		// colorMaterial: {
 		// 	textureTiling: 5, //质细节纹理的平铺。默认为1，也就是拉伸填满。大于 1 的时候，数字表示纹理平铺重复的次数。
