@@ -1,16 +1,23 @@
 
 
-/** 
- * @function clear   @description 清除所有存储 sessionStorage | localStorage
- * 
- * @function set     @description 设置存储 sessionStorage | localStorage  
-                     @param {Object | Array | String | Number} value value  @param {String} key  key  @return {obj}
+/**
+ * @function clear
+   @description 清除所有存储 sessionStorage | localStorage
  *
- * @function get     @description 获取存储 sessionStorage | localStorage  @param {String} key  key
-
- * @function remove  @description 清除存储 sessionStorage | localStorage  @param {String} key  key
+ * @function set
+   @description 设置存储 sessionStorage | localStorage
+   @param {Object | Array | String | Number} value value
+   @param {String} key
+   @return {Object | Array | String | Number}
+ *
+ *  @function get
+ *  @description 获取存储 sessionStorage | localStorage
+ *  @param {String} key
+ *
+ * @function remove
+   @description 清除存储 sessionStorage | localStorage
+   @param {String} key
 */
-
 
 const session = {
 	set: (key, value) => {
