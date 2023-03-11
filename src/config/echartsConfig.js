@@ -13,55 +13,58 @@ export const GEO_3D_OPTIONS = {
 		globeRadius: 60,
 		globeOuterRadius: 100,
 		shading: 'color',
-		// 配置为垂直渐变的背景
-		// environment: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-		// 	offset: 0, color: '#00aaff' // 天空颜色
-		// }, {
-		// 	offset: 0.7, color: '#998866' // 地面颜色
-		// }, {
-		// 	offset: 1, color: '#998866' // 地面颜色
-		// }], false),
-		// environment: drawAssetsImage('earth_geo_2.jpg'),
-		// environment: [ { itemStyle: { normal: { color: '#fff', shadowBlur: 2, shadowColor: '#fff', opacity: 0.5 } } }, { type: 'image', repeat: 'no-repeat', url: 'https://www.your-url.com/image.jpg', width: 100, height: 100, left: 0, top: 0, z: -2 }, { type: 'lines3D', silent: true, effect: { show: true, trailWidth: 10, trailLength: 0.2, trailOpacity: 1, trailColor: '#fff' } } ],
-		// colorMaterial: {
-		// 	textureTiling: 5, //质细节纹理的平铺。默认为1，也就是拉伸填满。大于 1 的时候，数字表示纹理平铺重复的次数。
-		// },
-		light: {
-			ambient: {
-				intensity: 0.2,
-				color: '#fff',
-
-			},
-			main: {
-				intensity: 1.5,
-				color: '#fff',
-			},
-		},
-		//用于地球外部大气层相关设置。
-		atmosphere: {
-			show: true, //是否显示
-			offset: 3, //外部大气层相对于默认位置的偏移
-			color: '#fff',//外部大气层的颜色。
-			glowPower: 20,//外部大气层发光功率
-			innerGlowPower: 210,//外部大气层内发光功率
-		},
 		viewControl: {
-			distance: 140 // 默认视角距离地球表面距离
+			zoomSensitivity: false,
+			      autoRotateDirection: 'ccw',
+			      autoRotateSpeed: 6,
+			      rotateSensitivity: 1.2,
+			      panSensitivity: 1.2,
+			      alpha: 40,
+			      beta: 60,
+			      animation: true,
+			      minAlpha: -19000,
+			      maxAlpha: 19000,
+			      damping: 0,
+			      autoRotateAfterStill: 0.1,
+			      targetCoord: [114, 46],
+			      autoRotate: true
 		},
-		layers: [
-			{
-				type: 'blend',
-				blendTo: 'emission',
-				texture: drawAssetsImage('earth_geo_4.jpg')
-			},
-			{
-				type: 'overlay',
-				texture: drawAssetsImage('earth_geo_4.png'),
-				shading: 'color',
-				distance: 5
-			}
-		],
+	
 	},
+	series: [
+		    {
+		      type: 'lines3D',
+		      effect: {
+		        constantSpeed: 14,
+		        show: true,
+		        trailWidth: 2,
+		        trailColor: '#0052d9',
+		        trailOpacity: 0.8,
+		        period: 4, // 尾迹特性周期
+		        trailLength: 0.05 // 尾迹0~1，线条长度的百分比
+		      },
+		      lineStyle: {
+		        color: '#0052d98a',
+		        width: 0.4,
+		        opacity: 0.5
+		      },
+		      data: [
+		        [[114.175193, 41.275706], [120.4574, -1.743046]],
+		        [[126.964746, 37.58644], [139.767187, 35.715616]],
+		        [[-118.24762, 34.058993], [139.767187, 35.715616]],
+		        [[114.175193, 41.275706], [100.454152, 13.731434]],
+		        [[114.175193, 22.275706], [2.332962, 48.864677]],
+		        [[101.684555, 3.15663], [114.175193, 22.275706]],
+		        [[78.64768, 21.75974], [102.71153, 31.90678]],
+		        [[39.48235, 29.84961], [114.767187, 38.74912]],
+		        [[126.964746, 37.58644], [120.4574, -1.743046]],
+		        [[7.13894, 50.11034], [24.80034, -27.57313]],
+		        [[99.79829, 17.13197], [198.47369, 69.55674]]
+		        // [[151.210446, -33.875774], [2.332962, 48.864677]]
+		      ]
+		    }
+		
+		  ]
 	// series: [
 	// 	{
 	// 		type: "lines3D",
