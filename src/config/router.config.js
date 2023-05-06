@@ -62,7 +62,7 @@ export const hideRouter = [
                 path: '/commoditycenter/commoditylibrary/setgoodsdetail',
                 component: () => import('@/views/commodityCenter/commodityLibrary/setGoodsDetail'),
                 name: 'setGoodsDetail',
-                meta: { title: '设置商品详情',hideTabs:true }
+                meta: { title: '设置商品详情', hideTabs: true }
             },
         ]
     },
