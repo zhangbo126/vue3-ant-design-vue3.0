@@ -1,26 +1,10 @@
 // eslint-disable-next-line
-import {  RouteView } from '@/layouts'
+import { RouteView } from '@/layouts'
 import { hideRouter } from '@/config/router.config.js'
-// 前端路由表
-const constantRouterComponents = {
-    // 基础页面 layout 必须引入
-    RouteView: RouteView,
-    // 你需要动态引入的页面组件
-    'userRole': () => import('@/views/userCenter/userRole'),
-    'userAccount': () => import('@/views/userCenter/userAccount'),
-    'menuList': () => import('@/views/userCenter/menuList'),
-    'commodityBrand': () => import('@/views/commodityCenter/commodityBrand'),
-    'commodityClass': () => import('@/views/commodityCenter/commodityClass'),
-    'commodityLibrary': () => import('@/views/commodityCenter/commodityLibrary'),
-    'informationList': () => import('@/views/informationCenter/informationList'),
-    'Home': () => import('@/views/Home/Home'),
-}
-
-
 // 根级菜单
 const rootRouter = {
     name: 'BasicLayouts',
-    component: ()=>import('@/layouts/BasicLayouts'),
+    component: () => import('@/layouts/BasicLayouts'),
     redirect: '/home/page'
 }
 
@@ -49,13 +33,14 @@ export const renderAsyncRouter = (menuList) => {
 export const generator = (routerMap, parent) => {
     return routerMap.map(item => {
         const { url, name, partentName, component, title, icon } = item
+        const pageView = component == null || component == 'RouteView' ? RouteView : () => import(`@/views${component}`)
         const currentRouter = {
             // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
             path: url,
             // 路由名称，建议唯一
             name,
             // 该路由对应页面的 组件 :方案1
-            component: constantRouterComponents[component],
+            component: pageView,
             // 该路由对应页面的 组件 :方案2 (动态加载)
             // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
             meta: {

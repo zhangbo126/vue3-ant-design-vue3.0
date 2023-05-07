@@ -35,11 +35,7 @@ const onChangeTab = () => {
 //监听路由变化
 watch(route, (n, o) => {
   pageInfo.activeKey = n.path;
-  const {
-    path,
-    meta: { title, hideTabs }
-  } = n;
-
+  const {path,meta: { title, hideTabs }} = n;
   //判断是否有重复的路由
   if (!pageInfo.fullPath.includes(n.path)) {
     const tab = { title,path };

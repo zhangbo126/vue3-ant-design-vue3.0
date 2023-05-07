@@ -5,7 +5,7 @@
  * @return {String} 唯一标识符字符串
 */
 
-function onlyKey(len, radix) {
+export function onlyKey(len, radix) {
 	var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 	var uuid = [], i;
 	radix = radix || chars.length;
@@ -34,7 +34,7 @@ function onlyKey(len, radix) {
  * @return {Array} 去重后的数组
 */
 
-function arrayDuplicateRemoval(arr, key) {
+export function arrayDuplicateRemoval(arr, key) {
 	let map = new Map();
 	for (let item of arr) {
 		if (!map.has(item[key])) {
@@ -54,7 +54,7 @@ function arrayDuplicateRemoval(arr, key) {
  * @return {String}  处理后的金额
 */
 
-function formatMoney(money, moneyNum) {
+export function formatMoney(money, moneyNum) {
 	if (/[^0-9\.]/.test(money)) return "0";
 	if (money == null || money == "") return "0";
 	money = money.toString().replace(/^(\d*)$/, "$1.");
@@ -81,7 +81,7 @@ function formatMoney(money, moneyNum) {
  * @return {String}  处理后的时间格式
 */
 
-function formatDuringTime(millisecond) {
+export function formatDuringTime(millisecond) {
 	let time = millisecond / 1000;
 	let day = Math.floor(time / 60 / 60 / 24);
 	let hour = Math.floor(time / 60 / 60) % 24;
@@ -103,7 +103,7 @@ function formatDuringTime(millisecond) {
  * @return {Array | Object}  获取到的参数 按key和value对象的格式返回
 */
 
-function getLocationParams(url) {
+export function getLocationParams(url) {
 	const paramsUrl = url.split('?')[1]
 	const params = new URLSearchParams(paramsUrl);
 	const entries = params.entries();
@@ -118,7 +118,7 @@ function getLocationParams(url) {
   * @return {Array | Object}  拷贝后的新值
 */
 
-function deepCopy(source) {
+export function deepCopy(source) {
 	if (typeof source !== 'object' || source == null) {
 		return source;
 	}
@@ -144,9 +144,9 @@ function deepCopy(source) {
   * @return {String} url 
 */
 
-function drawAssetsImage(imageName) {
-	const fromat = ['gif', 'jpeg', 'png','jpg']
-	let regxName = imageName.substring(imageName.lastIndexOf('.')+1)
+export function drawAssetsImage(imageName) {
+	const fromat = ['gif', 'jpeg', 'png', 'jpg']
+	let regxName = imageName.substring(imageName.lastIndexOf('.') + 1)
 	if (fromat.includes(regxName)) {
 		return require(`@/assets/image/${imageName}`)
 	} else {
@@ -156,12 +156,28 @@ function drawAssetsImage(imageName) {
 }
 
 
-export {
-	onlyKey,
-	arrayDuplicateRemoval,
-	formatMoney,
-	formatDuringTime,
-	getLocationParams,
-	deepCopy,
-	drawAssetsImage,
+/** 
+   @description 设置浏览器标签title
+  * @param {String} title  名称
+*/
+
+export function setDocumentTitle(title) {
+	document.title = title
+	const ua = navigator.userAgent
+	// eslint-disable-next-line
+	const regex = /\bMicroMessenger\/([\d\.]+)/
+	if (regex.test(ua) && /ip(hone|od|ad)/i.test(ua)) {
+		const i = document.createElement('iframe')
+		i.src = '/favicon.ico'
+		i.style.display = 'none'
+		i.onload = () => {
+			setTimeout(() => {
+				i.remove()
+			}, 9)
+		}
+		document.body.appendChild(i)
+	}
 }
+
+
+

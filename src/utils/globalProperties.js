@@ -1,5 +1,5 @@
 import {session,local} from './storage'  //会话和本地缓存全局方法
-import url from './config/routerPath' //全局静态路由
+import url from '@/config/routerPath' //全局静态路由
 import { messageListener, messageSend } from './webScoket'; //webscoket 全局方法
 import { drawAssetsImage } from '@/utils/utilityFunction.js' //获取本地图片方法
 const globalProperties = {

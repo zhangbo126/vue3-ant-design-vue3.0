@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN } from '@/config/constant'
 import { message } from 'ant-design-vue'
 import VueCookies from 'vue-cookies'
 import store from '@/store'

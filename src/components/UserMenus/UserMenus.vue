@@ -7,11 +7,11 @@
       </span>
       <template #overlay>
         <a-menu>
-          <a-menu-item @click="handleLogout">
-            <span>退出登录</span>
-          </a-menu-item>
           <a-menu-item @click="handlePass">
             <span>密码修改</span>
+          </a-menu-item>
+          <a-menu-item @click="handleLogout">
+            <span>退出登录</span>
           </a-menu-item>
         </a-menu>
       </template>
@@ -46,7 +46,7 @@ const handlePass = () => {
 };
 </script>
   
- <style lang="less" scoped>
+<style lang="less" scoped>
 .user-dropdown {
   cursor: pointer;
   padding: 0px 20px;

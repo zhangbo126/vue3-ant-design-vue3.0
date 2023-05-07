@@ -97,7 +97,7 @@ const data = ref([]);
 const menu = ref(null);
 const pageData = reactive({
   queryInfo: {
-    pageSize: 20,
+    pageSize: 10000,
     pageNumber: 1
   }
 });

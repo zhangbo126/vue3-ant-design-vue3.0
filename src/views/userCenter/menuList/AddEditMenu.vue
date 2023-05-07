@@ -1,6 +1,7 @@
 <template>
-  <a-modal  v-model:visible="pageData.visible" :width="690" :destroyOnClose="true" ok-text="确认" cancel-text="取消" :title="pageData.type == 1 ? '新增菜单' : '编辑菜单'" @ok="submitHandle" @cancel="onCancelModal">
-    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 7 }" :wrapper-col="{ span: 14 }">
+  <a-modal v-model:visible="pageData.visible" :width="690" :destroyOnClose="true" ok-text="确认" cancel-text="取消"
+    :title="pageData.type == 1 ? '新增菜单' : '编辑菜单'" @ok="submitHandle" @cancel="onCancelModal">
+    <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
       <a-form-item ref="name" label="菜单名称" name="name">
         <a-input size="small" placeholder="菜单名称" style="width: 220px" v-model:value.trim="form.name" />
       </a-form-item>
@@ -11,7 +12,9 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item ref="parentId" label="父级菜单" name="parentId">
-        <a-select size="small" style="width: 220px" v-model:value="form.parentId" :field-names="{value:'_id',label:'name'}" :options="pageData.menuList" placeholder="父级菜单" show-search :allowClear="true" :filter-option="filterOptionPartent">
+        <a-select size="small" style="width: 220px" v-model:value="form.parentId"
+          :field-names="{ value: '_id', label: 'name' }" :options="pageData.menuList" placeholder="父级菜单" show-search
+          :allowClear="true" :filter-option="filterOptionPartent">
         </a-select>
       </a-form-item>
       <a-form-item label="路由地址" name="url" v-if="[1].includes(form.menuType)">
@@ -26,13 +29,13 @@
       <a-form-item label="唯一标识" name="key">
         <a-input placeholder="唯一标识" style="width: 220px" v-model:value.trim="form.key" />( 建议英文+下滑线组合)
       </a-form-item>
-      <a-form-item label="使用组件" name="component" v-if="[1].includes(form.menuType)">
-        <a-select placeholder="使用组件" style="width: 220px" v-model:value="form.component" show-search :filter-option="filterOption">
-          <a-select-option v-for="com in componentList" :value="com.component" :key="com.component">{{ com.component }}({{ com.name }})</a-select-option>
-        </a-select>
+      <a-form-item label="组件路径" name="component" v-if="[1].includes(form.menuType)">
+        <a-input placeholder="组件路径" style="width: 220px" v-model:value.trim="form.component" />
+        <div :style="{ color: 'red' }">注:(“views”文件夹下面的.vue文件),父级菜单固定输入('RouteView')</div>
       </a-form-item>
-      <a-form-item label="图标" v-if="form.menuType!=2">
-        <a-select placeholder="图标" style="width: 220px" v-model:value="form.icon" show-search :filter-option="filterOption" :allowClear="true">
+      <a-form-item label="图标" v-if="form.menuType != 2">
+        <a-select placeholder="图标" style="width: 220px" v-model:value="form.icon" show-search
+          :filter-option="filterOption" :allowClear="true">
           <a-select-option v-for="icon in IconList" :value="icon" :key="icon">
             <span>{{ icon }}</span>
             <span>
@@ -43,7 +46,6 @@
       </a-form-item>
     </a-form>
   </a-modal>
-
 </template>
 
 <script setup>
@@ -92,7 +94,7 @@ const rules = {
 import { reactive, ref, toRefs } from "vue";
 import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenters";
 import { message } from "ant-design-vue";
-import { componentList, IconList } from "@/config/asyncRouter.js";
+import {  IconList } from "@/config/iconConfig.js";
 
 const emit = defineEmits(["refresh"]);
 const form = reactive({
@@ -131,7 +133,7 @@ const submitHandle = async () => {
         handleSuccessTip(res);
       });
     }
-  } catch {}
+  } catch { }
 };
 
 const showAddModal = async () => {
@@ -225,5 +227,4 @@ defineExpose({
 });
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

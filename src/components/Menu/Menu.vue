@@ -1,15 +1,7 @@
 <script>
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import {
-  computed,
-  ref,
-  watch,
-  h,
-  resolveComponent,
-  defineComponent,
-  getCurrentInstance,
-} from "vue";
+import { computed, ref, watch, h, resolveComponent, defineComponent } from "vue";
 export default defineComponent({
   setup() {
     const store = useStore();
@@ -29,7 +21,9 @@ export default defineComponent({
       menu.children.forEach((item) => menuItem.push(renderMenu(item)));
       const slot = {
         title: () => <span> {menu.meta.title}</span>,
-        icon: () => <span>{menu.meta.icon ? h(resolveComponent(menu.meta.icon)) : ''} </span>
+        icon: () => (
+          <span>{menu.meta.icon ? h(resolveComponent(menu.meta.icon)) : ""} </span>
+        ),
       };
       return (
         <a-sub-menu key={menu.name} v-slots={slot}>
@@ -40,8 +34,10 @@ export default defineComponent({
     // 生成  menu-item 菜单
     const renderMenuItem = (menu) => {
       const slot = {
-        icon: () => <span>{menu.meta.icon ? h(resolveComponent(menu.meta.icon)) : ''} </span>
-      }
+        icon: () => (
+          <span>{menu.meta.icon ? h(resolveComponent(menu.meta.icon)) : ""} </span>
+        ),
+      };
       return (
         <a-menu-item key={menu.name} v-slots={slot}>
           <router-link to={menu.path}>{menu.meta.title}</router-link>

@@ -32,16 +32,11 @@
   </a-layout>
 </template>
 <script setup>
-import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
 import ZMenu from "@/components/Menu/Menu";
 import ZTab from "@/components/MultiTab/MultiTab";
 import UserMenus from "@/components/UserMenus/UserMenus.vue";
 const collapsed = ref(false);
-const route = useRoute();
-const roterKey = computed(() => {
-  return route.path;
-});
 </script>
 <style scoped lang="less">
 #components-layout-demo-side {

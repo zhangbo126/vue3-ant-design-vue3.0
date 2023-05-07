@@ -1,8 +1,8 @@
 
 import VueCookies from 'vue-cookies'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN } from '@/config/constant'
 import { getUserInfo, login } from '@/api/login'
-import { webScoketInit} from '@/utils/webScoket'; //webscoket 全局方法
+import { webScoketInit } from '@/utils/webScoket'; //webscoket 全局方法
 const logins = {
     state: {
         userInfo: {},
@@ -20,31 +20,27 @@ const logins = {
     },
     actions: {
         Login({ commit }, userInfo) {
-            return new Promise((reslove, reject) => {
-                login(userInfo).then(res => {
-                    const result = res.data
-                    if (res.code == 1) {
-                        VueCookies.set(ACCESS_TOKEN, result.token, 10 * 24 * 60 * 60 * 1000)
-                        reslove(res)
-                        return
-                    }
-                    reject(result)
-                })
+            return new Promise(async (reslove, reject) => {
+                const {code,data} = await login(userInfo)
+                if (code == 1) {
+                    VueCookies.set(ACCESS_TOKEN, data.token, 10 * 24 * 60 * 60 * 1000)
+                    reslove(data)         
+                }else{
+                    reject(data)
+                }
             })
         },
         GetUserInfo({ commit, dispatch }) {
-            return new Promise((reslove, reject) => {
-                getUserInfo().then(res => {
-                    if (!res.data) {
-                        return dispatch('Logout')
-                    }
-                    commit('SET_USER_INFO', res.data)
-                    commit('SET_USER_BTN', res.data.btnAuthList)
-                    //scoket 初始化连接
-                    webScoketInit()
-                    reslove(res)
-                }).catch((err) => {
-                })
+            return new Promise(async (reslove, reject) => {
+                const { data } = await getUserInfo()
+                if (!data) {
+                    return dispatch('Logout')
+                }
+                commit('SET_USER_INFO', data)
+                commit('SET_USER_BTN', data.btnAuthList)
+                //scoket 初始化连接
+                webScoketInit()
+                reslove(data)
             })
         },
         Logout() {
