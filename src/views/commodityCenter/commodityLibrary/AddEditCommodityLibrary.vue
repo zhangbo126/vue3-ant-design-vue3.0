@@ -1,118 +1,122 @@
 <template>
   <div class="sku-content">
-   
-        <!-- 商品基本信息 -->
-        <div class="goods-info">
-          <div class="back">
-            <a-button type="primary" @click="router.back()">返回</a-button>
+    <!-- 商品基本信息 -->
+    <div class="goods-info">
+      <div class="back">
+        <a-button type="primary" @click="router.back()">返回</a-button>
+      </div>
+      <div class="info-title">商品基本信息</div>
+      <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+        <a-form-item ref="goodsName" label="商品名称" name="goodsName">
+          <a-input placeholder="商品名称" style="width: 220px" v-model:value="form.goodsName" />
+        </a-form-item>
+        <a-form-item label="商品分类" ref="categoryId" name="categoryId">
+          <a-select v-model:value="form.categoryId" placeholder="商品分类" style="width: 220px" :allowClear="true" show-search
+            :filter-option="filterOptionPartent">
+            <a-select-option v-for="c in pageData.classList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="商品品牌" ref="brandId" name="brandId">
+          <a-select v-model:value="form.brandId" placeholder="商品品牌" style="width: 220px" :allowClear="true" show-search
+            :filter-option="filterOptionPartent">
+            <a-select-option v-for="c in pageData.brandList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="商品货号" ref="goodsNo" name="goodsNo">
+          <a-input placeholder="商品货号" style="width: 220px" v-model:value.trim="form.goodsNo" />
+        </a-form-item>
+        <a-form-item label="产地" ref="placeOrigin" name="placeOrigin">
+          <a-input placeholder="产地" style="width: 220px" v-model:value.trim="form.placeOrigin" />
+        </a-form-item>
+      </a-form>
+    </div>
+    <!-- 商品规格 -->
+    <div class="mix-containter">
+      <div class="mix-title">商品规格</div>
+      <div class="mix-item">
+        <div class="item-bar" v-for="(mixMax, index) in mixMaxItem" :key="mixMax.key">
+          <div class="bar-nav">
+            <div class="nav-lf">
+              <p>规格项:</p>
+              <a-input v-model:value="mixMax.spaceName" :allowClear="true" size="small" />
+            </div>
+            <div class="nav-lr">
+              <a @click="onRemoveMixItem(index)">删除</a>
+            </div>
           </div>
-          <div class="info-title">商品基本信息</div>
-          <a-form ref="formRef" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-            <a-form-item ref="goodsName" label="商品名称" name="goodsName">
-              <a-input placeholder="商品名称" style="width: 220px" v-model:value="form.goodsName" />
-            </a-form-item>
-            <a-form-item label="商品分类" ref="categoryId" name="categoryId">
-              <a-select v-model:value="form.categoryId" placeholder="商品分类" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
-                <a-select-option v-for="c in pageData.classList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="商品品牌" ref="brandId" name="brandId">
-              <a-select v-model:value="form.brandId" placeholder="商品品牌" style="width: 220px" :allowClear="true" show-search :filter-option="filterOptionPartent">
-                <a-select-option v-for="c in pageData.brandList" :key="c._id" :value="c._id">{{ c.name }}</a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="商品货号" ref="goodsNo" name="goodsNo">
-              <a-input placeholder="商品货号" style="width: 220px" v-model:value.trim="form.goodsNo" />
-            </a-form-item>
-            <a-form-item label="产地" ref="placeOrigin" name="placeOrigin">
-              <a-input placeholder="产地" style="width: 220px" v-model:value.trim="form.placeOrigin" />
-            </a-form-item>
-          </a-form>
-        </div>
-        <!-- 商品规格 -->
-        <div class="mix-containter">
-          <div class="mix-title">商品规格</div>
-          <div class="mix-item">
-            <div class="item-bar" v-for="(mixMax, index) in mixMaxItem" :key="mixMax.key">
-              <div class="bar-nav">
-                <div class="nav-lf">
-                  <p>规格项:</p>
-                  <a-input v-model:value="mixMax.spaceName" :allowClear="true" size="small" />
+          <div class="bar-value">
+            <div class="value-box">
+              <div class="value" v-for="(mixMin, i) in mixMax.mixList" :key="mixMin.key">
+                <div class="inp-txt" v-if="mixMin.isShowInp">
+                  <a-input @blur="onBlurMixValue(mixMin)" v-model:value.trim="mixMin.specValue"
+                    :style="{ width: '120px', marginRight: '10px' }" />
+                  <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
+                    <CloseCircleOutlined />
+                  </span>
                 </div>
-                <div class="nav-lr">
-                  <a @click="onRemoveMixItem(index)">删除</a>
-                </div>
-              </div>
-              <div class="bar-value">
-                <div class="value-box">
-                  <div class="value" v-for="(mixMin, i) in mixMax.mixList" :key="mixMin.key">
-                    <div class="inp-txt" v-if="mixMin.isShowInp">
-                      <a-input @blur="onBlurMixValue(mixMin)" v-model:value.trim="mixMin.specValue" :style="{ width: '120px', marginRight: '10px' }" />
-                      <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
-                        <CloseCircleOutlined />
-                      </span>
-                    </div>
-                    <span class="txt" v-else @click="onCheckoutValue(mixMin)">
-                      {{ mixMin.specValue }}
-                      <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
-                        <CloseCircleOutlined />
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <div class="add-value">
-                  <a @click="onAddMaxValue(mixMax.mixList)">添加规格值+</a>
-                </div>
+                <span class="txt" v-else @click="onCheckoutValue(mixMin)">
+                  {{ mixMin.specValue }}
+                  <span class="ico" @click="onRemoveMinValue(mixMax.mixList, i)">
+                    <CloseCircleOutlined />
+                  </span>
+                </span>
               </div>
             </div>
-            <div class="add-btn">
-              <a-button type="primary" @click="onAddMixItem">添加规格项+</a-button>
+            <div class="add-value">
+              <a @click="onAddMaxValue(mixMax.mixList)">添加规格值+</a>
             </div>
           </div>
         </div>
-        <!-- 规格表格 -->
-        <div class="mix-table">
-          <a-table bordered :columns="columns" size="small" :pagination="false" :dataSource="data" :scroll="{x:1200}">
-            <template #bodyCell="{ column, text,record }">
-              <template v-if="column.dataIndex === 'price'">
-                <a-input-number :max="1000000" :min="1" v-model:value="record.price" />
-              </template>
-              <template v-if="column.dataIndex === 'skuName'">
-                <a-input v-model:value.trim="record.skuName" />
-              </template>
-              <template v-if="column.dataIndex === 'weight'">
-                <div class="weight">
-                  <a-input-number v-model:value="record.weight" :max="1000000" :min="1" />
-                </div>
-              </template>
-              <template v-if="column.dataIndex === 'goodsType'">
-                <a-radio-group v-model:value="record.goodsType" name="radioGroup">
-                  <a-radio :value="1">普通商品</a-radio>
-                  <a-radio :value="2">秒杀商品</a-radio>
-                  <a-radio :value="3">团购商品</a-radio>
-                </a-radio-group>
-              </template>
-              <template v-if="column.dataIndex === 'designSketch'">
-                <div class="design-img">
-                  <a-upload :multiple="true" list-type="picture-card" name="file" v-model:file-list="record.designSketch" :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)" :customRequest="(e) => onCustomRequest(e, record)">
+        <div class="add-btn">
+          <a-button type="primary" @click="onAddMixItem">添加规格项+</a-button>
+        </div>
+      </div>
+    </div>
+    <!-- 规格表格 -->
+    <div class="mix-table">
+      <a-table bordered :columns="columns" size="small" :pagination="false" :dataSource="data" :scroll="{ x: 1200 }">
+        <template #bodyCell="{ column, text, record }">
+          <template v-if="column.dataIndex === 'price'">
+            <a-input-number :max="1000000" :min="1" v-model:value="record.price" />
+          </template>
+          <template v-if="column.dataIndex === 'skuName'">
+            <a-input v-model:value.trim="record.skuName" />
+          </template>
+          <template v-if="column.dataIndex === 'weight'">
+            <div class="weight">
+              <a-input-number v-model:value="record.weight" :max="1000000" :min="1" />
+            </div>
+          </template>
+          <template v-if="column.dataIndex === 'goodsType'">
+            <a-radio-group v-model:value="record.goodsType" name="radioGroup">
+              <a-radio :value="1">普通商品</a-radio>
+              <a-radio :value="2">秒杀商品</a-radio>
+              <a-radio :value="3">团购商品</a-radio>
+            </a-radio-group>
+          </template>
+          <template v-if="column.dataIndex === 'designSketch'">
+            <div class="design-img">
+              <!-- <a-upload :multiple="true" list-type="picture-card" name="file" v-model:file-list="record.designSketch" :before-upload="(e, fileList) => onBeforeUpload(e, fileList, record)" :customRequest="(e) => onCustomRequest(e, record)">
                     <div v-if="record.designSketch?.length < 8">
                       <plus-outlined />
                       <div class="ant-upload-text">上传</div>
                     </div>
-                  </a-upload>
-                </div>
-              </template>
-            </template>
-          </a-table>
-        </div>
-        <div class="save-submit">
-          <a-button type="primary" @click="onSaveSubmit">保存</a-button>
-        </div>
-    
+                  </a-upload> -->
+              <z-upload list-type="picture-card" :max-count="7" :multiple="true" many v-model:filePath="record.designSketch" name="file"></z-upload>
+            </div>
+          </template>
+        </template>
+      </a-table>
+    </div>
+    <div class="save-submit">
+      <a-button type="primary" @click="onSaveSubmit">保存</a-button>
+    </div>
+
   </div>
 </template>
 
 <script setup>
+import ZUpload from "@/components/ZUpload";
 import { reactive, ref, toRefs, watch, onMounted, toRef } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
@@ -316,7 +320,6 @@ onMounted(async () => {
     });
     return v;
   });
-  // mixMaxItem.value=[]
   spaceInfo.spaceValueList.forEach(v => {
     mixMaxItem.value.push(v);
   });
@@ -362,7 +365,6 @@ const onAddMaxValue = mixMin => {
     key: Math.random() * 1000,
     isShowInp: true
   });
-  // mixMaxItem.value[index].mixList.push(minMin);
   mixMin.push(minMin);
 };
 //点击切换input输入
@@ -441,33 +443,25 @@ const onSaveSubmit = () => {
     if (mixMaxItem.value.length == 0) {
       return message.warning("请添加规格项");
     }
-    const specValueRule = mixMaxItem.value.every(v => v.spaceName != "");
-    if (!specValueRule) {
+    const valueType =['',null]
+    const specValueRule = mixMaxItem.value.some(v =>valueType.includes(v.spaceName));
+    if (specValueRule) {
       return message.warning("请填写规格项名称");
     }
-    console.log(data.value);
-    //价格是否输入验证
-    const priceRule = data.value.every(v => {
-      return v.price != "" && v.price != null;
-    });
-
-    if (!priceRule) {
+    const priceRule = data.value.some(v => valueType.includes(v.price) );
+    if (priceRule) {
       return message.warning("请填写商品价格");
     }
     //重量验证
-    const weightRule = data.value.every(
-      v => v.weight != "" && v.weight != null
-    );
-    if (!weightRule) {
+    const weightRule = data.value.some(v=>valueType.includes(v.weight))
+    if (weightRule) {
       return message.warning("请填写商品重量");
     }
-
     //效果图验证
-    const designSketchRule = data.value.every(v => v.designSketch.length != 0);
+    const designSketchRule = data.value.every(v =>v.designSketch &&  v.designSketch.length != 0);
     if (!designSketchRule) {
       return message.warning("请上传商品效果图");
     }
-
     const submitData = {
       mixInfo: form,
       mixList: data.value,
@@ -498,9 +492,10 @@ const filterOptionPartent = (input, option) => {
 </script>
 
 <style scoped lang="less">
-.sku-content{
-   padding: 10px;
+.sku-content {
+  padding: 10px;
 }
+
 .goods-info {
   .info-title {
     font-weight: bold;
@@ -508,14 +503,17 @@ const filterOptionPartent = (input, option) => {
     margin: 10px 0px;
   }
 }
+
 .mix-containter {
   .mix-title {
     font-weight: bold;
     font-size: 16px;
     margin: 10px 0px;
   }
+
   .mix-item {
     padding: 0px 15px;
+
     .item-bar {
       .bar-nav {
         display: flex;
@@ -524,22 +522,27 @@ const filterOptionPartent = (input, option) => {
         height: 50px;
         background-color: #f5f7fa;
         padding: 0px 15px;
+
         .nav-lf {
           display: flex;
           align-items: center;
+
           p {
             min-width: 80px;
             margin: 0 !important;
           }
         }
       }
+
       .bar-value {
         padding: 20px 80px;
+
         .value-box {
           display: flex;
           flex-wrap: wrap;
           margin-bottom: 10px;
         }
+
         .value {
           margin-right: 10px;
           margin-bottom: 8px;
@@ -562,6 +565,7 @@ const filterOptionPartent = (input, option) => {
             left: 0px;
             text-align: center;
             cursor: pointer;
+
             .ico {
               position: absolute;
               top: -15px;
@@ -569,10 +573,12 @@ const filterOptionPartent = (input, option) => {
               cursor: pointer;
               display: none;
             }
+
             &:hover .ico {
               display: block;
             }
           }
+
           .inp-txt {
             position: relative;
             padding: 0px 20px;
@@ -587,6 +593,7 @@ const filterOptionPartent = (input, option) => {
             left: 0px;
             text-align: center;
             cursor: pointer;
+
             .ico {
               position: absolute;
               top: -15px;
@@ -594,6 +601,7 @@ const filterOptionPartent = (input, option) => {
               cursor: pointer;
               display: none;
             }
+
             &:hover .ico {
               display: block;
             }
@@ -603,20 +611,26 @@ const filterOptionPartent = (input, option) => {
     }
   }
 }
+
 .mix-table {
   margin-top: 20px;
+
   .size {
     display: flex;
     align-items: center;
     color: red;
   }
+
   /deep/ .ant-input-number-handler-wrap {
     display: none;
   }
+
   /deep/ .ant-upload-list-picture-card .ant-upload-list-item-info::before {
     left: 0;
   }
+
 }
+
 .save-submit {
   height: 50px;
   background-color: #ffff;
@@ -626,5 +640,4 @@ const filterOptionPartent = (input, option) => {
   width: 100%;
   left: 0;
   bottom: 0;
-}
-</style>
+}</style>

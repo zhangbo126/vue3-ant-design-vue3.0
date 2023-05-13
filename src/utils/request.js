@@ -9,12 +9,9 @@ const request = axios.create({
 })
 
 
-
-
 //请求错误处理
 const errorHandler = (error) => {
     return message.error(error.message)
-
 }
 
 //请求头同意处理
@@ -29,7 +26,8 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use((response) => {
     const { code } = response.data
     if (code != 1) {
-        return message.warning(response.data.message)
+         message.warning(response.data.message)
+         return Promise.reject(response.data)
     }
     //登录失效，异常处理
     if (code == 403) {

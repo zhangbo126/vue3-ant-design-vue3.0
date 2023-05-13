@@ -7,6 +7,7 @@
     :width="600"
     ok-text="确认"
     cancel-text="取消"
+    :confirm-loading="pageData.confirmLoading"
     :title="pageData.type == 1 ? '新增分类' : '编辑分类'"
     @ok="submitHandle"
   >
@@ -29,9 +30,12 @@
           show-search
           :filter-option="filterOption"
         >
-          <a-select-option v-for="c in pageData.classList" :key="c._id" :value="c._id">{{
-            c.name
-          }}</a-select-option>
+          <a-select-option
+            v-for="item in pageData.classList"
+            :key="item._id"
+            :value="item._id"
+            >{{ item.name }}</a-select-option
+          >
         </a-select>
       </a-form-item>
       <a-form-item label="排序" name="sort">
@@ -48,7 +52,11 @@
         </a-radio-group>
       </a-form-item>
       <a-form-item label="分类图标" name="logoFilePath">
-        <z-upload  list-type="picture-card" v-model:filePath="form.logoFilePath"  name="file"></z-upload>
+        <z-upload
+          list-type="picture-card"
+          v-model:filePath="form.logoFilePath"
+          name="file"
+        ></z-upload>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -81,9 +89,9 @@ const rules = {
     },
   ],
 };
-import { reactive, ref, toRefs } from "vue";
+import { reactive, ref } from "vue";
 import { message } from "ant-design-vue";
-import { imgUpload, getPartentClass, addClass, editClass } from "@/api/commodityCenter";
+import { getPartentClass, addClass, editClass } from "@/api/commodityCenter";
 const emit = defineEmits(["refresh"]);
 const form = reactive({
   name: null,
@@ -98,22 +106,24 @@ const pageData = reactive({
   type: 1,
   visible: false,
   classList: [],
+  confirmLoading:false
 });
-
-
 
 //保存提交
 const submitHandle = () => {
-  formRef.value.validate().then(() => {
-    if (pageData.type == 1) {
-      addClass(form).then((res) => {
+  formRef.value.validate().then(async () => {
+    try {
+      pageData.confirmLoading=true
+      if (pageData.type == 1) {
+        const res = await addClass(form);
         handleSuccessTip(res);
-      });
-      return;
-    }
-    editClass(form).then((res) => {
+        return;
+      }
+      const res = await editClass(form);
       handleSuccessTip(res);
-    });
+    } finally {
+       pageData.confirmLoading=false
+    }
   });
 };
 
@@ -121,31 +131,25 @@ const submitHandle = () => {
 const showAddModal = async () => {
   pageData.type = 1;
   pageData.visible = true;
-  getPartentClassList();
+  const { data } = await getPartentClass();
+  pageData.classList = data;
 };
 //编辑打开弹框
-const showEditModal = (obj) => {
+const showEditModal = async (obj) => {
   pageData.type = 2;
   pageData.visible = true;
-  getPartentClassList().then(() => {
-    const { name, logoFilePath, sort, partentId, _id } = obj;
-    Object.assign(form, {
-      name,
-      logoFilePath,
-      sort,
-      partentId,
-      _id,
-    });
+  const { data } = await getPartentClass();
+  pageData.classList = data;
+  const { name, logoFilePath, sort, partentId, _id } = obj;
+  Object.assign(form, {
+    name,
+    logoFilePath,
+    sort,
+    partentId,
+    _id,
   });
 };
-const getPartentClassList = () => {
-  return new Promise((reslove, reject) => {
-    getPartentClass().then((res) => {
-      pageData.classList = res.data;
-      reslove();
-    });
-  });
-};
+
 const handleSuccessTip = (res) => {
   if (res.code == 1) {
     message.success("操作成功");
@@ -157,15 +161,13 @@ const handleSuccessTip = (res) => {
 const filterOption = (input, option) => {
   return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
-const filterOptionPartent = (input, option) => {
-  return option.children[0].children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-};
 
 //弹框关闭
 const onCancelModal = () => {
   formRef.value.resetFields();
   Object.assign(pageData, {
     visible: false,
+    confirmLoading:false,
     classList: [],
   });
 };
