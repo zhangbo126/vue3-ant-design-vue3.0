@@ -493,7 +493,7 @@ const filterOptionPartent = (input, option) => {
 
 <style scoped lang="less">
 .sku-content {
-  padding: 10px;
+  padding: 10px 10px 80px;
 }
 
 .goods-info {
@@ -632,6 +632,7 @@ const filterOptionPartent = (input, option) => {
 }
 
 .save-submit {
+  box-shadow: -20px -5px 8px #f0f1f2;
   height: 50px;
   background-color: #ffff;
   line-height: 50px;
