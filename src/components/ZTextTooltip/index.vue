@@ -25,7 +25,6 @@ export default defineComponent({
       //文本占位高度
       const height = getComputedStyle(tooltipElemt.value).height.replace("px", "") - 0;
       ellipsis.value = height > lineClamp * lineHeight;
-	  console.log(height,lineClamp,lineHeight)
       const style = {
         height: `${lineHeight * lineClamp}px`,
         overflow: "hidden",

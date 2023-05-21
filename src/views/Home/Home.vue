@@ -39,11 +39,28 @@
       <a-col :span="16">
         <p><b>当前项目封装的一些组件和指令</b></p>
         <z-table bordered :pagination="false" :dataSource="dataSource" :columns="columns">
+          <template #bodyCell="{ column, text,record }">
+            <template v-if="column.dataIndex === 'template'">
+              <z-text-tooltip placement="top" :lineClamp="1">
+                {{ text }}
+              </z-text-tooltip>
+            </template>
+            <template v-if="column.dataIndex === 'describe'">
+              <z-text-tooltip placement="top" :lineClamp="2">
+                {{ text }}
+              </z-text-tooltip>
+            </template>
+            <template v-if="column.dataIndex === 'other'">
+              <z-text-tooltip placement="top" :lineClamp="1">
+                {{ text }}
+              </z-text-tooltip>
+            </template>
+          </template>
         </z-table>
       </a-col>
     </a-row>
-    <a-row>
-      <div id="echarts"></div>
+    <a-row >
+        <div id="echarts"></div>
     </a-row>
   </div>
 </template>
@@ -94,6 +111,7 @@ onUnmounted(() => {
   }
   #echarts {
     width: 60%;
+    margin:0 auto;
     height: calc(100vh - 100px);
   }
 }
