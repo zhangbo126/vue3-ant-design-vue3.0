@@ -52,6 +52,7 @@ const emit = defineEmits(["update:filePath", "uploadSuccess"]);
 const props = defineProps({
   filePath: {
     default: null,
+    type:[String,Array]
   },
   // 上传数量类型
   many: {

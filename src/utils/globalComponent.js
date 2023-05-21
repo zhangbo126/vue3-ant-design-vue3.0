@@ -5,12 +5,14 @@
  *
  * 当需要更多组件依赖时，在该文件加入即可
  */
-import { Modal,notification,message, } from 'ant-design-vue'
+import { Modal, notification, message, } from 'ant-design-vue'
 import * as antIcons from '@ant-design/icons-vue'
-import { ZTable, ZModal } from '@/components' //table组件二次封装
+import { ZTable, ZModal, ZTextTooltip, ZUpload } from '@/components' //table组件二次封装
 const ant = {
     install(Vue) {
         Vue.component('ZTable', ZTable)
+        Vue.component('ZTextTooltip', ZTextTooltip)
+        Vue.component('ZUpload', ZUpload)
         // Vue.component('ZModal', ZModal)
         Object.keys(antIcons).forEach(key => {
             Vue.component(key, antIcons[key])

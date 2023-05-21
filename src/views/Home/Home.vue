@@ -1,29 +1,50 @@
 <template>
   <div class="home">
-    <div class="author">
-      <div :style="{ textAlign: 'left', width: '500px', margin: '0 auto' }">
-        <div>
-          <a-image :width="70" :src="$drawAssetsImage('author.png')" />
+    <a-row>
+      <a-col :span="8">
+        <div class="author">
+          <div :style="{ textAlign: 'left', width: '600px', margin: '0 auto' }">
+            <div>
+              <a-image :width="70" :src="$drawAssetsImage('author.png')" />
+            </div>
+            <div style="width: 30px">
+              <b>CSDN:</b>
+              <a href="https://blog.csdn.net/weixin_43835425" target="_brank"
+              >https://blog.csdn.net/weixin_43835425
+            </a>
+            </div>
+            <div>
+              <b>前端:</b>
+              <a href="https://gitee.com/ZHANG_6666/crm-template" target="_brank"
+                >https://gitee.com/ZHANG_6666/crm-template</a
+              >
+            </div>
+            <div>
+              <b>后端:</b>
+              <a
+                href="https://gitee.com/ZHANG_6666/express--vue3--ant-design2"
+                target="_brank"
+                >https://gitee.com/ZHANG_6666/express--vue3--ant-design2</a
+              >
+            </div>
+            <div>
+              <b>小程序端:</b>
+              <a href="https://gitee.com/ZHANG_6666/uni-app" target="_brank"
+                >https://gitee.com/ZHANG_6666/uni-app</a
+              >
+            </div>
+          </div>
         </div>
-        <div>
-          <b>CSDN:</b>
-          <a href="https://blog.csdn.net/weixin_43835425" target="_brank">https://blog.csdn.net/weixin_43835425</a>
-        </div>
-        <div>
-          <b>前端:</b>
-          <a href="https://gitee.com/ZHANG_6666/crm-template" target="_brank">https://gitee.com/ZHANG_6666/crm-template</a>
-        </div>
-        <div>
-          <b>后端:</b>
-          <a href="https://gitee.com/ZHANG_6666/express--vue3--ant-design2" target="_brank">https://gitee.com/ZHANG_6666/express--vue3--ant-design2</a>
-        </div>
-        <div>
-          <b>小程序端:</b>
-          <a href="https://gitee.com/ZHANG_6666/uni-app" target="_brank">https://gitee.com/ZHANG_6666/uni-app</a>
-        </div>
-      </div>
-    </div>
-    <div id="echarts"></div>
+      </a-col>
+      <a-col :span="16">
+        <p><b>当前项目封装的一些组件</b></p>
+        <z-table bordered :pagination="false" :dataSource="dataSource" :columns="columns">
+        </z-table>
+      </a-col>
+    </a-row>
+    <a-row>
+      <div id="echarts"></div>
+    </a-row>
   </div>
 </template>
 
@@ -31,11 +52,13 @@
 import { getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { getLocationParams, deepCopy } from "@/utils/utilityFunction";
 import { GEO_3D_OPTIONS } from "@/config/echartsConfig.js";
+import { tableColumns, tableData } from "./home";
 import * as echarts from "echarts";
 import "echarts-gl";
-
 const { $scoketEvent } = getCurrentInstance().proxy;
 const myChart = ref();
+const dataSource = tableData;
+const columns = tableColumns;
 onMounted(() => {
   echartsInit();
 });
@@ -62,15 +85,10 @@ onUnmounted(() => {
 
 <style scoped lang="less">
 .home {
-  display: flex;
-  width: 100%;
-  height: 100%;
   .author {
-    width: 40%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    div{
+    div {
       margin-bottom: 20px;
     }
   }
