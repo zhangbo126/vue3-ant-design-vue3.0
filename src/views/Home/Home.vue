@@ -37,7 +37,7 @@
         </div>
       </a-col>
       <a-col :span="16">
-        <p><b>当前项目封装的一些组件</b></p>
+        <p><b>当前项目封装的一些组件和指令</b></p>
         <z-table bordered :pagination="false" :dataSource="dataSource" :columns="columns">
         </z-table>
       </a-col>
