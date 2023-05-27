@@ -1,6 +1,10 @@
 <template>
   <a-layout class="app-layout">
-    <a-layout-sider v-model:collapsed="collapsed" collapsible id="components-layout-demo-side">
+    <a-layout-sider
+      v-model:collapsed="collapsed"
+      collapsible
+      id="components-layout-demo-side"
+    >
       <template #trigger>
         <MenuFoldOutlined v-show="collapsed" />
         <MenuUnfoldOutlined v-show="!collapsed" />
@@ -11,20 +15,28 @@
       </div>
       <z-menu></z-menu>
     </a-layout-sider>
-    <div class="sider-hidden" :style="{width:!collapsed?'200px':'80px'}"></div>
+    <div class="sider-hidden" :style="{ width: !collapsed ? '200px' : '80px' }"></div>
     <a-layout class="layout-content">
       <a-layout-header class="layout-header">
         <div class="trigger">
-          <MenuFoldOutlined v-if="collapsed" @click="collapsed = !collapsed" :style="{ fontSize: '20px', cursor: 'pointer' }" />
-          <MenuUnfoldOutlined @click="collapsed = !collapsed" :style="{ fontSize: '20px', cursor: 'pointer' }" v-else />
+          <MenuFoldOutlined
+            v-if="collapsed"
+            @click="collapsed = !collapsed"
+            :style="{ fontSize: '20px', cursor: 'pointer' }"
+          />
+          <MenuUnfoldOutlined
+            @click="collapsed = !collapsed"
+            :style="{ fontSize: '20px', cursor: 'pointer' }"
+            v-else
+          />
         </div>
         <div class="user-menu">
           <user-menus></user-menus>
         </div>
       </a-layout-header>
       <a-layout-content>
-        <z-tab></z-tab>
-        <div class="app-content">
+        <z-tab v-model:length="tabLength"></z-tab>
+        <div class="app-content" :style="style">
           <router-view></router-view>
         </div>
       </a-layout-content>
@@ -32,11 +44,22 @@
   </a-layout>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import ZMenu from "@/components/Menu/Menu";
 import ZTab from "@/components/MultiTab/MultiTab";
 import UserMenus from "@/components/UserMenus/UserMenus.vue";
 const collapsed = ref(false);
+const tabLength = ref(0);
+const style = computed(() => {
+  if (tabLength.value) {
+    return {
+      height: `calc(100vh - 100px)`,
+    };
+  }
+  return {
+    height: `calc(100vh - 64px)`,
+  };
+});
 </script>
 <style scoped lang="less">
 #components-layout-demo-side {
@@ -102,7 +125,6 @@ const collapsed = ref(false);
 }
 .app-content {
   background-color: #fff;
-  height: calc(100vh - 100px);
   overflow: scroll;
   padding-left: 10px;
 }

@@ -8,7 +8,7 @@ import * as echarts from "echarts";
 export const GEO_3D_OPTIONS = {
 	globe: {
 		baseTexture: drawAssetsImage('earth_geo_1.jpg'),
-		heightTexture: drawAssetsImage('earth_geo_3.jpg'),
+		// heightTexture: drawAssetsImage('earth_geo_4.jpg'),
 		displacementScale: 0.1,
 		globeRadius: 60,
 		globeOuterRadius: 100,
@@ -21,7 +21,6 @@ export const GEO_3D_OPTIONS = {
 			panSensitivity: 1.2,
 			alpha: 40,
 			beta: 60,
-			animation: true,
 			minAlpha: -19000,
 			maxAlpha: 19000,
 			damping: 0,

@@ -52,7 +52,7 @@ const emit = defineEmits(["update:filePath", "uploadSuccess"]);
 const props = defineProps({
   filePath: {
     default: null,
-    type:[String,Array]
+    type: [String, Array],
   },
   // 上传数量类型
   many: {
@@ -138,7 +138,7 @@ const onPreview = (file) => {
 
 // 初始化上传组件文件
 const initUploadFile = (filePath) => {
-  if (props.many && filePath && filePath.length) {
+  if (Array.isArray(filePath)) {
     fileList.value = filePath.map((file) => {
       return {
         uid: Math.random() * 1000,

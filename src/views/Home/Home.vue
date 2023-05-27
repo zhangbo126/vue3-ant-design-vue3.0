@@ -59,7 +59,7 @@
         </z-table>
       </a-col>
     </a-row>
-    <a-row >
+    <a-row>
         <div id="echarts"></div>
     </a-row>
   </div>
@@ -69,7 +69,7 @@
 import { getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { getLocationParams, deepCopy } from "@/utils/utilityFunction";
 import { GEO_3D_OPTIONS } from "@/config/echartsConfig.js";
-import { tableColumns, tableData } from "./home";
+import { tableColumns, tableData } from "./homeData.js";
 import * as echarts from "echarts";
 import "echarts-gl";
 const { $scoketEvent } = getCurrentInstance().proxy;
@@ -97,7 +97,9 @@ const echartsInit = () => {
 //清除监听
 onUnmounted(() => {
   window.removeEventListener("resize", myChart.value.resize);
+  myChart.value.dispose()
 });
+
 </script>
 
 <style scoped lang="less">
