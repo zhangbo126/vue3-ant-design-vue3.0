@@ -15,6 +15,7 @@
 ![输入图片说明](public/image/image_2.png)
 ![输入图片说明](public/image/image_3.png)
 ![输入图片说明](public/image/image_4.png)
+![输入图片说明](public/image/image_5.png)
 
 ##### 6.小程序端预览端
 
