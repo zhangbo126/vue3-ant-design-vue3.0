@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { getMenuTree, removeMenuTree } from "@/api/UserCenters";
+import { getMenuTree, removeMenuTree } from "@/api/userCenters";
 import AddEditMenu from "./menuList/AddEditMenu.vue";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";

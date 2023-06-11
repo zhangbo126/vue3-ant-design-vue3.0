@@ -37,7 +37,7 @@ const rules = {
   ]
 };
 import { reactive, ref } from "vue";
-import { getAddMenuList, addRole, getEditMenuList,  eidtRole } from "@/api/UserCenters";
+import { getAddMenuList, addRole, getEditMenuList,  eidtRole } from "@/api/userCenters";
 import { message } from "ant-design-vue";
 const emit = defineEmits(["refresh"]);
 const form = reactive({

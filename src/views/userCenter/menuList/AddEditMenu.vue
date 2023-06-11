@@ -92,7 +92,7 @@ const rules = {
   ]
 };
 import { reactive, ref, toRefs } from "vue";
-import { addMenuTree, getMenuList, editMenuTree } from "@/api/UserCenters";
+import { addMenuTree, getMenuList, editMenuTree } from "@/api/userCenters";
 import { message } from "ant-design-vue";
 import {  IconList } from "@/config/iconConfig.js";
 

@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { getAccountList, delAccount,accountStatusSet, resultPassWord } from "@/api/UserCenters";
+import { getAccountList, delAccount,accountStatusSet, resultPassWord } from "@/api/userCenters";
 import { reactive, ref, toRefs, onMounted } from "vue";
 import { Modal, message } from "ant-design-vue";
 import moment from "moment";

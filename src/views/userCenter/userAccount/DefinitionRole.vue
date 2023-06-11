@@ -23,7 +23,7 @@ const rules = {
   ]
 };
 import { reactive, ref, toRefs } from "vue";
-import { roleAssignment, getRoleList } from "@/api/UserCenters";
+import { roleAssignment, getRoleList } from "@/api/userCenters";
 import { message } from "ant-design-vue";
 const emit = defineEmits(["refresh"]);
 const form = reactive({

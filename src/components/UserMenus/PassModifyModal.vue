@@ -29,7 +29,7 @@ const rules = {
     }
   ]
 };
-import { editPasswordTesting, editPassword } from "@/api/UserCenters.js";
+import { editPasswordTesting, editPassword } from "@/api/userCenters.js";
 import { reactive, ref, toRefs } from "vue";
 import { message } from "ant-design-vue";
 import { useStore } from "vuex";
