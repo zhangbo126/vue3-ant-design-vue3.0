@@ -41,9 +41,6 @@ const columns = [
     dataIndex: "status",
     width: 120,
     align: "center"
-    // slots: {
-    //   customRender: "status"
-    // }
   },
   {
     title: "使用组件",

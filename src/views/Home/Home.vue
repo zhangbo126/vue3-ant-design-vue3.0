@@ -10,8 +10,8 @@
             <div style="width: 30px">
               <b>CSDN:</b>
               <a href="https://blog.csdn.net/weixin_43835425" target="_brank"
-              >https://blog.csdn.net/weixin_43835425
-            </a>
+                >https://blog.csdn.net/weixin_43835425
+              </a>
             </div>
             <div>
               <b>前端:</b>
@@ -39,7 +39,7 @@
       <a-col :span="16">
         <p><b>当前项目封装的一些组件和指令</b></p>
         <z-table bordered :pagination="false" :dataSource="dataSource" :columns="columns">
-          <template #bodyCell="{ column, text,record }">
+          <template #bodyCell="{ column, text, record }">
             <template v-if="column.dataIndex === 'template'">
               <z-text-tooltip placement="top" :lineClamp="1">
                 {{ text }}
@@ -60,7 +60,7 @@
       </a-col>
     </a-row>
     <a-row>
-        <div id="echarts"></div>
+      <div id="echarts"></div>
     </a-row>
   </div>
 </template>
@@ -72,12 +72,13 @@ import { GEO_3D_OPTIONS } from "@/config/echartsConfig.js";
 import { tableColumns, tableData } from "./homeData.js";
 import * as echarts from "echarts";
 import "echarts-gl";
-const { $scoketEvent } = getCurrentInstance().proxy;
+const { $scoketEvent, $bus } = getCurrentInstance().proxy;
 const myChart = ref();
 const dataSource = tableData;
 const columns = tableColumns;
 onMounted(() => {
   echartsInit();
+  $bus.emit("receive", "$bus全局总事件调用,home组件加载完毕");
 });
 
 const echartsInit = () => {
@@ -86,20 +87,19 @@ const echartsInit = () => {
   window.addEventListener("resize", myChart.value.resize);
 };
 
-// onMounted(() => {
-//   $scoketEvent.messageSend("1231312313");
-// });
-
-// $scoketEvent.messageListener(msg => {
-//    console.log(msg);
-// });
+onMounted(() => {
+  $scoketEvent.messageSend("scoket发送消息测试");
+});
+$scoketEvent.messageListener(msg => {
+   console.log('scoket监听接收消息测试:',msg);
+});
 
 //清除监听
 onUnmounted(() => {
   window.removeEventListener("resize", myChart.value.resize);
-  myChart.value.dispose()
+  $bus.off("receive");
+  myChart.value.dispose();
 });
-
 </script>
 
 <style scoped lang="less">
@@ -113,7 +113,7 @@ onUnmounted(() => {
   }
   #echarts {
     width: 60%;
-    margin:0 auto;
+    margin: 0 auto;
     height: calc(100vh - 100px);
   }
 }
