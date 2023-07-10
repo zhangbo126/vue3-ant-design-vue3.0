@@ -5,7 +5,7 @@
 ##### 1. yarn install
 ##### 2. yarn serve
 
-##### 3.服务端启动参照：[https://gitee.com/ZHANG_6666/express--vue3--ant-design2](https://gitee.com/ZHANG_6666/express--vue3--ant-design2)
+##### 3.服务端启动参照：[https://github.com/zhangbo126/express-mongoose-server](https://github.com/zhangbo126/express-mongoose-server)
 
 ##### 4.账号：admin ,密码:zb123456
 
